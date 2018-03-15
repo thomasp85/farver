@@ -22,6 +22,7 @@ Description: The encoding of colour can be handled in many different ways, using
     'grDevices' package.
 License: MIT + file LICENSE
 Encoding: UTF-8
+SystemRequirements: C++11
 Imports: Rcpp (>= 0.12.15)
 LinkingTo: Rcpp
 RoxygenNote: 6.0.1.9000

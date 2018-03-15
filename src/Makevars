@@ -1,1 +1,1 @@
-PKG_CXXFLAGS = -std=c++11
+CXX_STD = CXX11

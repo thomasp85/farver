@@ -12,7 +12,7 @@
 #' `to_space` defaults to be the same as `from_space`.
 #' 
 #' @param method The method to use for comparison. Either `'euclidean'`, 
-#' `'cie1976'`, `'cie94`, `'cie2000'`, or `'cmc'`
+#' `'cie1976'`, `'cie94'`, `'cie2000'`, or `'cmc'`
 #' 
 #' @return A numeric matrix with the same number of rows as colours in `from`
 #' and the same number of columns as colours in `to`. If `to` is not given, only

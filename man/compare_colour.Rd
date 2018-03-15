@@ -16,7 +16,7 @@ compared with itself and only the upper triangle will get calculated}
 \code{to_space} defaults to be the same as \code{from_space}.}
 
 \item{method}{The method to use for comparison. Either \code{'euclidean'},
-\code{'cie1976'}, \code{'cie94}, \code{'cie2000'}, or \code{'cmc'}}
+\code{'cie1976'}, \code{'cie94'}, \code{'cie2000'}, or \code{'cmc'}}
 }
 \value{
 A numeric matrix with the same number of rows as colours in \code{from}
