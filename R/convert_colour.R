@@ -28,7 +28,7 @@
 #' convert_colour(spectrum, 'rgb', 'lab')
 #' 
 convert_colour <- function(colour, from, to) {
-  from <- match.arg(tolower(from), colorspaces)
-  to <- match.arg(tolower(to), colorspaces)
+  from <- match.arg(tolower(from), colourspaces)
+  to <- match.arg(tolower(to), colourspaces)
   convert_c(as.matrix(colour), from, to)
 }
