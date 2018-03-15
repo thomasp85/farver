@@ -5,8 +5,10 @@ using namespace Rcpp;
 
 //[[Rcpp::export]]
 NumericMatrix convert_c(NumericMatrix colour, std::string from, std::string to) {
-  if (from == "cmyk" && colour.ncol() != 4) {
-    stop("colour space requires four values");
+  if (from == "cmyk") {
+    if (colour.ncol() != 4) {
+      stop("colour space requires four values");
+    }
   } else if (colour.ncol() != 3) {
     stop("colour space requires three values");
   }
