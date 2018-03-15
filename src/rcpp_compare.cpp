@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include "ColorSpace.h"
 #include "Comparison.h"
+#include <memory.h>
 
 using namespace Rcpp;
 
