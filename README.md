@@ -20,7 +20,9 @@ devtools::install_github('thomasp85/farver')
 Use
 ---
 
-The main function of the package is `convert_colour()` with an interface very much alike `grDevices::convertColor()`:
+The main functions of the package isare`convert_colour()` with an interface very much alike `grDevices::convertColor()`, and `compare_colour()` which allows you to calculate the distance between colours using different metrics
+
+### Conversion
 
 ``` r
 library(farver)
@@ -53,6 +55,24 @@ convert_colour(spectrum, 'rgb', 'lab')
 #> [10,] 55.65103  86.52861   -9.719051
 ```
 
+### Comparison
+
+``` r
+spectrum2 <- t(col2rgb(heat.colors(10)))
+
+compare_colour(spectrum, spectrum2, 'rgb', method = 'cie2000')[1:6, 1:6]
+#>          [,1]      [,2]      [,3]     [,4]      [,5]     [,6]
+#> [1,]  0.00000  1.950705  7.131114 15.53888 27.083292 39.89086
+#> [2,] 29.50183 27.566791 22.403383 13.98164  2.416093 10.31364
+#> [3,] 72.33700 70.330572 64.926952 55.98589 43.599157 30.24633
+#> [4,] 85.84641 83.687702 77.853543 68.19825 55.060776 41.58806
+#> [5,] 85.92047 83.796852 78.072403 68.67013 56.074572 43.42730
+#> [6,] 70.95912 69.553268 65.907408 60.35762 53.722352 47.94419
+```
+
+Supported colour spaces
+-----------------------
+
 `farver` currently supports the following colour spaces:
 
 -   CMY
@@ -68,7 +88,8 @@ convert_colour(spectrum, 'rgb', 'lab')
 -   XYZ
 -   YXY
 
-### Benchmark
+Benchmark
+---------
 
 `farver` is substantially faster than its `grDevices` counterpart as all operation happens in compiled code:
 
@@ -83,7 +104,7 @@ timing <- microbenchmark(
 autoplot(timing)
 ```
 
-![](man/figures/README-unnamed-chunk-4-1.png)
+![](man/figures/README-unnamed-chunk-5-1.png)
 
 Limitations
 -----------

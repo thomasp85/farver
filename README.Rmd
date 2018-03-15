@@ -36,8 +36,11 @@ devtools::install_github('thomasp85/farver')
 ```
 
 ## Use
-The main function of the package is `convert_colour()` with an interface very
-much alike `grDevices::convertColor()`:
+The main functions of the package isare`convert_colour()` with an interface very
+much alike `grDevices::convertColor()`, and `compare_colour()` which allows you
+to calculate the distance between colours using different metrics
+
+### Conversion
 
 ```{r}
 library(farver)
@@ -48,6 +51,15 @@ spectrum
 convert_colour(spectrum, 'rgb', 'lab')
 ```
 
+### Comparison
+
+```{r}
+spectrum2 <- t(col2rgb(heat.colors(10)))
+
+compare_colour(spectrum, spectrum2, 'rgb', method = 'cie2000')[1:6, 1:6]
+```
+
+## Supported colour spaces
 `farver` currently supports the following colour spaces:
 
 - CMY
@@ -63,7 +75,7 @@ convert_colour(spectrum, 'rgb', 'lab')
 - XYZ
 - YXY
 
-### Benchmark
+## Benchmark
 `farver` is substantially faster than its `grDevices` counterpart as all 
 operation happens in compiled code:
 

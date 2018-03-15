@@ -33,3 +33,6 @@ spectrum <- t(col2rgb(rainbow(10)))
 convert_colour(spectrum, 'rgb', 'lab')
 
 }
+\seealso{
+\code{\link[grDevices:convertColor]{grDevices::convertColor()}}, \code{\link[grDevices:col2rgb]{grDevices::col2rgb()}}
+}

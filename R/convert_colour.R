@@ -19,6 +19,8 @@
 #' @return A numeric matrix with the same number of rows as `colour` and either 
 #' 3 or 4 columns depending on the value of `to`
 #' 
+#' @seealso [grDevices::convertColor()], [grDevices::col2rgb()]
+#' 
 #' @export
 #' 
 #' @examples

@@ -6,7 +6,13 @@
 \alias{farver-package}
 \title{farver: Vectorised Colour Conversion and Comparison}
 \description{
-One paragraph description of what the package does as one or more full sentences.
+The encoding of colour can be handled in many different ways, using
+different colour spaces. As different colour spaces have different uses,
+efficient conversion between these representations are important. The
+'farver' package provides a set of functions that gives access to very fast
+colour space conversion and comparisons implemented in C++, and offers
+100-fold speed improvements over the 'convertColor' function in the
+'grDevices' package.
 }
 \seealso{
 Useful links:
