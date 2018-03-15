@@ -33,9 +33,9 @@ namespace ColorSpace {
 		double g = color->g / 255.0;
 		double b = color->b / 255.0;
 
-		r = ((r > 0.04045) ? pow((r + 0.055) / 1.055, 2.4) : (r / 12.92)) * 100.0;
-		g = ((g > 0.04045) ? pow((g + 0.055) / 1.055, 2.4) : (g / 12.92)) * 100.0;
-		b = ((b > 0.04045) ? pow((b + 0.055) / 1.055, 2.4) : (b / 12.92)) * 100.0;
+		r = ((r > 0.04045) ? std::pow((r + 0.055) / 1.055, 2.4) : (r / 12.92)) * 100.0;
+		g = ((g > 0.04045) ? std::pow((g + 0.055) / 1.055, 2.4) : (g / 12.92)) * 100.0;
+		b = ((b > 0.04045) ? std::pow((b + 0.055) / 1.055, 2.4) : (b / 12.92)) * 100.0;
 
 		item->x = r*0.4124564 + g*0.3575761 + b*0.1804375;
 		item->y = r*0.2126729 + g*0.7151522 + b*0.0721750;
@@ -50,9 +50,9 @@ namespace ColorSpace {
 		double g = x * -0.9692660 + y * 1.8760108 + z * 0.0415560;
 		double b = x * 0.0556434 + y * -0.2040259 + z * 1.0572252;
 
-		r = ((r > 0.0031308) ? (1.055*pow(r, 1 / 2.4) - 0.055) : (12.92*r)) * 255.0;
-		g = ((g > 0.0031308) ? (1.055*pow(g, 1 / 2.4) - 0.055) : (12.92*g)) * 255.0;
-		b = ((b > 0.0031308) ? (1.055*pow(b, 1 / 2.4) - 0.055) : (12.92*b)) * 255.0;
+		r = ((r > 0.0031308) ? (1.055*std::pow(r, 1 / 2.4) - 0.055) : (12.92*r)) * 255.0;
+		g = ((g > 0.0031308) ? (1.055*std::pow(g, 1 / 2.4) - 0.055) : (12.92*g)) * 255.0;
+		b = ((b > 0.0031308) ? (1.055*std::pow(b, 1 / 2.4) - 0.055) : (12.92*b)) * 255.0;
 		
 		color->r = r;
 		color->g = g;
@@ -81,7 +81,7 @@ namespace ColorSpace {
 				item->s = delta / (max + min) * 100;
 			}
 			else {
-				item->s = delta / (1 - abs(2 * item->l - 1)) * 100;
+				item->s = delta / (1 - std::abs(2 * item->l - 1)) * 100;
 			}
 
 			if (r == max) {
@@ -93,7 +93,7 @@ namespace ColorSpace {
 			else if (b == max) {
 				item->h = (r - g) / delta + 4;
 			}
-			item->h = fmod(60 * item->h + 360, 360);
+			item->h = std::fmod(60 * item->h + 360, 360);
 		}
 		item->l *= 100;
 	}
@@ -126,9 +126,9 @@ namespace ColorSpace {
 		double y = xyz.y / 100.00;
 		double z = xyz.z / 108.883;
 
-		x = (x > 0.008856) ? cbrt(x) : (7.787 * x + 16.0 / 116.0);
-		y = (y > 0.008856) ? cbrt(y) : (7.787 * y + 16.0 / 116.0);
-		z = (z > 0.008856) ? cbrt(z) : (7.787 * z + 16.0 / 116.0);
+		x = (x > 0.008856) ? std::cbrt(x) : (7.787 * x + 16.0 / 116.0);
+		y = (y > 0.008856) ? std::cbrt(y) : (7.787 * y + 16.0 / 116.0);
+		z = (z > 0.008856) ? std::cbrt(z) : (7.787 * z + 16.0 / 116.0);
 
 		item->l = (116.0 * y) - 16;
 		item->a = 500 * (x - y);
@@ -156,8 +156,8 @@ namespace ColorSpace {
 
 		LabConverter::ToColorSpace(color, &lab);
 		double l = lab.l;
-		double c = sqrt(lab.a*lab.a + lab.b*lab.b);
-		double h = atan2(lab.b, lab.a);
+		double c = std::sqrt(lab.a*lab.a + lab.b*lab.b);
+		double h = std::atan2(lab.b, lab.a);
 
 		h = h / M_PI * 180;
 		if (h < 0) {
@@ -177,8 +177,8 @@ namespace ColorSpace {
 		item->h = item->h * M_PI / 180;
 
 		lab.l = item->l;
-		lab.a = cos(item->h)*item->c;
-		lab.b = sin(item->h)*item->c;
+		lab.a = std::cos(item->h)*item->c;
+		lab.b = std::sin(item->h)*item->c;
 
 		LabConverter::ToColor(color, &lab);
 	}
@@ -192,7 +192,7 @@ namespace ColorSpace {
 		double temp = (xyz.x + 15 * xyz.y + 3 * xyz.z);
 		double tempr = (white.x + 15 * white.y + 3 * white.z);
 
-		item->l = (y > XyzConverter::eps) ? (116 * cbrt(y) - 16) : (XyzConverter::kappa*y);
+		item->l = (y > XyzConverter::eps) ? (116 * std::cbrt(y) - 16) : (XyzConverter::kappa*y);
 		item->u = 52 * item->l * (((temp > 1e-3) ? (xyz.x / temp) : 0) - white.x / tempr);
 		item->v = 117 * item->l * (((temp > 1e-3) ? (xyz.y / temp) : 0) - white.y / tempr);
 	}
@@ -256,7 +256,7 @@ namespace ColorSpace {
 		k = std::min(k, cmy.y);
 
 		item->k = k;
-		if (abs(item->k - 1) < 1e-3) {
+		if (std::abs(item->k - 1) < 1e-3) {
 			item->c = 0;
 			item->m = 0;
 			item->y = 0;
@@ -303,13 +303,13 @@ namespace ColorSpace {
 			}
 
 			item->h *= 60;
-			item->h = fmod(item->h + 360, 360);
+			item->h = std::fmod(item->h + 360, 360);
 		}
 	}
 	void HsvConverter::ToColor(Rgb *color, Hsv *item) {
-		int range = (int)floor(item->h / 60);
+		int range = (int)std::floor(item->h / 60);
 		double c = item->v*item->s;
-		double x = c*(1 - abs(fmod(item->h / 60, 2) - 1));
+		double x = c*(1 - std::abs(std::fmod(item->h / 60, 2) - 1));
 		double m = item->v - c;
 
 		switch (range) {
@@ -367,9 +367,9 @@ namespace ColorSpace {
 		Xyz xyz;
 
 		XyzConverter::ToColorSpace(color, &xyz);
-		item->l = 10.0*sqrt(xyz.y);
-		item->a = (xyz.y != 0) ? (17.5*(1.02*xyz.x - xyz.y) / sqrt(xyz.y)) : 0;
-		item->b = (xyz.y != 0) ? (7.0*(xyz.y - 0.847*xyz.z) / sqrt(xyz.y)) : 0;
+		item->l = 10.0*std::sqrt(xyz.y);
+		item->a = (xyz.y != 0) ? (17.5*(1.02*xyz.x - xyz.y) / std::sqrt(xyz.y)) : 0;
+		item->b = (xyz.y != 0) ? (7.0*(xyz.y - 0.847*xyz.z) / std::sqrt(xyz.y)) : 0;
 	}
 	void HunterLabConverter::ToColor(Rgb *color, HunterLab *item) {
 		double x = (item->a / 17.5) *(item->l / 10.0);

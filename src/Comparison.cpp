@@ -11,7 +11,7 @@ namespace ColorSpace {
 		a->ToRgb(&rgb_a);
 		b->ToRgb(&rgb_b);
 
-		return sqrt(SQR(rgb_a.r - rgb_b.r) + SQR(rgb_a.g - rgb_b.g) + SQR(rgb_a.b - rgb_a.b));
+		return std::sqrt(SQR(rgb_a.r - rgb_b.r) + SQR(rgb_a.g - rgb_b.g) + SQR(rgb_a.b - rgb_a.b));
 	}
 
 	double Cie1976Comparison::Compare(IColorSpace *a, IColorSpace *b) {
@@ -21,7 +21,7 @@ namespace ColorSpace {
 		a->To<Lab>(&lab_a);
 		b->To<Lab>(&lab_b);
 
-		return sqrt(SQR(lab_a.l - lab_b.l) + SQR(lab_a.a - lab_b.a) + SQR(lab_a.b - lab_b.b));
+		return std::sqrt(SQR(lab_a.l - lab_b.l) + SQR(lab_a.a - lab_b.a) + SQR(lab_a.b - lab_b.b));
 	}
 
 	Cie94Comparison::Application::Application(Cie94Comparison::APPLICATION appType) {
@@ -51,8 +51,8 @@ namespace ColorSpace {
 		double deltaA = lab_a.a - lab_b.a;
 		double deltaB = lab_a.b - lab_b.b;
 
-		double c1 = sqrt(SQR(lab_a.a) + SQR(lab_a.b));
-		double c2 = sqrt(SQR(lab_b.a) + SQR(lab_b.b));
+		double c1 = std::sqrt(SQR(lab_a.a) + SQR(lab_a.b));
+		double c2 = std::sqrt(SQR(lab_b.a) + SQR(lab_b.b));
 		double deltaC = c1 - c2;
 
 		double deltaH = SQR(deltaA) + SQR(deltaB) - SQR(deltaC);
@@ -64,7 +64,7 @@ namespace ColorSpace {
 		deltaL /= app.kl*sl;
 		deltaC /= sc;
 
-		return sqrt(SQR(deltaL) + SQR(deltaC) + deltaH/SQR(sh));
+		return std::sqrt(SQR(deltaL) + SQR(deltaC) + deltaH/SQR(sh));
 	}
 
 	double Cie2000Comparison::Compare(IColorSpace *a, IColorSpace *b) {
@@ -76,19 +76,19 @@ namespace ColorSpace {
 		b->To<Lab>(&lab_b);
 
 		// calculate ci, hi, i=1,2
-		double c1 = sqrt(SQR(lab_a.a) + SQR(lab_a.b));
-		double c2 = sqrt(SQR(lab_b.a) + SQR(lab_b.b));
+		double c1 = std::sqrt(SQR(lab_a.a) + SQR(lab_a.b));
+		double c2 = std::sqrt(SQR(lab_b.a) + SQR(lab_b.b));
 		double meanC = (c1 + c2) / 2.0;
 		double meanC7 = POW7(meanC);
 
-		double g = 0.5*(1 - sqrt(meanC7 / (meanC7 + 6103515625.))); // 0.5*(1-sqrt(meanC^7/(meanC^7+25^7)))
+		double g = 0.5*(1 - std::sqrt(meanC7 / (meanC7 + 6103515625.))); // 0.5*(1-sqrt(meanC^7/(meanC^7+25^7)))
 		double a1p = lab_a.a * (1 + g);
 		double a2p = lab_b.a * (1 + g);
 
-		c1 = sqrt(SQR(a1p) + SQR(lab_a.b));
-		c2 = sqrt(SQR(a2p) + SQR(lab_b.b));
-		double h1 = fmod(atan2(lab_a.b, a1p) + 2*M_PI, 2*M_PI);
-		double h2 = fmod(atan2(lab_b.b, a2p) + 2*M_PI, 2*M_PI);
+		c1 = std::sqrt(SQR(a1p) + SQR(lab_a.b));
+		c2 = std::sqrt(SQR(a2p) + SQR(lab_b.b));
+		double h1 = std::fmod(std::atan2(lab_a.b, a1p) + 2*M_PI, 2*M_PI);
+		double h2 = std::fmod(std::atan2(lab_b.b, a2p) + 2*M_PI, 2*M_PI);
 
 		// compute deltaL, deltaC, deltaH
 		double deltaL = lab_b.l - lab_a.l;
@@ -98,7 +98,7 @@ namespace ColorSpace {
 		if (c1*c2 < eps) {
 			deltah = 0;
 		}
-		if (abs(h2 - h1) <= M_PI) {
+		if (std::abs(h2 - h1) <= M_PI) {
 			deltah = h2 - h1;
 		}
 		else if (h2 > h1) {
@@ -108,7 +108,7 @@ namespace ColorSpace {
 			deltah = h2 - h1 + 2 * M_PI;
 		}
 
-		double deltaH = 2 * sqrt(c1*c2)*sin(deltah / 2);
+		double deltaH = 2 * std::sqrt(c1*c2)*std::sin(deltah / 2);
 
 		// calculate CIEDE2000
 		double meanL = (lab_a.l + lab_b.l) / 2;
@@ -119,7 +119,7 @@ namespace ColorSpace {
 		if (c1*c2 < eps) {
 			meanH = h1 + h2;
 		}
-		if (abs(h1 - h2) <= M_PI + eps) {
+		if (std::abs(h1 - h2) <= M_PI + eps) {
 			meanH = (h1 + h2) / 2;
 		}
 		else if (h1 + h2 < 2*M_PI) {
@@ -130,15 +130,15 @@ namespace ColorSpace {
 		}
 
 		double T = 1
-			- 0.17*cos(meanH - DegToRad(30))
-			+ 0.24*cos(2 * meanH)
-			+ 0.32*cos(3 * meanH + DegToRad(6))
-			- 0.2*cos(4 * meanH - DegToRad(63));
-		double sl = 1 + (0.015*SQR(meanL - 50)) / sqrt(20 + SQR(meanL - 50));
+			- 0.17*std::cos(meanH - DegToRad(30))
+			+ 0.24*std::cos(2 * meanH)
+			+ 0.32*std::cos(3 * meanH + DegToRad(6))
+			- 0.2*std::cos(4 * meanH - DegToRad(63));
+		double sl = 1 + (0.015*SQR(meanL - 50)) / std::sqrt(20 + SQR(meanL - 50));
 		double sc = 1 + 0.045*meanC;
 		double sh = 1 + 0.015*meanC*T;
-		double rc = 2 * sqrt(meanC7 / (meanC7 + 6103515625.));
-		double rt = -sin(DegToRad(60 * exp(-SQR((RadToDeg(meanH) - 275) / 25)))) * rc;
+		double rc = 2 * std::sqrt(meanC7 / (meanC7 + 6103515625.));
+		double rt = -std::sin(DegToRad(60 * std::exp(-SQR((RadToDeg(meanH) - 275) / 25)))) * rc;
 
 		return sqrt(SQR(deltaL / sl) + SQR(deltaC / sc) + SQR(deltaH / sh) + rt * deltaC / sc * deltaH / sh);
 	}
@@ -157,14 +157,14 @@ namespace ColorSpace {
 		double deltaC = lch_a.c - lch_b.c;
 		double deltaH = 0;
 
-		double f = sqrt(POW4(lch_a.c) / (POW4(lch_a.c) + 1900));
-		double t = (164 <= lch_a.h && lch_a.h <= 345) ? (0.56 + abs(0.2*cos(lch_a.h + 168))) : (0.36 + abs(0.4*cos(lch_a.h + 35)));
+		double f = std::sqrt(POW4(lch_a.c) / (POW4(lch_a.c) + 1900));
+		double t = (164 <= lch_a.h && lch_a.h <= 345) ? (0.56 + std::abs(0.2*std::cos(lch_a.h + 168))) : (0.36 + std::abs(0.4*std::cos(lch_a.h + 35)));
 
 		double sl = (lch_a.l < 16) ? 0.511 : (0.040975*lch_a.l / (1 + 0.01765*lch_a.l));
 		double sc = 0.0638*lch_a.c / (1 + 0.0131*lch_a.c) + 0.638;
 		double sh = sc*(f*t + 1 - f);
 
-		return sqrt(SQR(deltaL / (defaultLightness*sl)) + SQR(deltaC / (defaultChroma*sc)) + SQR(deltaH / sh));
+		return std::sqrt(SQR(deltaL / (defaultLightness*sl)) + SQR(deltaC / (defaultChroma*sc)) + SQR(deltaH / sh));
 	}
 }
 
