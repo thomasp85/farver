@@ -1,0 +1,91 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+farver
+======
+
+[![Travis-CI Build Status](https://travis-ci.org/thomasp85/farver.svg?branch=master)](https://travis-ci.org/thomasp85/farver) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/thomasp85/farver?branch=master&svg=true)](https://ci.appveyor.com/project/thomasp85/farver) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version-ago/farver)](http://cran.r-project.org/package=farver) [![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/farver)](http://cran.r-project.org/package=farver) [![Coverage Status](https://img.shields.io/codecov/c/github/thomasp85/farver/master.svg)](https://codecov.io/github/thomasp85/farver?branch=master)
+
+The goal of `farver` is to provide very fast, vectorised conversion of colours between different colour spaces, as well as provide fast colour comparisons (distance between colours). To this end it provides an interface to a modified version of the [ColorSpace](https://github.com/berendeanicolae/ColorSpace) C++ library developed by Berendea Nicolae.
+
+Installation
+------------
+
+`farver` is currently only available on Github, but will be released on CRAN once it has reached a stable state. For now, install using `devtools`:
+
+``` r
+# install.packages('devtools')
+devtools::install_github('thomasp85/farver')
+```
+
+Use
+---
+
+The main function of the package is `convert_colour()` with an interface very much alike `grDevices::convertColor()`:
+
+``` r
+library(farver)
+
+spectrum <- t(col2rgb(rainbow(10)))
+spectrum
+#>       red green blue
+#>  [1,] 255     0    0
+#>  [2,] 255   153    0
+#>  [3,] 204   255    0
+#>  [4,]  51   255    0
+#>  [5,]   0   255  102
+#>  [6,]   0   255  255
+#>  [7,]   0   102  255
+#>  [8,]  51     0  255
+#>  [9,] 204     0  255
+#> [10,] 255     0  153
+
+convert_colour(spectrum, 'rgb', 'lab')
+#>           [,1]      [,2]        [,3]
+#>  [1,] 53.24079  80.09246   67.203197
+#>  [2,] 72.26072  30.16539   77.224482
+#>  [3,] 93.60533 -41.94504   90.274226
+#>  [4,] 88.07403 -83.10813   83.593379
+#>  [5,] 88.19634 -80.27943   57.926987
+#>  [6,] 91.11322 -48.08753  -14.131186
+#>  [7,] 47.90478  35.19678  -82.006104
+#>  [8,] 33.81896  79.70044 -105.279006
+#>  [9,] 51.90416  90.99470  -74.834222
+#> [10,] 55.65103  86.52861   -9.719051
+```
+
+`farver` currently supports the following colour spaces:
+
+-   CMY
+-   CMYK
+-   HSL
+-   HSB
+-   HSV
+-   CIE L\*AB
+-   Hunter LAB
+-   LCH
+-   LUV
+-   RGB
+-   XYZ
+-   YXY
+
+### Benchmark
+
+`farver` is substantially faster than its `grDevices` counterpart as all operation happens in compiled code:
+
+``` r
+library(ggplot2)
+library(microbenchmark)
+test <- matrix(sample(256L, 30000, TRUE), ncol = 3) - 1L
+timing <- microbenchmark(
+  farver = convert_colour(test, 'rgb', 'lab'),
+  grDevices = convertColor(test, 'sRGB', 'Lab', scale.in = 255)
+)
+autoplot(timing)
+```
+
+![](man/figures/README-unnamed-chunk-4-1.png)
+
+Limitations
+-----------
+
+Currently `farver` does not allow setting custom white points for the input and output colour spaces. Hopefully this will be added at a later stage.

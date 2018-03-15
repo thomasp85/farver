@@ -1,2 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^appveyor\.yml$
+^\.travis\.yml$
+^README\.Rmd$
+^README-.*\.png$
