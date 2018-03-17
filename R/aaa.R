@@ -12,3 +12,9 @@ colourspaces <- c(
   "xyz",       # 10
   "yxy"        # 11
 )
+
+colourspace_match <- function(colour){
+  m <- pmatch( tolower(colour), colourspaces )
+  if( is.na(m) ) stop("Unknown colour space")
+  m
+}

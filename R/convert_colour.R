@@ -1,3 +1,4 @@
+
 #' Convert between colour spaces
 #' 
 #' This function lets you convert between different representations of colours. 
@@ -28,7 +29,5 @@
 #' convert_colour(spectrum, 'rgb', 'lab')
 #' 
 convert_colour <- function(colour, from, to) {
-  from <- match.arg(tolower(from), colourspaces)
-  to <- match.arg(tolower(to), colourspaces)
-  convert_c(as.matrix(colour), from, to)
+  convert_c(as.matrix(colour), colourspace_match(from), colourspace_match(to))
 }
