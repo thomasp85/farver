@@ -24,7 +24,7 @@ A numeric matrix with the same number of rows as \code{colour} and either
 This function lets you convert between different representations of colours.
 The API is reminiscent of \code{\link[grDevices:convertColor]{grDevices::convertColor()}}, but the performance is
 much better. It is not assured that \code{grDevices::convertColor()} and
-\code{convert_colour()} provide numerically eqivalent conversion at 16bit level as
+\code{convert_colour()} provide numerically equivalent conversion at 16bit level as
 the formula used are potentially slightly different. For all intend and
 purpose, the resulting colours will be equivalent though.
 }

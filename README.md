@@ -20,7 +20,7 @@ devtools::install_github('thomasp85/farver')
 Use
 ---
 
-The main functions of the package isare`convert_colour()` with an interface very much alike `grDevices::convertColor()`, and `compare_colour()` which allows you to calculate the distance between colours using different metrics
+The main functions of the package are`convert_colour()` with an interface very much alike `grDevices::convertColor()`, and `compare_colour()` which allows you to calculate the distance between colours using different metrics
 
 ### Conversion
 

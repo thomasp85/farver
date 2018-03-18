@@ -3,7 +3,7 @@
 #' This function lets you convert between different representations of colours. 
 #' The API is reminiscent of [grDevices::convertColor()], but the performance is
 #' much better. It is not assured that `grDevices::convertColor()` and 
-#' `convert_colour()` provide numerically eqivalent conversion at 16bit level as
+#' `convert_colour()` provide numerically equivalent conversion at 16bit level as
 #' the formula used are potentially slightly different. For all intend and 
 #' purpose, the resulting colours will be equivalent though.
 #' 
