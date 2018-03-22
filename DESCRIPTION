@@ -16,7 +16,7 @@ Authors@R:
              family = "François", 
              role = "aut", 
              email = "romain@purrple.cat",
-             comment = comment = c(ORCID = "0000-0002-2444-4226")) 
+             comment = c(ORCID = "0000-0002-2444-4226")) 
       )
 Maintainer: Thomas Lin Pedersen <thomasp85@gmail.com>
 Description: The encoding of colour can be handled in many different ways, using
