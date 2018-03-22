@@ -11,7 +11,7 @@ Authors@R:
       person(given = "Berendea",
              family = "Nicolae",
              role = "aut",
-             comment = "Author of the ColorSpace C++ library")
+             comment = "Author of the ColorSpace C++ library"),
       person(given = "Romain", 
              family = "François", 
              role = "aut", 
