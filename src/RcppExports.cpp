@@ -22,14 +22,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // convert_c
-NumericMatrix convert_c(NumericMatrix colour, std::string from, std::string to);
+NumericMatrix convert_c(NumericMatrix colour, int from, int to);
 RcppExport SEXP _farver_convert_c(SEXP colourSEXP, SEXP fromSEXP, SEXP toSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type colour(colourSEXP);
-    Rcpp::traits::input_parameter< std::string >::type from(fromSEXP);
-    Rcpp::traits::input_parameter< std::string >::type to(toSEXP);
+    Rcpp::traits::input_parameter< int >::type from(fromSEXP);
+    Rcpp::traits::input_parameter< int >::type to(toSEXP);
     rcpp_result_gen = Rcpp::wrap(convert_c(colour, from, to));
     return rcpp_result_gen;
 END_RCPP
