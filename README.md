@@ -96,7 +96,7 @@ Benchmark
 ``` r
 library(ggplot2)
 library(microbenchmark)
-test <- matrix(sample(256L, 30000, TRUE), ncol = 3) - 1L
+test <- matrix(runif(30000, min = 0, max = 255), ncol = 3)
 timing <- microbenchmark(
   farver = convert_colour(test, 'rgb', 'lab'),
   grDevices = convertColor(test, 'sRGB', 'Lab', scale.in = 255)
