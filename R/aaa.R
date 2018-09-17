@@ -12,6 +12,20 @@ colourspaces <- c(
   "xyz",       # 10
   "yxy"        # 11
 )
+colour_dims <- list(
+  cmy = c('c', 'm', 'y'),
+  cmyk = c('c', 'm', 'y', 'k'),
+  hsl = c('h', 's', 'l'),
+  hsb = c('h', 's', 'b'),
+  hsv = c('h', 's', 'v'),
+  lab = c('l', 'a', 'b'),
+  hunterlab = c('l', 'a', 'b'),
+  lch = c('l', 'c', 'h'),
+  luv = c('l', 'u', 'v'),
+  rgb = c('r', 'g', 'b'),
+  xyz = c('x', 'y', 'z'),
+  yxy = c('y1', 'x', 'y2')
+)
 distances <- c(
   "euclidean",
   "cie1976",

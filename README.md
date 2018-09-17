@@ -10,7 +10,7 @@ The goal of `farver` is to provide very fast, vectorised conversion of colours b
 Installation
 ------------
 
-`farver` is currently only available on Github, but will be released on CRAN once it has reached a stable state. For now, install using `devtools`:
+`farver` can be installed from CRAN using `install.packages('farver')`. The development version can be installed from Github using `devtools`:
 
 ``` r
 # install.packages('devtools')
@@ -42,7 +42,7 @@ spectrum
 #> [10,] 255     0  153
 
 convert_colour(spectrum, 'rgb', 'lab')
-#>           [,1]      [,2]        [,3]
+#>              l         a           b
 #>  [1,] 53.24079  80.09246   67.203197
 #>  [2,] 72.26072  30.16539   77.224482
 #>  [3,] 93.60533 -41.94504   90.274226

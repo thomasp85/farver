@@ -7,10 +7,10 @@
 convert_colour(colour, from, to)
 }
 \arguments{
-\item{colour}{A numeric matrix with colours encoded in the rows and the
-different colour space values in the columns. For all colourspaces except
-\code{'cmyk'} this will mean a matrix with three columns - for \code{'cmyk'} it means
-four columns.}
+\item{colour}{A numeric matrix (or an object coercible to one) with colours
+encoded in the rows and the different colour space values in the columns. For
+all colourspaces except \code{'cmyk'} this will mean a matrix with three columns -
+for \code{'cmyk'} it means four columns.}
 
 \item{from, to}{The input and output colour space. Allowed values are: "cmy",
 "cmyk", "hsl", "hsb", "hsv", "lab", "hunterlab", "lch", "luv", "rgb", "xyz",
@@ -18,7 +18,8 @@ four columns.}
 }
 \value{
 A numeric matrix with the same number of rows as \code{colour} and either
-3 or 4 columns depending on the value of \code{to}
+3 or 4 columns depending on the value of \code{to}. If \code{colour} is given as a
+\code{data.frame} the output will be a data.frame as well
 }
 \description{
 This function lets you convert between different representations of colours.

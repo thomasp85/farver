@@ -27,8 +27,8 @@ version of the [ColorSpace](https://github.com/berendeanicolae/ColorSpace) C++
 library developed by Berendea Nicolae.
 
 ## Installation
-`farver` is currently only available on Github, but will be released on CRAN
-once it has reached a stable state. For now, install using `devtools`:
+`farver` can be installed from CRAN using `install.packages('farver')`. The 
+development version can be installed from Github using `devtools`:
 
 ```{r, eval=FALSE}
 # install.packages('devtools')

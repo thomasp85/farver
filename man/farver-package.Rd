@@ -7,12 +7,12 @@
 \title{farver: Vectorised Colour Conversion and Comparison}
 \description{
 The encoding of colour can be handled in many different ways, using
-different colour spaces. As different colour spaces have different uses,
-efficient conversion between these representations are important. The
-'farver' package provides a set of functions that gives access to very fast
-colour space conversion and comparisons implemented in C++, and offers
-100-fold speed improvements over the 'convertColor' function in the
-'grDevices' package.
+    different colour spaces. As different colour spaces have different uses,
+    efficient conversion between these representations are important. The 
+    'farver' package provides a set of functions that gives access to very fast
+    colour space conversion and comparisons implemented in C++, and offers 
+    100-fold speed improvements over the 'convertColor' function in the 
+    'grDevices' package.
 }
 \seealso{
 Useful links:
@@ -28,6 +28,7 @@ Useful links:
 Authors:
 \itemize{
   \item Berendea Nicolae (Author of the ColorSpace C++ library)
+  \item Romain François \email{romain@purrple.cat} (0000-0002-2444-4226)
 }
 
 }
