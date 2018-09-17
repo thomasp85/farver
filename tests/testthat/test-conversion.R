@@ -2,7 +2,7 @@ context("conversion")
 
 spectrum <- unname(t(col2rgb(rainbow(10))))
 reconvert <- function(data, space) {
-  round(convert_colour(convert_colour(data, 'rgb', space), space, 'rgb'))
+  unname(round(convert_colour(convert_colour(data, 'rgb', space), space, 'rgb')))
 }
 test_that("basic io works", {
   expect_error(convert_colour(spectrum, 'test', 'lab'))
