@@ -103,7 +103,7 @@ namespace ColorSpace {
 		double l = item->l / 100;
 
 		if (item->s == 0) {
-			color->r = color->g = color->b = item->l * 255;
+			color->r = color->g = color->b = item->l / 100 * 255;
 		}
 		else {
 			double temp1, temp2;
