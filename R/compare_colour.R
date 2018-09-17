@@ -35,8 +35,5 @@ compare_colour <- function(from, to = NULL, from_space, to_space = from_space, m
     to <- from;
     sym <- TRUE
   }
-  from_space <- match.arg(from_space, colourspaces)
-  to_space <- match.arg(to_space, colourspaces)
-  method <- match.arg(tolower(method), c('euclidean', 'cie1976', 'cie94', 'cie2000', 'cmc'))
-  compare_c(from, to, from_space, to_space, method, sym)
+  compare_c(as.matrix(from), as.matrix(to), colourspace_match(from_space), colourspace_match(to_space), distance_match(method), sym)
 }

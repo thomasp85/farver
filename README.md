@@ -88,6 +88,17 @@ Supported colour spaces
 -   XYZ
 -   YXY
 
+Supported distance measures
+---------------------------
+
+`farver` supports the following colour distance metrics
+
+-   Euclidean
+-   CIE1976
+-   CIE94
+-   CIE2000
+-   CMC
+
 Benchmark
 ---------
 
@@ -95,11 +106,13 @@ Benchmark
 
 ``` r
 library(ggplot2)
-library(microbenchmark)
 test <- matrix(runif(30000, min = 0, max = 255), ncol = 3)
-timing <- microbenchmark(
+timing <- bench::mark(
   farver = convert_colour(test, 'rgb', 'lab'),
-  grDevices = convertColor(test, 'sRGB', 'Lab', scale.in = 255)
+  grDevices = convertColor(test, 'sRGB', 'Lab', scale.in = 255), 
+  check = FALSE,
+  iterations = 100,
+  filter_gc = FALSE
 )
 autoplot(timing)
 ```
