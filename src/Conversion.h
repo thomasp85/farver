@@ -34,7 +34,7 @@ namespace ColorSpace {
 		static void ToColor(Rgb *color, Xyz *item);
 		static const double eps;
 		static const double kappa;
-		static const Xyz whiteReference;
+		static Xyz whiteReference;
 	};
 	typedef IConverter<Xyz> XyzConverter;
 

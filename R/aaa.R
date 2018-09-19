@@ -45,3 +45,94 @@ distance_match <- function(dist) {
   if( is.na(m) ) stop("Unknown distance measure")
   m
 }
+white_references <- list(
+  "2" = list(
+    A = c(0.44757, 0.40745),
+    B = c(0.34842, 0.35161),
+    C = c(0.31006, 0.31616),
+    D50 = c(0.34567, 0.35850),
+    D55 = c(0.33242, 0.34743),
+    D65 = c(0.31271, 0.32902),
+    D75 = c(0.29902, 0.31485),
+    E = c(1/3, 1/3),
+    F1 = c(0.31310, 0.33727),
+    F2 = c(0.37208, 0.37529),
+    F3 = c(0.40910, 0.39430),
+    F4 = c(0.44018, 0.40329),
+    F5 = c(0.31379, 0.34531),
+    F6 = c(0.37790, 0.38835),
+    F7 = c(0.31292, 0.32933),
+    F8 = c(0.34588, 0.35875),
+    F9 = c(0.37417, 0.37281),
+    F10 = c(0.34609, 0.35986),
+    F11 = c(0.38052, 0.37713),
+    F12 = c(0.43695, 0.40441)
+  ),
+  "10" = list(
+    A = c(0.45117, 0.40594),
+    B = c(0.34980, 0.35270),
+    C = c(0.31039, 0.31905),
+    D50 = c(0.34773, 0.35952),
+    D55 = c(0.33411, 0.34877),
+    D65 = c(0.31382, 0.33100),
+    D75 = c(0.29968, 0.31740),
+    E = c(1/3, 1/3),
+    F1 = c(0.31811, 0.33559),
+    F2 = c(0.37925, 0.36733),
+    F3 = c(0.41761, 0.38324),
+    F4 = c(0.44920, 0.39074),
+    F5 = c(0.31975, 0.34246),
+    F6 = c(0.38660, 0.37847),
+    F7 = c(0.31569, 0.32960),
+    F8 = c(0.34902, 0.35939),
+    F9 = c(0.37829, 0.37045),
+    F10 = c(0.35090, 0.35444),
+    F11 = c(0.38541, 0.37123),
+    F12 = c(0.44256, 0.39717)
+  )
+)
+#' Convert value to a tristimulus values normalised to Y=100
+#' 
+#' This function can take either the name of a standardised illuminants, x
+#' and y chromaticity coordinates or X, Y, and Z tristimulus values and converts
+#' it to tristimulus values normalised to Y=100. All Illuminant series A-F are
+#' supported and can be queried both on the CIE 1931 2° and CIE 1964 10° 
+#' chromaticity coordinates.
+#' 
+#' @param x A string giving the name of the standardized illuminant or a 
+#' 2 (chromaticity) or 3 (trsitimulus) length numeric vector.
+#' 
+#' @param fow The field-of-view for the illuminant - either `2` or `10`
+#' 
+#' @return A 3-length vector with tristimulus values
+#' 
+#' @export
+#' 
+#' @examples 
+#' # Using names
+#' as_white_ref('D65')
+#' 
+#' # Using chromaticity values
+#' as_white_ref(c(0.3, 0.4))
+as_white_ref <- function(x, fow = 2) {
+  if (is.character(x)) {
+    x <- white_references[[as.character(fow)]][[toupper(x)]]
+    if (is.null(x)) stop('Unknown white reference', call. = FALSE)
+  }
+  stopifnot(is.numeric(x))
+  if (length(x) == 2) {
+    tmp <- 100/x[2]
+    x <- c(
+      tmp * x[1],
+      100,
+      tmp * (1 - sum(x))
+    )
+  } else if (length(x) == 3) {
+    if (x[2] != 100) {
+      x <- x * 100 / x[2]
+    }
+  } else {
+    stop('White reference must be of length 2 (chromaticity) or 3 (tristimulus)', call. = FALSE)
+  }
+  structure(x, names = c('X', 'Y', 'Z'))
+}

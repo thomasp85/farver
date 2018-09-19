@@ -14,6 +14,10 @@
 #' @param method The method to use for comparison. Either `'euclidean'`, 
 #' `'cie1976'`, `'cie94'`, `'cie2000'`, or `'cmc'`
 #' 
+#' @param white_from,white_to The white reference of the from and to colour 
+#' space. Will only have an effect for relative colour spaces such as Lab and 
+#' luv. Any value accepted by [as_white_ref()] allowed.
+#' 
 #' @return A numeric matrix with the same number of rows as colours in `from`
 #' and the same number of columns as colours in `to`. If `to` is not given, only
 #' the upper triangle will be returned.
@@ -29,11 +33,11 @@
 #' 
 #' # Compare a set of colours with itself
 #' compare_colour(r, from_space = 'rgb', method = 'cmc')
-compare_colour <- function(from, to = NULL, from_space, to_space = from_space, method = 'euclidean') {
+compare_colour <- function(from, to = NULL, from_space, to_space = from_space, method = 'euclidean', white_from = 'D65', white_to = white_from) {
   sym <- FALSE
   if (is.null(to)) {
     to <- from;
     sym <- TRUE
   }
-  compare_c(as.matrix(from), as.matrix(to), colourspace_match(from_space), colourspace_match(to_space), distance_match(method), sym)
+  compare_c(as.matrix(from), as.matrix(to), colourspace_match(from_space), colourspace_match(to_space), distance_match(method), sym, as_white_ref(white_from), as_white_ref(white_to))
 }

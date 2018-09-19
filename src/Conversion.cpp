@@ -60,7 +60,7 @@ namespace ColorSpace {
 	}
 	const double XyzConverter::eps = 216.0 / 24389.0;
 	const double XyzConverter::kappa = 24389.0 / 27.0;
-	const Xyz XyzConverter::whiteReference(95.047, 100.000, 108.883);
+	Xyz XyzConverter::whiteReference(95.047, 100.000, 108.883); // D65
 
 	void HslConverter::ToColorSpace(Rgb *color, Hsl *item) {
 		double r = color->r / 255.0;
@@ -118,13 +118,14 @@ namespace ColorSpace {
 	}
 
 	void LabConverter::ToColorSpace(Rgb *color, Lab *item) {
+	  const Xyz &white = XyzConverter::whiteReference;
 		Xyz xyz;
 
 		XyzConverter::ToColorSpace(color, &xyz);
 
-		double x = xyz.x / 95.047;
-		double y = xyz.y / 100.00;
-		double z = xyz.z / 108.883;
+		double x = xyz.x / white.x;
+		double y = xyz.y / white.y;
+		double z = xyz.z / white.z;
 
 		x = (x > 0.008856) ? std::cbrt(x) : (7.787 * x + 16.0 / 116.0);
 		y = (y > 0.008856) ? std::cbrt(y) : (7.787 * y + 16.0 / 116.0);
@@ -135,6 +136,8 @@ namespace ColorSpace {
 		item->b = 200 * (y - z);
 	}
 	void LabConverter::ToColor(Rgb *color, Lab *item) {
+	  const Xyz &white = XyzConverter::whiteReference;
+	  
 		double y = (item->l + 16.0) / 116.0;
 		double x = item->a / 500.0 + y;
 		double z = y - item->b / 200.0;
@@ -143,9 +146,9 @@ namespace ColorSpace {
 		double y3 = POW3(y);
 		double z3 = POW3(z);
 
-		x = ((x3 > 0.008856) ? x3 : ((x - 16.0 / 116.0) / 7.787)) * 95.047;
-		y = ((y3 > 0.008856) ? y3 : ((y - 16.0 / 116.0) / 7.787)) * 100.0;
-		z = ((z3 > 0.008856) ? z3 : ((z - 16.0 / 116.0) / 7.787)) * 108.883;
+		x = ((x3 > 0.008856) ? x3 : ((x - 16.0 / 116.0) / 7.787)) * white.x;
+		y = ((y3 > 0.008856) ? y3 : ((y - 16.0 / 116.0) / 7.787)) * white.y;
+		z = ((z3 > 0.008856) ? z3 : ((z - 16.0 / 116.0) / 7.787)) * white.z;
 
 		Xyz xyz(x, y, z);
 		XyzConverter::ToColor(color, &xyz);

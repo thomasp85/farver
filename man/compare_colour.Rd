@@ -5,7 +5,7 @@
 \title{Calculate the distance between colours}
 \usage{
 compare_colour(from, to = NULL, from_space, to_space = from_space,
-  method = "euclidean")
+  method = "euclidean", white_from = "D65", white_to = white_from)
 }
 \arguments{
 \item{from, to}{Numeric matrices with colours to compare - the format is the
@@ -17,6 +17,10 @@ compared with itself and only the upper triangle will get calculated}
 
 \item{method}{The method to use for comparison. Either \code{'euclidean'},
 \code{'cie1976'}, \code{'cie94'}, \code{'cie2000'}, or \code{'cmc'}}
+
+\item{white_from, white_to}{The white reference of the from and to colour
+space. Will only have an effect for relative colour spaces such as Lab and
+luv. Any value accepted by \code{\link[=as_white_ref]{as_white_ref()}} allowed.}
 }
 \value{
 A numeric matrix with the same number of rows as colours in \code{from}

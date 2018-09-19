@@ -121,7 +121,7 @@ void grab<ColorSpace::HunterLab>( NumericMatrix::Row row, const ColorSpace::Hunt
 // the template parameters Space_From and Space_To give us the types of the 
 // from and to colours. 
 template <typename Space_From, typename Space_To>
-NumericMatrix convert_dispatch_impl( const NumericMatrix& colour ){
+NumericMatrix convert_dispatch_impl( const NumericMatrix& colour, const NumericVector& white_from, const NumericVector& white_to ){
   
   // check that the dimensions of the input match the colour space
   if( dimension<Space_From>() != colour.ncol() ){
@@ -137,9 +137,11 @@ NumericMatrix convert_dispatch_impl( const NumericMatrix& colour ){
   
   for( int i=0; i<n; i++){
     // fill `rgb` based on the input color in the `from` color space
+    ColorSpace::XyzConverter::whiteReference = {white_from[0], white_from[1], white_from[2]};
     fill_rgb<Space_From>( colour(i,_), &rgb) ; 
     
     // ... convert the color to the `to` color space
+    ColorSpace::XyzConverter::whiteReference = {white_to[0], white_to[1], white_to[2]};
     ColorSpace::IConverter<Space_To>::ToColorSpace(&rgb, &to) ;
     
     // ... and move it to the row of the `out` matrix
@@ -170,20 +172,20 @@ NumericMatrix convert_dispatch_impl( const NumericMatrix& colour ){
 // the idea is to call the right instantiation of the convert_dispatch_impl template 
 // where the real work happens, based on `to`
 template <typename From>
-NumericMatrix convert_dispatch_to( const NumericMatrix& colour, int to ){
+NumericMatrix convert_dispatch_to( const NumericMatrix& colour, int to, const NumericVector& white_from, const NumericVector& white_to ){
   switch(to){
-    case CMY: return convert_dispatch_impl<From, ColorSpace::Cmy>( colour ) ; 
-    case CMYK: return convert_dispatch_impl<From, ColorSpace::Cmyk>( colour ) ; 
-    case HSL: return convert_dispatch_impl<From, ColorSpace::Hsl>( colour ) ; 
-    case HSB: return convert_dispatch_impl<From, ColorSpace::Hsb>( colour ) ; 
-    case HSV: return convert_dispatch_impl<From, ColorSpace::Hsv>( colour ) ; 
-    case LAB: return convert_dispatch_impl<From, ColorSpace::Lab>( colour ) ; 
-    case HUNTERLAB: return convert_dispatch_impl<From, ColorSpace::HunterLab>( colour ) ; 
-    case LCH: return convert_dispatch_impl<From, ColorSpace::Lch>( colour ) ; 
-    case LUV: return convert_dispatch_impl<From, ColorSpace::Luv>( colour ) ; 
-    case RGB: return convert_dispatch_impl<From, ColorSpace::Rgb>( colour ) ; 
-    case XYZ: return convert_dispatch_impl<From, ColorSpace::Xyz>( colour ) ; 
-    case YXY: return convert_dispatch_impl<From, ColorSpace::Yxy>( colour ) ; 
+    case CMY: return convert_dispatch_impl<From, ColorSpace::Cmy>( colour, white_from, white_to ) ; 
+    case CMYK: return convert_dispatch_impl<From, ColorSpace::Cmyk>( colour, white_from, white_to ) ; 
+    case HSL: return convert_dispatch_impl<From, ColorSpace::Hsl>( colour, white_from, white_to ) ; 
+    case HSB: return convert_dispatch_impl<From, ColorSpace::Hsb>( colour, white_from, white_to ) ; 
+    case HSV: return convert_dispatch_impl<From, ColorSpace::Hsv>( colour, white_from, white_to ) ; 
+    case LAB: return convert_dispatch_impl<From, ColorSpace::Lab>( colour, white_from, white_to ) ; 
+    case HUNTERLAB: return convert_dispatch_impl<From, ColorSpace::HunterLab>( colour, white_from, white_to ) ; 
+    case LCH: return convert_dispatch_impl<From, ColorSpace::Lch>( colour, white_from, white_to ) ; 
+    case LUV: return convert_dispatch_impl<From, ColorSpace::Luv>( colour, white_from, white_to ) ; 
+    case RGB: return convert_dispatch_impl<From, ColorSpace::Rgb>( colour, white_from, white_to ) ; 
+    case XYZ: return convert_dispatch_impl<From, ColorSpace::Xyz>( colour, white_from, white_to ) ; 
+    case YXY: return convert_dispatch_impl<From, ColorSpace::Yxy>( colour, white_from, white_to ) ; 
   }
   
   // never happens
@@ -191,20 +193,20 @@ NumericMatrix convert_dispatch_to( const NumericMatrix& colour, int to ){
 }
 
 // same trick, but for the `from` 
-NumericMatrix convert_dispatch_from( const NumericMatrix& colour, int from, int to){
+NumericMatrix convert_dispatch_from( const NumericMatrix& colour, int from, int to, const NumericVector& white_from, const NumericVector& white_to){
   switch(from){
-    case CMY: return convert_dispatch_to<ColorSpace::Cmy>( colour, to ) ; 
-    case CMYK: return convert_dispatch_to<ColorSpace::Cmyk>( colour, to ) ; 
-    case HSL: return convert_dispatch_to<ColorSpace::Hsl>( colour, to ) ; 
-    case HSB: return convert_dispatch_to<ColorSpace::Hsb>( colour, to ) ; 
-    case HSV: return convert_dispatch_to<ColorSpace::Hsv>( colour, to ) ; 
-    case LAB: return convert_dispatch_to<ColorSpace::Lab>( colour, to ) ; 
-    case HUNTERLAB: return convert_dispatch_to<ColorSpace::HunterLab>( colour, to ) ; 
-    case LCH: return convert_dispatch_to<ColorSpace::Lch>( colour, to ) ; 
-    case LUV: return convert_dispatch_to<ColorSpace::Luv>( colour, to ) ; 
-    case RGB: return convert_dispatch_to<ColorSpace::Rgb>( colour, to ) ; 
-    case XYZ: return convert_dispatch_to<ColorSpace::Xyz>( colour, to ) ; 
-    case YXY: return convert_dispatch_to<ColorSpace::Yxy>( colour, to ) ; 
+    case CMY: return convert_dispatch_to<ColorSpace::Cmy>( colour, to, white_from, white_to ) ; 
+    case CMYK: return convert_dispatch_to<ColorSpace::Cmyk>( colour, to, white_from, white_to ) ; 
+    case HSL: return convert_dispatch_to<ColorSpace::Hsl>( colour, to, white_from, white_to ) ; 
+    case HSB: return convert_dispatch_to<ColorSpace::Hsb>( colour, to, white_from, white_to ) ; 
+    case HSV: return convert_dispatch_to<ColorSpace::Hsv>( colour, to, white_from, white_to ) ; 
+    case LAB: return convert_dispatch_to<ColorSpace::Lab>( colour, to, white_from, white_to ) ; 
+    case HUNTERLAB: return convert_dispatch_to<ColorSpace::HunterLab>( colour, to, white_from, white_to ) ; 
+    case LCH: return convert_dispatch_to<ColorSpace::Lch>( colour, to, white_from, white_to ) ; 
+    case LUV: return convert_dispatch_to<ColorSpace::Luv>( colour, to, white_from, white_to ) ; 
+    case RGB: return convert_dispatch_to<ColorSpace::Rgb>( colour, to, white_from, white_to ) ; 
+    case XYZ: return convert_dispatch_to<ColorSpace::Xyz>( colour, to, white_from, white_to ) ; 
+    case YXY: return convert_dispatch_to<ColorSpace::Yxy>( colour, to, white_from, white_to ) ; 
   }
   
   // never happens so we just return the input to quiet the compiler
@@ -212,8 +214,8 @@ NumericMatrix convert_dispatch_from( const NumericMatrix& colour, int from, int 
 }
 
 //[[Rcpp::export]]
-NumericMatrix convert_c(NumericMatrix colour, int from, int to) {
-  return convert_dispatch_from(colour, from, to) ;
+NumericMatrix convert_c(NumericMatrix colour, int from, int to, NumericVector white_from, NumericVector white_to) {
+  return convert_dispatch_from(colour, from, to, white_from, white_to) ;
 }
 
 #define EUCLIDEAN 1
@@ -235,7 +237,7 @@ double get_colour_dist(ColorSpace::Rgb& from, ColorSpace::Rgb& to, int dist) {
 }
 
 template <typename Space_From, typename Space_To>
-NumericMatrix compare_dispatch_impl(const NumericMatrix& from, const NumericMatrix& to, int dist, bool sym){
+NumericMatrix compare_dispatch_impl(const NumericMatrix& from, const NumericMatrix& to, int dist, bool sym, const NumericVector& white_from, const NumericVector& white_to){
   
   // check that the dimensions of the input match the colour space
   if( dimension<Space_From>() != from.ncol() ){
@@ -250,7 +252,9 @@ NumericMatrix compare_dispatch_impl(const NumericMatrix& from, const NumericMatr
   ColorSpace::Rgb from_rgb, to_rgb;
   
   for (i = 0; i < n; ++i) {
+    ColorSpace::XyzConverter::whiteReference = {white_from[0], white_from[1], white_from[2]};
     fill_rgb<Space_From>(from(i, _), &from_rgb);
+    ColorSpace::XyzConverter::whiteReference = {white_to[0], white_to[1], white_to[2]};
     for (j = sym ? i + 1 : 0; j < m; ++j) {
       fill_rgb<Space_To>(to(j, _), &to_rgb);
       out(i, j) = get_colour_dist(from_rgb, to_rgb, dist);
@@ -261,40 +265,40 @@ NumericMatrix compare_dispatch_impl(const NumericMatrix& from, const NumericMatr
 }
 
 template <typename From>
-NumericMatrix compare_dispatch_to(const NumericMatrix& from, const NumericMatrix& to, int to_space, int dist, bool sym) {
+NumericMatrix compare_dispatch_to(const NumericMatrix& from, const NumericMatrix& to, int to_space, int dist, bool sym, const NumericVector& white_from, const NumericVector& white_to) {
   switch(to_space){
-    case CMY: return compare_dispatch_impl<From, ColorSpace::Cmy>(from, to, dist, sym) ; 
-    case CMYK: return compare_dispatch_impl<From, ColorSpace::Cmyk>(from, to, dist, sym) ; 
-    case HSL: return compare_dispatch_impl<From, ColorSpace::Hsl>(from, to, dist, sym) ; 
-    case HSB: return compare_dispatch_impl<From, ColorSpace::Hsb>(from, to, dist, sym) ; 
-    case HSV: return compare_dispatch_impl<From, ColorSpace::Hsv>(from, to, dist, sym) ; 
-    case LAB: return compare_dispatch_impl<From, ColorSpace::Lab>(from, to, dist, sym) ; 
-    case HUNTERLAB: return compare_dispatch_impl<From, ColorSpace::HunterLab>(from, to, dist, sym) ; 
-    case LCH: return compare_dispatch_impl<From, ColorSpace::Lch>(from, to, dist, sym) ; 
-    case LUV: return compare_dispatch_impl<From, ColorSpace::Luv>(from, to, dist, sym) ; 
-    case RGB: return compare_dispatch_impl<From, ColorSpace::Rgb>(from, to, dist, sym) ; 
-    case XYZ: return compare_dispatch_impl<From, ColorSpace::Xyz>(from, to, dist, sym) ; 
-    case YXY: return compare_dispatch_impl<From, ColorSpace::Yxy>(from, to, dist, sym) ; 
+    case CMY: return compare_dispatch_impl<From, ColorSpace::Cmy>(from, to, dist, sym, white_from, white_to) ; 
+    case CMYK: return compare_dispatch_impl<From, ColorSpace::Cmyk>(from, to, dist, sym, white_from, white_to) ; 
+    case HSL: return compare_dispatch_impl<From, ColorSpace::Hsl>(from, to, dist, sym, white_from, white_to) ; 
+    case HSB: return compare_dispatch_impl<From, ColorSpace::Hsb>(from, to, dist, sym, white_from, white_to) ; 
+    case HSV: return compare_dispatch_impl<From, ColorSpace::Hsv>(from, to, dist, sym, white_from, white_to) ; 
+    case LAB: return compare_dispatch_impl<From, ColorSpace::Lab>(from, to, dist, sym, white_from, white_to) ; 
+    case HUNTERLAB: return compare_dispatch_impl<From, ColorSpace::HunterLab>(from, to, dist, sym, white_from, white_to) ; 
+    case LCH: return compare_dispatch_impl<From, ColorSpace::Lch>(from, to, dist, sym, white_from, white_to) ; 
+    case LUV: return compare_dispatch_impl<From, ColorSpace::Luv>(from, to, dist, sym, white_from, white_to) ; 
+    case RGB: return compare_dispatch_impl<From, ColorSpace::Rgb>(from, to, dist, sym, white_from, white_to) ; 
+    case XYZ: return compare_dispatch_impl<From, ColorSpace::Xyz>(from, to, dist, sym, white_from, white_to) ; 
+    case YXY: return compare_dispatch_impl<From, ColorSpace::Yxy>(from, to, dist, sym, white_from, white_to) ; 
   }
   
   // never happens
   return from ;
 }
 
-NumericMatrix compare_dispatch_from(const NumericMatrix& from, const NumericMatrix& to, int from_space, int to_space, int dist, bool sym) {
+NumericMatrix compare_dispatch_from(const NumericMatrix& from, const NumericMatrix& to, int from_space, int to_space, int dist, bool sym, const NumericVector& white_from, const NumericVector& white_to) {
   switch(from_space){
-    case CMY: return compare_dispatch_to<ColorSpace::Cmy>(from, to, to_space, dist, sym) ; 
-    case CMYK: return compare_dispatch_to<ColorSpace::Cmyk>(from, to, to_space, dist, sym) ; 
-    case HSL: return compare_dispatch_to<ColorSpace::Hsl>(from, to, to_space, dist, sym) ; 
-    case HSB: return compare_dispatch_to<ColorSpace::Hsb>(from, to, to_space, dist, sym) ; 
-    case HSV: return compare_dispatch_to<ColorSpace::Hsv>(from, to, to_space, dist, sym) ; 
-    case LAB: return compare_dispatch_to<ColorSpace::Lab>(from, to, to_space, dist, sym) ; 
-    case HUNTERLAB: return compare_dispatch_to<ColorSpace::HunterLab>(from, to, to_space, dist, sym) ; 
-    case LCH: return compare_dispatch_to<ColorSpace::Lch>(from, to, to_space, dist, sym) ; 
-    case LUV: return compare_dispatch_to<ColorSpace::Luv>(from, to, to_space, dist, sym) ; 
-    case RGB: return compare_dispatch_to<ColorSpace::Rgb>(from, to, to_space, dist, sym) ; 
-    case XYZ: return compare_dispatch_to<ColorSpace::Xyz>(from, to, to_space, dist, sym) ; 
-    case YXY: return compare_dispatch_to<ColorSpace::Yxy>(from, to, to_space, dist, sym) ; 
+    case CMY: return compare_dispatch_to<ColorSpace::Cmy>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case CMYK: return compare_dispatch_to<ColorSpace::Cmyk>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case HSL: return compare_dispatch_to<ColorSpace::Hsl>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case HSB: return compare_dispatch_to<ColorSpace::Hsb>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case HSV: return compare_dispatch_to<ColorSpace::Hsv>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case LAB: return compare_dispatch_to<ColorSpace::Lab>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case HUNTERLAB: return compare_dispatch_to<ColorSpace::HunterLab>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case LCH: return compare_dispatch_to<ColorSpace::Lch>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case LUV: return compare_dispatch_to<ColorSpace::Luv>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case RGB: return compare_dispatch_to<ColorSpace::Rgb>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case XYZ: return compare_dispatch_to<ColorSpace::Xyz>(from, to, to_space, dist, sym, white_from, white_to) ; 
+    case YXY: return compare_dispatch_to<ColorSpace::Yxy>(from, to, to_space, dist, sym, white_from, white_to) ; 
   }
   
   // never happens so we just return the input to quiet the compiler
@@ -302,6 +306,6 @@ NumericMatrix compare_dispatch_from(const NumericMatrix& from, const NumericMatr
 }
 
 //[[Rcpp::export]]
-NumericMatrix compare_c(NumericMatrix from, NumericMatrix to, int from_space, int to_space, int dist, bool sym) {
-  return compare_dispatch_from(from, to, from_space, to_space, dist, sym);
+NumericMatrix compare_c(NumericMatrix from, NumericMatrix to, int from_space, int to_space, int dist, bool sym, NumericVector white_from, NumericVector white_to) {
+  return compare_dispatch_from(from, to, from_space, to_space, dist, sym, white_from, white_to);
 }

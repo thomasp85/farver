@@ -6,21 +6,23 @@
 using namespace Rcpp;
 
 // convert_c
-NumericMatrix convert_c(NumericMatrix colour, int from, int to);
-RcppExport SEXP _farver_convert_c(SEXP colourSEXP, SEXP fromSEXP, SEXP toSEXP) {
+NumericMatrix convert_c(NumericMatrix colour, int from, int to, NumericVector white_from, NumericVector white_to);
+RcppExport SEXP _farver_convert_c(SEXP colourSEXP, SEXP fromSEXP, SEXP toSEXP, SEXP white_fromSEXP, SEXP white_toSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type colour(colourSEXP);
     Rcpp::traits::input_parameter< int >::type from(fromSEXP);
     Rcpp::traits::input_parameter< int >::type to(toSEXP);
-    rcpp_result_gen = Rcpp::wrap(convert_c(colour, from, to));
+    Rcpp::traits::input_parameter< NumericVector >::type white_from(white_fromSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type white_to(white_toSEXP);
+    rcpp_result_gen = Rcpp::wrap(convert_c(colour, from, to, white_from, white_to));
     return rcpp_result_gen;
 END_RCPP
 }
 // compare_c
-NumericMatrix compare_c(NumericMatrix from, NumericMatrix to, int from_space, int to_space, int dist, bool sym);
-RcppExport SEXP _farver_compare_c(SEXP fromSEXP, SEXP toSEXP, SEXP from_spaceSEXP, SEXP to_spaceSEXP, SEXP distSEXP, SEXP symSEXP) {
+NumericMatrix compare_c(NumericMatrix from, NumericMatrix to, int from_space, int to_space, int dist, bool sym, NumericVector white_from, NumericVector white_to);
+RcppExport SEXP _farver_compare_c(SEXP fromSEXP, SEXP toSEXP, SEXP from_spaceSEXP, SEXP to_spaceSEXP, SEXP distSEXP, SEXP symSEXP, SEXP white_fromSEXP, SEXP white_toSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -30,14 +32,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type to_space(to_spaceSEXP);
     Rcpp::traits::input_parameter< int >::type dist(distSEXP);
     Rcpp::traits::input_parameter< bool >::type sym(symSEXP);
-    rcpp_result_gen = Rcpp::wrap(compare_c(from, to, from_space, to_space, dist, sym));
+    Rcpp::traits::input_parameter< NumericVector >::type white_from(white_fromSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type white_to(white_toSEXP);
+    rcpp_result_gen = Rcpp::wrap(compare_c(from, to, from_space, to_space, dist, sym, white_from, white_to));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_farver_convert_c", (DL_FUNC) &_farver_convert_c, 3},
-    {"_farver_compare_c", (DL_FUNC) &_farver_compare_c, 6},
+    {"_farver_convert_c", (DL_FUNC) &_farver_convert_c, 5},
+    {"_farver_compare_c", (DL_FUNC) &_farver_compare_c, 8},
     {NULL, NULL, 0}
 };
 

@@ -17,9 +17,17 @@
 #' "cmyk", "hsl", "hsb", "hsv", "lab", "hunterlab", "lch", "luv", "rgb", "xyz", 
 #' "yxy"
 #' 
+#' @param white_from,white_to The white reference of the from and to colour 
+#' space. Will only have an effect for relative colour spaces such as Lab and 
+#' luv. Any value accepted by [as_white_ref()] allowed.
+#' 
 #' @return A numeric matrix with the same number of rows as `colour` and either 
 #' 3 or 4 columns depending on the value of `to`. If `colour` is given as a 
 #' `data.frame` the output will be a data.frame as well
+#' 
+#' @note This function and [convertColor()] are not
+#' numerically equivalent due to rounding errors, but for all intend and purpose
+#' they give the same results.
 #' 
 #' @seealso [grDevices::convertColor()], [grDevices::col2rgb()]
 #' 
@@ -29,8 +37,8 @@
 #' spectrum <- t(col2rgb(rainbow(10)))
 #' convert_colour(spectrum, 'rgb', 'lab')
 #' 
-convert_colour <- function(colour, from, to) {
-  res <- convert_c(as.matrix(colour), colourspace_match(from), colourspace_match(to))
+convert_colour <- function(colour, from, to, white_from = 'D65', white_to = white_from) {
+  res <- convert_c(as.matrix(colour), colourspace_match(from), colourspace_match(to), as_white_ref(white_from), as_white_ref(white_to))
   colnames(res) <- colour_dims[[to]]
   if (is.data.frame(colour)) res <- as.data.frame(res)
   res

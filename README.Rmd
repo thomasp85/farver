@@ -84,6 +84,11 @@ compare_colour(spectrum, spectrum2, 'rgb', method = 'cie2000')[1:6, 1:6]
 - CIE2000
 - CMC
 
+## White References
+`farver` allows you to set the white point for relative colour spaces, either
+based on a standard illuminant (A-F series supported) or by specifying 
+chromaticity coordinates or tristimulus values directly
+
 ## Benchmark
 `farver` is substantially faster than its `grDevices` counterpart as all 
 operation happens in compiled code:
@@ -101,6 +106,3 @@ timing <- bench::mark(
 autoplot(timing)
 ```
 
-## Limitations
-Currently `farver` does not allow setting custom white points for the input and
-output colour spaces. Hopefully this will be added at a later stage.

@@ -4,7 +4,8 @@
 \alias{convert_colour}
 \title{Convert between colour spaces}
 \usage{
-convert_colour(colour, from, to)
+convert_colour(colour, from, to, white_from = "D65",
+  white_to = white_from)
 }
 \arguments{
 \item{colour}{A numeric matrix (or an object coercible to one) with colours
@@ -15,6 +16,10 @@ for \code{'cmyk'} it means four columns.}
 \item{from, to}{The input and output colour space. Allowed values are: "cmy",
 "cmyk", "hsl", "hsb", "hsv", "lab", "hunterlab", "lch", "luv", "rgb", "xyz",
 "yxy"}
+
+\item{white_from, white_to}{The white reference of the from and to colour
+space. Will only have an effect for relative colour spaces such as Lab and
+luv. Any value accepted by \code{\link[=as_white_ref]{as_white_ref()}} allowed.}
 }
 \value{
 A numeric matrix with the same number of rows as \code{colour} and either
@@ -28,6 +33,11 @@ much better. It is not assured that \code{grDevices::convertColor()} and
 \code{convert_colour()} provide numerically equivalent conversion at 16bit level as
 the formula used are potentially slightly different. For all intend and
 purpose, the resulting colours will be equivalent though.
+}
+\note{
+This function and \code{\link[=convertColor]{convertColor()}} are not
+numerically equivalent due to rounding errors, but for all intend and purpose
+they give the same results.
 }
 \examples{
 spectrum <- t(col2rgb(rainbow(10)))
