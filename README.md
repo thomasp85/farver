@@ -1,26 +1,40 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-farver
-======
 
-[![Travis-CI Build Status](https://travis-ci.org/thomasp85/farver.svg?branch=master)](https://travis-ci.org/thomasp85/farver) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/thomasp85/farver?branch=master&svg=true)](https://ci.appveyor.com/project/thomasp85/farver) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version-ago/farver)](http://cran.r-project.org/package=farver) [![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/farver)](http://cran.r-project.org/package=farver) [![Coverage Status](https://img.shields.io/codecov/c/github/thomasp85/farver/master.svg)](https://codecov.io/github/thomasp85/farver?branch=master)
+# farver
 
-The goal of `farver` is to provide very fast, vectorised conversion of colours between different colour spaces, as well as provide fast colour comparisons (distance between colours). To this end it provides an interface to a modified version of the [ColorSpace](https://github.com/berendeanicolae/ColorSpace) C++ library developed by Berendea Nicolae.
+[![Travis-CI Build
+Status](https://travis-ci.org/thomasp85/farver.svg?branch=master)](https://travis-ci.org/thomasp85/farver)
+[![AppVeyor Build
+Status](https://ci.appveyor.com/api/projects/status/github/thomasp85/farver?branch=master&svg=true)](https://ci.appveyor.com/project/thomasp85/farver)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version-ago/farver)](http://cran.r-project.org/package=farver)
+[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/farver)](http://cran.r-project.org/package=farver)
+[![Coverage
+Status](https://img.shields.io/codecov/c/github/thomasp85/farver/master.svg)](https://codecov.io/github/thomasp85/farver?branch=master)
 
-Installation
-------------
+The goal of `farver` is to provide very fast, vectorised conversion of
+colours between different colour spaces, as well as provide fast colour
+comparisons (distance between colours). To this end it provides an
+interface to a modified version of the
+[ColorSpace](https://github.com/berendeanicolae/ColorSpace) C++ library
+developed by Berendea Nicolae.
 
-`farver` can be installed from CRAN using `install.packages('farver')`. The development version can be installed from Github using `devtools`:
+## Installation
+
+`farver` can be installed from CRAN using `install.packages('farver')`.
+The development version can be installed from Github using `devtools`:
 
 ``` r
 # install.packages('devtools')
 devtools::install_github('thomasp85/farver')
 ```
 
-Use
----
+## Use
 
-The main functions of the package are`convert_colour()` with an interface very much alike `grDevices::convertColor()`, and `compare_colour()` which allows you to calculate the distance between colours using different metrics
+The main functions of the package are`convert_colour()` with an
+interface very much alike `grDevices::convertColor()`, and
+`compare_colour()` which allows you to calculate the distance between
+colours using different metrics
 
 ### Conversion
 
@@ -70,44 +84,43 @@ compare_colour(spectrum, spectrum2, 'rgb', method = 'cie2000')[1:6, 1:6]
 #> [6,] 70.95853 69.55274 65.907013 60.35739 53.72218 47.94387
 ```
 
-Supported colour spaces
------------------------
+## Supported colour spaces
 
 `farver` currently supports the following colour spaces:
 
--   CMY
--   CMYK
--   HSL
--   HSB
--   HSV
--   CIE L\*AB
--   Hunter LAB
--   LCH
--   LUV
--   RGB
--   XYZ
--   YXY
+  - CMY
+  - CMYK
+  - HSL
+  - HSB
+  - HSV
+  - CIE L\*AB
+  - Hunter LAB
+  - LCH
+  - LUV
+  - RGB
+  - XYZ
+  - YXY
 
-Supported distance measures
----------------------------
+## Supported distance measures
 
 `farver` supports the following colour distance metrics
 
--   Euclidean
--   CIE1976
--   CIE94
--   CIE2000
--   CMC
+  - Euclidean
+  - CIE1976
+  - CIE94
+  - CIE2000
+  - CMC
 
-White References
-----------------
+## White References
 
-`farver` allows you to set the white point for relative colour spaces, either based on a standard illuminant (A-F series supported) or by specifying chromaticity coordinates or tristimulus values directly
+`farver` allows you to set the white point for relative colour spaces,
+either based on a standard illuminant (A-F series supported) or by
+specifying chromaticity coordinates or tristimulus values directly
 
-Benchmark
----------
+## Benchmark
 
-`farver` is substantially faster than its `grDevices` counterpart as all operation happens in compiled code:
+`farver` is substantially faster than its `grDevices` counterpart as all
+operation happens in compiled code:
 
 ``` r
 library(ggplot2)
@@ -122,4 +135,4 @@ timing <- bench::mark(
 autoplot(timing)
 ```
 
-![](man/figures/README-unnamed-chunk-5-1.png)
+![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->

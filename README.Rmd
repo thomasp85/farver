@@ -9,7 +9,7 @@ output: github_document
 [![Travis-CI Build Status](https://travis-ci.org/thomasp85/farver.svg?branch=master)](https://travis-ci.org/thomasp85/farver)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/thomasp85/farver?branch=master&svg=true)](https://ci.appveyor.com/project/thomasp85/farver)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/farver)](http://cran.r-project.org/package=farver)
-[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/grand-total/farver)](http://cran.r-project.org/package=farver)
+[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/farver)](http://cran.r-project.org/package=farver)
 [![Coverage Status](https://img.shields.io/codecov/c/github/thomasp85/farver/master.svg)](https://codecov.io/github/thomasp85/farver?branch=master)
 
 ```{r, echo = FALSE}
