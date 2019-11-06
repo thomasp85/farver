@@ -121,7 +121,8 @@ as_white_ref <- function(x, fow = 2) {
     x <- white_references[[as.character(fow)]][[toupper(x)]]
     if (is.null(x)) stop('Unknown white reference', call. = FALSE)
   }
-  stopifnot(is.numeric(x))
+  if (is.integer(x)) x <- as.numeric(x)
+  if (!is.numeric(x)) stop('White reference must be a numeric vector', call. = FALSE)
   if (length(x) == 2) {
     tmp <- 100/x[2]
     x <- c(

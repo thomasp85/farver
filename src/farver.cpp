@@ -132,10 +132,10 @@ void grab<ColorSpace::Hcl>(const ColorSpace::Hcl& color, double* x1, double* x2,
 // from and to colours. 
 template <typename Space_From, typename Space_To>
 SEXP convert_dispatch_impl(SEXP colour, SEXP white_from, SEXP white_to) {
-  int ncol = Rf_ncols(colour);
+  int ncol = dimension<Space_From>();
   // check that the dimensions of the input match the colour space
-  if (dimension<Space_From>() != ncol) {
-    Rf_error("colourspace requires %d values", dimension<Space_From>());    
+  if (ncol > Rf_ncols(colour)) {
+    Rf_error("colourspace requires %d values", ncol);    
   }
   int ncol_out = dimension<Space_To>();
   
@@ -256,15 +256,15 @@ double get_colour_dist(ColorSpace::Rgb& from, ColorSpace::Rgb& to, int dist) {
 
 template <typename Space_From, typename Space_To>
 SEXP compare_dispatch_impl(SEXP from, SEXP to, int dist, bool sym, SEXP white_from, SEXP white_to){
-  int from_col = Rf_ncols(from);
-  int to_col = Rf_ncols(to);
+  int from_col = dimension<Space_From>();
+  int to_col = dimension<Space_To>();
   
   // check that the dimensions of the input match the colour space
-  if (dimension<Space_From>() != from_col) {
-    Rf_error("colourspace requires %d values", dimension<Space_From>());    
+  if (from_col > Rf_ncols(from)) {
+    Rf_error("colourspace requires %d values", from_col);    
   }
-  if (dimension<Space_To>() != to_col) {
-    Rf_error("colourspace requires %d values", dimension<Space_From>());    
+  if (to_col > Rf_ncols(to)) {
+    Rf_error("colourspace requires %d values", to_col);    
   }
   double wf1 = REAL(white_from)[0];
   double wf2 = REAL(white_from)[1];
