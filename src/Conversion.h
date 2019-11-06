@@ -35,6 +35,7 @@ namespace ColorSpace {
 		static const double eps;
 		static const double kappa;
 		static Xyz whiteReference;
+		static void SetWhiteReference(double x, double y, double z);
 	};
 	typedef IConverter<Xyz> XyzConverter;
 

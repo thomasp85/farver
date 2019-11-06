@@ -119,8 +119,9 @@ specifying chromaticity coordinates or tristimulus values directly
 
 ## Benchmark
 
-`farver` is substantially faster than its `grDevices` counterpart as all
-operation happens in compiled code:
+`farver` is faster than its `grDevices` counterpart but less so than it
+was at its first release, as the colour conversion in grDevices has been
+improved since.
 
 ``` r
 library(ggplot2)
@@ -132,7 +133,7 @@ timing <- bench::mark(
   iterations = 100,
   filter_gc = FALSE
 )
-autoplot(timing)
+plot(timing, type = 'ridge')
 ```
 
 ![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->

@@ -3,5 +3,4 @@
 export(as_white_ref)
 export(compare_colour)
 export(convert_colour)
-import(Rcpp)
 useDynLib(farver)

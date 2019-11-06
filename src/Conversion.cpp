@@ -61,6 +61,9 @@ namespace ColorSpace {
 	const double XyzConverter::eps = 216.0 / 24389.0;
 	const double XyzConverter::kappa = 24389.0 / 27.0;
 	Xyz XyzConverter::whiteReference(95.047, 100.000, 108.883); // D65
+	void XyzConverter::SetWhiteReference(double x, double y, double z) {
+	  whiteReference = Xyz(x, y, z);
+	}
 
 	void HslConverter::ToColorSpace(Rgb *color, Hsl *item) {
 		double r = color->r / 255.0;

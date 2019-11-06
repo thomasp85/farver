@@ -1,13 +1,13 @@
 Package: farver
 Type: Package
 Title: Vectorised Colour Conversion and Comparison
-Version: 1.1.0
-Date: 2018-11-20
+Version: 1.1.0.9999
 Authors@R:
     c(person(given = "Thomas Lin",
              family = "Pedersen",
              role = c("cre", "aut"),
-             email = "thomasp85@gmail.com"),
+             email = "thomasp85@gmail.com",
+             comment = c(ORCID = "0000-0002-5147-4711")),
       person(given = "Berendea",
              family = "Nicolae",
              role = "aut",
@@ -24,13 +24,11 @@ Description: The encoding of colour can be handled in many different ways, using
     efficient conversion between these representations are important. The 
     'farver' package provides a set of functions that gives access to very fast
     colour space conversion and comparisons implemented in C++, and offers 
-    100-fold speed improvements over the 'convertColor' function in the 
-    'grDevices' package.
+    speed improvements over the 'convertColor' function in the 'grDevices' 
+    package.
 License: MIT + file LICENSE
 Encoding: UTF-8
 SystemRequirements: C++11
-Imports: Rcpp (>= 0.12.15)
-LinkingTo: Rcpp
 RoxygenNote: 6.1.1
 URL: https://github.com/thomasp85/farver
 BugReports: https://github.com/thomasp85/farver/issues

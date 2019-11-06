@@ -1,4 +1,3 @@
-
 #' Convert between colour spaces
 #' 
 #' This function lets you convert between different representations of colours. 
@@ -38,8 +37,13 @@
 #' convert_colour(spectrum, 'rgb', 'lab')
 #' 
 convert_colour <- function(colour, from, to, white_from = 'D65', white_to = white_from) {
-  res <- convert_c(as.matrix(colour), colourspace_match(from), colourspace_match(to), as_white_ref(white_from), as_white_ref(white_to))
+  res <- convert_c(colour, colourspace_match(from), colourspace_match(to), as_white_ref(white_from), as_white_ref(white_to))
   colnames(res) <- colour_dims[[to]]
   if (is.data.frame(colour)) res <- as.data.frame(res)
   res
+}
+
+convert_c <- function(colour, from, to, white_from, white_to) {
+  .Call('convert_c', as.matrix(colour), as.integer(from), as.integer(to), 
+        as.numeric(white_from), as.numeric(white_to), PACKAGE = 'farver')
 }

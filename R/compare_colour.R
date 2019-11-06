@@ -39,5 +39,11 @@ compare_colour <- function(from, to = NULL, from_space, to_space = from_space, m
     to <- from;
     sym <- TRUE
   }
-  compare_c(as.matrix(from), as.matrix(to), colourspace_match(from_space), colourspace_match(to_space), distance_match(method), sym, as_white_ref(white_from), as_white_ref(white_to))
+  compare_c(from, to, colourspace_match(from_space), colourspace_match(to_space), distance_match(method), sym, as_white_ref(white_from), as_white_ref(white_to))
+}
+
+compare_c <- function(from, to, from_space, to_space, method, symmetric, white_from, white_to) {
+  .Call('compare_c', as.matrix(from), as.matrix(to), as.integer(from_space), 
+        as.integer(to_space), as.integer(method), as.logical(symmetric), 
+        as.numeric(white_from), as.numeric(white_to), PACKAGE = 'farver')
 }
