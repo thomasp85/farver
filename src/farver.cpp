@@ -165,7 +165,7 @@ SEXP convert_dispatch_impl(SEXP colour, SEXP white_from, SEXP white_to) {
     if (colour_is_int) {
       fill_rgb<Space_From>(&rgb, colour_i[offset1 + i], colour_i[offset2 + i], colour_i[offset3 + i], ncol == 4 ? colour_i[offset4 + i] : 0.0);
     } else {
-      fill_rgb<Space_From>(&rgb, colour_i[offset1 + i], colour_i[offset2 + i], colour_i[offset3 + i], ncol == 4 ? colour_i[offset4 + i] : 0.0);
+      fill_rgb<Space_From>(&rgb, colour_d[offset1 + i], colour_d[offset2 + i], colour_d[offset3 + i], ncol == 4 ? colour_d[offset4 + i] : 0.0);
     }
     
     // ... convert the color to the `to` color space
