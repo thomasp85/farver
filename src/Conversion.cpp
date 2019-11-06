@@ -388,5 +388,37 @@ namespace ColorSpace {
 		Xyz xyz((x+y)/1.02, y, -(z-y)/0.847);
 		XyzConverter::ToColor(color, &xyz);
 	}
+	
+	void HclConverter::ToColorSpace(Rgb *color, Hcl *item) {
+	  Luv luv;
+	  
+	  LuvConverter::ToColorSpace(color, &luv);
+	  double l = luv.l;
+	  double c = std::sqrt(luv.u*luv.u + luv.v*luv.v);
+	  double h = std::atan2(luv.v, luv.u);
+	  
+	  h = h / M_PI * 180;
+	  if (h < 0) {
+	    h += 360;
+	  }
+	  else if (h >= 360) {
+	    h -= 360;
+	  }
+	  
+	  item->l = l;
+	  item->c = c;
+	  item->h = h;
+	}
+	void HclConverter::ToColor(Rgb *color, Hcl *item) {
+	  Luv luv;
+	  
+	  item->h = item->h * M_PI / 180;
+	  
+	  luv.l = item->l;
+	  luv.u = std::cos(item->h)*item->c;
+	  luv.v = std::sin(item->h)*item->c;
+	  
+	  LuvConverter::ToColor(color, &luv);
+	}
 }
 

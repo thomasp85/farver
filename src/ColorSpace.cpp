@@ -183,5 +183,20 @@ namespace ColorSpace {
 		lab->a = a;
 		lab->b = b;
 	}
+
+  Hcl::Hcl() {}
+  Hcl::Hcl(double h, double c, double l) : h(h), c(c), l(l) {}
+  void Hcl::Initialize(Rgb *color) {
+    HclConverter::ToColorSpace(color, this);
+  }
+  void Hcl::ToRgb(Rgb *color) {
+    HclConverter::ToColor(color, this);
+  }
+  void Hcl::Copy(IColorSpace *color) {
+    Hcl *hcl = static_cast<Hcl*>(color);
+    hcl->l = l;
+    hcl->c = c;
+    hcl->h = h;
+  }
 }
 

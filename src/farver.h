@@ -19,6 +19,7 @@
 #define RGB 10
 #define XYZ 11
 #define YXY 12
+#define HCL 13
 
 #define EUCLIDEAN 1
 #define CIE1976 2

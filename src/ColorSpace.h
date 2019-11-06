@@ -161,6 +161,18 @@ namespace ColorSpace {
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
 	};
+	
+	struct Hcl : public IColorSpace {
+	  double h, c, l;
+	  
+	  Hcl();
+	  Hcl(double h, double c, double l);
+	  
+	  virtual void Initialize(Rgb *color);
+	  virtual void ToRgb(Rgb *color);
+	  virtual void Copy(IColorSpace *color);
+	};
+	
 }
 
 #endif // COLOR_SPACE_H

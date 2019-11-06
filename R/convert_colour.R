@@ -12,9 +12,10 @@
 #' all colourspaces except `'cmyk'` this will mean a matrix with three columns - 
 #' for `'cmyk'` it means four columns.
 #' 
-#' @param from,to The input and output colour space. Allowed values are: "cmy", 
-#' "cmyk", "hsl", "hsb", "hsv", "lab", "hunterlab", "lch", "luv", "rgb", "xyz", 
-#' "yxy"
+#' @param from,to The input and output colour space. Allowed values are: `"cmy"`, 
+#' `"cmyk"`, `"hsl"`, `"hsb"`, `"hsv"`, `"lab"` (CIE L*ab), `"hunterlab"` 
+#' (Hunter Lab), `"lch"` (CIE Lch(ab) / polarLAB), `"luv"`, `"rgb"` (sRGB), 
+#' `"xyz"`, `"yxy"`, or `"hcl"` (CIE Lch(uv) / polarLuv)
 #' 
 #' @param white_from,white_to The white reference of the from and to colour 
 #' space. Will only have an effect for relative colour spaces such as Lab and 

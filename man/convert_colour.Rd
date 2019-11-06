@@ -13,9 +13,10 @@ encoded in the rows and the different colour space values in the columns. For
 all colourspaces except \code{'cmyk'} this will mean a matrix with three columns -
 for \code{'cmyk'} it means four columns.}
 
-\item{from, to}{The input and output colour space. Allowed values are: "cmy",
-"cmyk", "hsl", "hsb", "hsv", "lab", "hunterlab", "lch", "luv", "rgb", "xyz",
-"yxy"}
+\item{from, to}{The input and output colour space. Allowed values are: \code{"cmy"},
+\code{"cmyk"}, \code{"hsl"}, \code{"hsb"}, \code{"hsv"}, \code{"lab"} (CIE L*ab), \code{"hunterlab"}
+(Hunter Lab), \code{"lch"} (CIE Lch(ab) / polarLAB), \code{"luv"}, \code{"rgb"} (sRGB),
+\code{"xyz"}, \code{"yxy"}, or \code{"hcl"} (CIE Lch(uv) / polarLuv)}
 
 \item{white_from, white_to}{The white reference of the from and to colour
 space. Will only have an effect for relative colour spaces such as Lab and

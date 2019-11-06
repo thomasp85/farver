@@ -69,7 +69,8 @@ compare_colour(spectrum, spectrum2, 'rgb', method = 'cie2000')[1:6, 1:6]
 - HSV
 - CIE L*AB
 - Hunter LAB
-- LCH
+- LCH(ab)
+- LCH(uv)
 - LUV
 - RGB
 - XYZ

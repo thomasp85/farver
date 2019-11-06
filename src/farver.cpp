@@ -115,6 +115,13 @@ void grab<ColorSpace::HunterLab>(const ColorSpace::HunterLab& color, double* x1,
   *x3 = color.b ;
 }
 
+template <>
+void grab<ColorSpace::Hcl>(const ColorSpace::Hcl& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.h ;
+  *x2 = color.c ;
+  *x3 = color.l ;
+}
+
 
 //------------------------------------------------------------------------------
 //--- Conversions --------------------------------------------------------------
@@ -198,6 +205,7 @@ SEXP convert_dispatch_to(SEXP colour, int to, SEXP white_from, SEXP white_to) {
     case RGB: return convert_dispatch_impl<From, ColorSpace::Rgb>(colour, white_from, white_to);
     case XYZ: return convert_dispatch_impl<From, ColorSpace::Xyz>(colour, white_from, white_to);
     case YXY: return convert_dispatch_impl<From, ColorSpace::Yxy>(colour, white_from, white_to);
+    case HCL: return convert_dispatch_impl<From, ColorSpace::Hcl>(colour, white_from, white_to);
   }
   
   // never happens
@@ -219,6 +227,7 @@ SEXP convert_dispatch_from(SEXP colour, int from, int to, SEXP white_from, SEXP 
     case RGB: return convert_dispatch_to<ColorSpace::Rgb>(colour, to, white_from, white_to);
     case XYZ: return convert_dispatch_to<ColorSpace::Xyz>(colour, to, white_from, white_to);
     case YXY: return convert_dispatch_to<ColorSpace::Yxy>(colour, to, white_from, white_to);
+    case HCL: return convert_dispatch_to<ColorSpace::Hcl>(colour, to, white_from, white_to);
   }
   
   // never happens so we just return the input to quiet the compiler
@@ -333,6 +342,7 @@ SEXP compare_dispatch_to(SEXP from, SEXP to, int to_space, int dist, bool sym, S
     case RGB: return compare_dispatch_impl<From, ColorSpace::Rgb>(from, to, dist, sym, white_from, white_to);
     case XYZ: return compare_dispatch_impl<From, ColorSpace::Xyz>(from, to, dist, sym, white_from, white_to);
     case YXY: return compare_dispatch_impl<From, ColorSpace::Yxy>(from, to, dist, sym, white_from, white_to);
+    case HCL: return compare_dispatch_impl<From, ColorSpace::Hcl>(from, to, dist, sym, white_from, white_to);
   }
   
   // never happens
@@ -352,7 +362,7 @@ SEXP compare_dispatch_from(SEXP from, SEXP to, int from_space, int to_space, int
     case LUV: return compare_dispatch_to<ColorSpace::Luv>(from, to, to_space, dist, sym, white_from, white_to);
     case RGB: return compare_dispatch_to<ColorSpace::Rgb>(from, to, to_space, dist, sym, white_from, white_to);
     case XYZ: return compare_dispatch_to<ColorSpace::Xyz>(from, to, to_space, dist, sym, white_from, white_to);
-    case YXY: return compare_dispatch_to<ColorSpace::Yxy>(from, to, to_space, dist, sym, white_from, white_to);
+    case YXY: return compare_dispatch_to<ColorSpace::Hcl>(from, to, to_space, dist, sym, white_from, white_to);
   }
   
   // never happens so we just return the input to quiet the compiler

@@ -10,7 +10,8 @@ colourspaces <- c(
   "luv",       # 8
   "rgb",       # 9
   "xyz",       # 10
-  "yxy"        # 11
+  "yxy",       # 11
+  "hcl"        # 11
 )
 colour_dims <- list(
   cmy = c('c', 'm', 'y'),
@@ -24,7 +25,8 @@ colour_dims <- list(
   luv = c('l', 'u', 'v'),
   rgb = c('r', 'g', 'b'),
   xyz = c('x', 'y', 'z'),
-  yxy = c('y1', 'x', 'y2')
+  yxy = c('y1', 'x', 'y2'),
+  hcl = c('h', 'c', 'l')
 )
 distances <- c(
   "euclidean",
@@ -34,15 +36,15 @@ distances <- c(
   "cmc"
 )
 
-colourspace_match <- function(colour){
-  m <- pmatch( tolower(colour), colourspaces )
-  if( is.na(m) ) stop("Unknown colour space")
+colourspace_match <- function(colour) {
+  m <- pmatch(tolower(colour), colourspaces)
+  if (is.na(m)) stop("Unknown colour space")
   m
 }
 
 distance_match <- function(dist) {
-  m <- pmatch( match.arg(tolower(dist), distances), distances)
-  if( is.na(m) ) stop("Unknown distance measure")
+  m <- pmatch(match.arg(tolower(dist), distances), distances)
+  if (is.na(m)) stop("Unknown distance measure")
   m
 }
 white_references <- list(
