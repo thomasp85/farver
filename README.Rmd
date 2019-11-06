@@ -96,7 +96,7 @@ since.
 
 ```{r, message=FALSE}
 library(ggplot2)
-test <- matrix(runif(30000, min = 0, max = 255), ncol = 3)
+test <- matrix(runif(300000, min = 0, max = 255), ncol = 3)
 timing <- bench::mark(
   farver = convert_colour(test, 'rgb', 'lab'),
   grDevices = convertColor(test, 'sRGB', 'Lab', scale.in = 255), 
