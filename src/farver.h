@@ -3,6 +3,7 @@
 
 #include <R.h>
 #include <Rinternals.h>
+#include "ColorSpace.h"
 
 // these are used in the dispatcher functions
 // this is one-based in the same order as the `colourspaces` 
@@ -30,5 +31,191 @@
 
 SEXP convert_c(SEXP colour, SEXP from, SEXP to, SEXP white_from, SEXP white_to);
 SEXP compare_c(SEXP from, SEXP to, SEXP from_space, SEXP to_space, SEXP dist, SEXP sym, SEXP white_from, SEXP white_to);
+
+inline SEXP copy_names(SEXP from, SEXP to) {
+  SEXP names;
+  bool from_matrix = Rf_isMatrix(from);
+  if (from_matrix) {
+    names = PROTECT(Rf_getAttrib(from, Rf_install("dimnames")));
+  } else {
+    names = PROTECT(Rf_getAttrib(from, Rf_install("names")));
+  }
+  
+  if (!Rf_isNull(names)) {
+    if (Rf_isMatrix(to)) {
+      if (from_matrix) {
+        Rf_setAttrib(to, Rf_install("dimnames"), names);
+      } else {
+        SEXP dn = PROTECT(Rf_allocVector(VECSXP, 2));
+        SET_VECTOR_ELT(dn, 0, names);
+        Rf_setAttrib(to, Rf_install("dimnames"), dn);
+        UNPROTECT(1);
+      }
+    } else {
+      if (from_matrix) {
+        Rf_namesgets(to, VECTOR_ELT(names, 0));
+      } else {
+        Rf_namesgets(to, names);
+      }
+    }
+  }
+  
+  UNPROTECT(1);
+  return to;
+}
+
+inline SEXP copy_names(SEXP from1, SEXP from2, SEXP to) {
+  SEXP names1, names2, names;
+  bool from1_matrix = Rf_isMatrix(from1);
+  bool from2_matrix = Rf_isMatrix(from2);
+  if (from1_matrix) {
+    names1 = PROTECT(Rf_getAttrib(from1, Rf_install("dimnames")));
+  } else {
+    names1 = PROTECT(Rf_getAttrib(from1, Rf_install("names")));
+  }
+  if (from1_matrix) {
+    names2 = PROTECT(Rf_getAttrib(from2, Rf_install("dimnames")));
+  } else {
+    names2 = PROTECT(Rf_getAttrib(from2, Rf_install("names")));
+  }
+  
+  if (!(Rf_isNull(names1) && Rf_isNull(names2)) && Rf_isMatrix(to)) {
+    names = PROTECT(Rf_allocVector(VECSXP, 2));
+    if (from1_matrix) {
+      SET_VECTOR_ELT(names, 0, VECTOR_ELT(names1, 0));
+    } else {
+      SET_VECTOR_ELT(names, 0, names1);
+    }
+    if (from2_matrix) {
+      SET_VECTOR_ELT(names, 1, VECTOR_ELT(names2, 1));
+    } else {
+      SET_VECTOR_ELT(names, 1, names2);
+    }
+    Rf_setAttrib(to, Rf_install("dimnames"), names);
+    UNPROTECT(1);
+  }
+  
+  UNPROTECT(2);
+  return to;
+}
+
+// returns the number of dimensions for a color space type
+// with a special case for Cmyk
+template <typename SPACE>
+inline int dimension(){
+  return 3 ;
+}
+template <>
+inline int dimension<ColorSpace::Cmyk>(){
+  return 4 ;
+}
+
+// read a color from a color space in the row, and convert it to rgb
+template <typename Space>
+inline void fill_rgb(ColorSpace::Rgb* rgb, double x1, double x2, double x3, double x4=0.0){
+  Space(x1, x2, x3).ToRgb(rgb) ;
+}
+template <>
+inline void fill_rgb<ColorSpace::Cmyk>(ColorSpace::Rgb* rgb, double x1, double x2, double x3, double x4){
+  ColorSpace::Cmyk(x1, x2, x3, x4).ToRgb(rgb) ;
+}
+
+// these grab values from the Space type and use them to fill `row`
+// unfortunately, given how the `ColorSpace` C++ library is written, 
+// this has to do lots of special casing
+template <typename Space>
+inline void grab(const Space&, double* x1, double* x2, double* x3, double* x4) ;
+
+template <>
+inline void grab<ColorSpace::Rgb>(const ColorSpace::Rgb& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.r ;
+  *x2 = color.g ;
+  *x3 = color.b ;
+}
+
+template <>
+inline void grab<ColorSpace::Xyz>(const ColorSpace::Xyz& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.x ;
+  *x2 = color.y ;
+  *x3 = color.z ;
+}
+
+template <>
+inline void grab<ColorSpace::Hsl>(const ColorSpace::Hsl& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.h ;
+  *x2 = color.s ;
+  *x3 = color.l ;
+}
+
+template <>
+inline void grab<ColorSpace::Lab>(const ColorSpace::Lab& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.l ;
+  *x2 = color.a ;
+  *x3 = color.b ;
+}
+
+template <>
+inline void grab<ColorSpace::Lch>(const ColorSpace::Lch& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.l ;
+  *x2 = color.c ;
+  *x3 = color.h ;
+}
+
+template <>
+inline void grab<ColorSpace::Luv>(const ColorSpace::Luv& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.l ;
+  *x2 = color.u ;
+  *x3 = color.v ;
+}
+
+template <>
+inline void grab<ColorSpace::Yxy>(const ColorSpace::Yxy& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.y1 ;
+  *x2 = color.x ;
+  *x3 = color.y2 ;
+}
+
+template <>
+inline void grab<ColorSpace::Cmy>(const ColorSpace::Cmy& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.c ;
+  *x2 = color.m ;
+  *x3 = color.y ;
+}
+
+template <>
+inline void grab<ColorSpace::Cmyk>(const ColorSpace::Cmyk& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.c ;
+  *x2 = color.m ;
+  *x3 = color.y ;
+  *x4 = color.k ;
+}
+
+template <>
+inline void grab<ColorSpace::Hsv>(const ColorSpace::Hsv& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.h ;
+  *x2 = color.s ;
+  *x3 = color.v ;
+}
+
+template <>
+inline void grab<ColorSpace::Hsb>(const ColorSpace::Hsb& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.h ;
+  *x2 = color.s ;
+  *x3 = color.b ;
+}
+
+template <>
+inline void grab<ColorSpace::HunterLab>(const ColorSpace::HunterLab& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.l ;
+  *x2 = color.a ;
+  *x3 = color.b ;
+}
+
+template <>
+inline void grab<ColorSpace::Hcl>(const ColorSpace::Hcl& color, double* x1, double* x2, double* x3, double* x4){
+  *x1 = color.h ;
+  *x2 = color.c ;
+  *x3 = color.l ;
+}
 
 #endif

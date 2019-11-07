@@ -1,127 +1,6 @@
 #include "farver.h"
-#include "ColorSpace.h"
 #include "Comparison.h"
 #include <memory>
-
-// returns the number of dimensions for a color space type
-// with a special case for Cmyk
-template <typename SPACE>
-inline int dimension(){
-  return 3 ;
-}
-template <>
-inline int dimension<ColorSpace::Cmyk>(){
-  return 4 ;
-}
-
-// read a color from a color space in the row, and convert it to rgb
-template <typename Space>
-void fill_rgb(ColorSpace::Rgb* rgb, double x1, double x2, double x3, double x4=0.0){
-  Space(x1, x2, x3).ToRgb(rgb) ;
-}
-template <>
-void fill_rgb<ColorSpace::Cmyk>(ColorSpace::Rgb* rgb, double x1, double x2, double x3, double x4){
-  ColorSpace::Cmyk(x1, x2, x3, x4).ToRgb(rgb) ;
-}
-
-// these grab values from the Space type and use them to fill `row`
-// unfortunately, given how the `ColorSpace` C++ library is written, 
-// this has to do lots of special casing
-template <typename Space>
-void grab(const Space&, double* x1, double* x2, double* x3, double* x4) ;
-
-template <>
-void grab<ColorSpace::Rgb>(const ColorSpace::Rgb& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.r ;
-  *x2 = color.g ;
-  *x3 = color.b ;
-}
-
-template <>
-void grab<ColorSpace::Xyz>(const ColorSpace::Xyz& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.x ;
-  *x2 = color.y ;
-  *x3 = color.z ;
-}
-
-template <>
-void grab<ColorSpace::Hsl>(const ColorSpace::Hsl& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.h ;
-  *x2 = color.s ;
-  *x3 = color.l ;
-}
-
-template <>
-void grab<ColorSpace::Lab>(const ColorSpace::Lab& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.l ;
-  *x2 = color.a ;
-  *x3 = color.b ;
-}
-
-template <>
-void grab<ColorSpace::Lch>(const ColorSpace::Lch& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.l ;
-  *x2 = color.c ;
-  *x3 = color.h ;
-}
-
-template <>
-void grab<ColorSpace::Luv>(const ColorSpace::Luv& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.l ;
-  *x2 = color.u ;
-  *x3 = color.v ;
-}
-
-template <>
-void grab<ColorSpace::Yxy>(const ColorSpace::Yxy& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.y1 ;
-  *x2 = color.x ;
-  *x3 = color.y2 ;
-}
-
-template <>
-void grab<ColorSpace::Cmy>(const ColorSpace::Cmy& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.c ;
-  *x2 = color.m ;
-  *x3 = color.y ;
-}
-
-template <>
-void grab<ColorSpace::Cmyk>(const ColorSpace::Cmyk& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.c ;
-  *x2 = color.m ;
-  *x3 = color.y ;
-  *x4 = color.k ;
-}
-
-template <>
-void grab<ColorSpace::Hsv>(const ColorSpace::Hsv& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.h ;
-  *x2 = color.s ;
-  *x3 = color.v ;
-}
-
-template <>
-void grab<ColorSpace::Hsb>(const ColorSpace::Hsb& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.h ;
-  *x2 = color.s ;
-  *x3 = color.b ;
-}
-
-template <>
-void grab<ColorSpace::HunterLab>(const ColorSpace::HunterLab& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.l ;
-  *x2 = color.a ;
-  *x3 = color.b ;
-}
-
-template <>
-void grab<ColorSpace::Hcl>(const ColorSpace::Hcl& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.h ;
-  *x2 = color.c ;
-  *x3 = color.l ;
-}
-
 
 //------------------------------------------------------------------------------
 //--- Conversions --------------------------------------------------------------
@@ -184,7 +63,7 @@ SEXP convert_dispatch_impl(SEXP colour, SEXP white_from, SEXP white_to) {
   }
   
   UNPROTECT(1);
-  return out;
+  return copy_names(colour, out);
 }
 
 // this is a trick to do a runtime fake compile time dispatch
@@ -324,7 +203,7 @@ SEXP compare_dispatch_impl(SEXP from, SEXP to, int dist, bool sym, SEXP white_fr
   }
   
   UNPROTECT(1);
-  return out ;
+  return copy_names(from, to, out);
 }
 
 template <typename From>
