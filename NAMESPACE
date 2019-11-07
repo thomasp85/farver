@@ -3,5 +3,6 @@
 export(as_white_ref)
 export(compare_colour)
 export(convert_colour)
+export(decode_colour)
 export(encode_colour)
 useDynLib(farver)

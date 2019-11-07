@@ -5,3 +5,4 @@
 * Add support for Lch(uv) (Hcl) for parallel to `grDevices::hcl()` (#9)
 * Add `encode_colour()` for converting colours in any colourspace into `#RRGGBB`
   format (#7)
+* Add `decode_colour()` for converting hexstrings into any colourspace

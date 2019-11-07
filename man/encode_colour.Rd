@@ -13,7 +13,7 @@ all colourspaces except \code{'cmyk'} this will mean a matrix with three columns
 for \code{'cmyk'} it means four columns.}
 
 \item{alpha}{A numeric vector between 0 and 1. Will be recycled to the number
-of rows in \code{colour}}
+of rows in \code{colour}. If \code{NULL} or a single \code{NA} it will be ignored.}
 
 \item{from}{The input colour space. Allowed values are: \code{"cmy"},
 \code{"cmyk"}, \code{"hsl"}, \code{"hsb"}, \code{"hsv"}, \code{"lab"} (CIE L*ab), \code{"hunterlab"}
@@ -25,7 +25,7 @@ effect for relative colour spaces such as Lab and luv. Any value accepted by
 \code{\link[=as_white_ref]{as_white_ref()}} allowed.}
 }
 \value{
-A character vector with colours encoded as \code{#RRGGBB}
+A character vector with colours encoded as \code{#RRGGBB(AA)}
 }
 \description{
 This is a version of \code{\link[grDevices:rgb]{grDevices::rgb()}} that works with the standard colour
@@ -36,3 +36,7 @@ support taking input from any colour space.
 The output may differ slightly from that of \code{\link[grDevices:rgb]{grDevices::rgb()}} since
 \code{rgb()} doesn't round numeric values correctly.
 }
+\seealso{
+Other encoding and decoding functions: \code{\link{decode_colour}}
+}
+\concept{encoding and decoding functions}

@@ -139,3 +139,10 @@ as_white_ref <- function(x, fow = 2) {
   }
   structure(x, names = c('X', 'Y', 'Z'))
 }
+
+load_colour_names <- function() {
+  all_colours <- grDevices::colours()
+  all_values <- grDevices::col2rgb(all_colours)
+  .Call('load_colour_names_c', all_colours, all_values, PACKAGE = 'farver')
+  invisible()
+}

@@ -35,3 +35,5 @@ BugReports: https://github.com/thomasp85/farver/issues
 Suggests: testthat,
     covr
 Roxygen: list(markdown=TRUE)
+Imports: 
+    grDevices
