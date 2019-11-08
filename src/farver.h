@@ -37,26 +37,21 @@ inline SEXP copy_names(SEXP from, SEXP to) {
   bool from_matrix = Rf_isMatrix(from);
   if (from_matrix) {
     names = PROTECT(Rf_getAttrib(from, Rf_install("dimnames")));
+    if (!Rf_isNull(names)) {
+      names = VECTOR_ELT(names, 0);
+    }
   } else {
     names = PROTECT(Rf_getAttrib(from, Rf_install("names")));
   }
   
   if (!Rf_isNull(names)) {
     if (Rf_isMatrix(to)) {
-      if (from_matrix) {
-        Rf_setAttrib(to, Rf_install("dimnames"), names);
-      } else {
-        SEXP dn = PROTECT(Rf_allocVector(VECSXP, 2));
-        SET_VECTOR_ELT(dn, 0, names);
-        Rf_setAttrib(to, Rf_install("dimnames"), dn);
-        UNPROTECT(1);
-      }
+      SEXP dn = PROTECT(Rf_allocVector(VECSXP, 2));
+      SET_VECTOR_ELT(dn, 0, names);
+      Rf_setAttrib(to, Rf_install("dimnames"), dn);
+      UNPROTECT(1);
     } else {
-      if (from_matrix) {
-        Rf_namesgets(to, VECTOR_ELT(names, 0));
-      } else {
-        Rf_namesgets(to, names);
-      }
+      Rf_namesgets(to, names);
     }
   }
   
@@ -70,25 +65,27 @@ inline SEXP copy_names(SEXP from1, SEXP from2, SEXP to) {
   bool from2_matrix = Rf_isMatrix(from2);
   if (from1_matrix) {
     names1 = PROTECT(Rf_getAttrib(from1, Rf_install("dimnames")));
+    if (!Rf_isNull(names1)) {
+      names1 = VECTOR_ELT(names1, 0);
+    }
   } else {
     names1 = PROTECT(Rf_getAttrib(from1, Rf_install("names")));
   }
-  if (from1_matrix) {
+  if (from2_matrix) {
     names2 = PROTECT(Rf_getAttrib(from2, Rf_install("dimnames")));
+    if (!Rf_isNull(names2)) {
+      names2 = VECTOR_ELT(names2, 0);
+    }
   } else {
     names2 = PROTECT(Rf_getAttrib(from2, Rf_install("names")));
   }
   
-  if (!(Rf_isNull(names1) && Rf_isNull(names2)) && Rf_isMatrix(to)) {
+  if ((!Rf_isNull(names1) || !Rf_isNull(names2)) && Rf_isMatrix(to)) {
     names = PROTECT(Rf_allocVector(VECSXP, 2));
-    if (from1_matrix) {
-      SET_VECTOR_ELT(names, 0, VECTOR_ELT(names1, 0));
-    } else {
+    if (!Rf_isNull(names1)) {
       SET_VECTOR_ELT(names, 0, names1);
     }
-    if (from2_matrix) {
-      SET_VECTOR_ELT(names, 1, VECTOR_ELT(names2, 1));
-    } else {
+    if (!Rf_isNull(names2)) {
       SET_VECTOR_ELT(names, 1, names2);
     }
     Rf_setAttrib(to, Rf_install("dimnames"), names);
