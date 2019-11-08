@@ -18,7 +18,7 @@ of rows in \code{colour}. If \code{NULL} or a single \code{NA} it will be ignore
 \item{from}{The input colour space. Allowed values are: \code{"cmy"},
 \code{"cmyk"}, \code{"hsl"}, \code{"hsb"}, \code{"hsv"}, \code{"lab"} (CIE L*ab), \code{"hunterlab"}
 (Hunter Lab), \code{"lch"} (CIE Lch(ab) / polarLAB), \code{"luv"}, \code{"rgb"} (sRGB),
-\code{"xyz"}, \code{"yxy"}, or \code{"hcl"} (CIE Lch(uv) / polarLuv)}
+\code{"xyz"}, \code{"yxy"} (CIE xyY), or \code{"hcl"} (CIE Lch(uv) / polarLuv)}
 
 \item{white}{The white reference of the input colour space. Will only have an
 effect for relative colour spaces such as Lab and luv. Any value accepted by

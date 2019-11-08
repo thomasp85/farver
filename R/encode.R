@@ -10,7 +10,7 @@
 #' @param from The input colour space. Allowed values are: `"cmy"`, 
 #' `"cmyk"`, `"hsl"`, `"hsb"`, `"hsv"`, `"lab"` (CIE L*ab), `"hunterlab"` 
 #' (Hunter Lab), `"lch"` (CIE Lch(ab) / polarLAB), `"luv"`, `"rgb"` (sRGB), 
-#' `"xyz"`, `"yxy"`, or `"hcl"` (CIE Lch(uv) / polarLuv)
+#' `"xyz"`, `"yxy"` (CIE xyY), or `"hcl"` (CIE Lch(uv) / polarLuv)
 #' @param white The white reference of the input colour space. Will only have an 
 #' effect for relative colour spaces such as Lab and luv. Any value accepted by 
 #' [as_white_ref()] allowed.
@@ -57,7 +57,7 @@ encode_c <- function(colour, alpha, from, white) {
 #' @param to The output colour space. Allowed values are: `"cmy"`, 
 #' `"cmyk"`, `"hsl"`, `"hsb"`, `"hsv"`, `"lab"` (CIE L*ab), `"hunterlab"` 
 #' (Hunter Lab), `"lch"` (CIE Lch(ab) / polarLAB), `"luv"`, `"rgb"` (sRGB), 
-#' `"xyz"`, `"yxy"`, or `"hcl"` (CIE Lch(uv) / polarLuv) 
+#' `"xyz"`, `"yxy"` (CIE xyY), or `"hcl"` (CIE Lch(uv) / polarLuv) 
 #' @param white The white reference of the output colour space. Will only have 
 #' an effect for relative colour spaces such as Lab and luv. Any value accepted 
 #' by [as_white_ref()] allowed.

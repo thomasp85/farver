@@ -15,7 +15,7 @@
 #' @param from,to The input and output colour space. Allowed values are: `"cmy"`, 
 #' `"cmyk"`, `"hsl"`, `"hsb"`, `"hsv"`, `"lab"` (CIE L*ab), `"hunterlab"` 
 #' (Hunter Lab), `"lch"` (CIE Lch(ab) / polarLAB), `"luv"`, `"rgb"` (sRGB), 
-#' `"xyz"`, `"yxy"`, or `"hcl"` (CIE Lch(uv) / polarLuv)
+#' `"xyz"`, `"yxy"` (CIE xyY), or `"hcl"` (CIE Lch(uv) / polarLuv)
 #' 
 #' @param white_from,white_to The white reference of the from and to colour 
 #' space. Will only have an effect for relative colour spaces such as Lab and 
