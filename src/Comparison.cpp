@@ -5,6 +5,7 @@
 
 namespace ColorSpace {
 	double EuclideanComparison::Compare(IColorSpace *a, IColorSpace *b) {
+	  if (!a->valid || !b->valid) return -1.0;
 		Rgb rgb_a;
 		Rgb rgb_b;
 
@@ -15,6 +16,7 @@ namespace ColorSpace {
 	}
 
 	double Cie1976Comparison::Compare(IColorSpace *a, IColorSpace *b) {
+	  if (!a->valid || !b->valid) return -1.0;
 		Lab lab_a;
 		Lab lab_b;
 
@@ -40,6 +42,7 @@ namespace ColorSpace {
 	}
 
 	double Cie94Comparison::Compare(IColorSpace *a, IColorSpace *b, APPLICATION appType) {
+	  if (!a->valid || !b->valid) return -1.0;
 		Application app(appType);
 		Lab lab_a;
 		Lab lab_b;
@@ -68,6 +71,7 @@ namespace ColorSpace {
 	}
 
 	double Cie2000Comparison::Compare(IColorSpace *a, IColorSpace *b) {
+	  if (!a->valid || !b->valid) return -1.0;
 		const double eps = 1e-5;
 		Lab lab_a;
 		Lab lab_b;
@@ -147,6 +151,7 @@ namespace ColorSpace {
 	const double CmcComparison::defaultLightness = 2.;
 	const double CmcComparison::defaultChroma = 1.;
 	double CmcComparison::Compare(IColorSpace *a, IColorSpace *b) {
+	  if (!a->valid || !b->valid) return -1.0;
 		Lch lch_a;
 		Lch lch_b;
 

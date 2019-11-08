@@ -110,11 +110,27 @@ inline int dimension<ColorSpace::Cmyk>(){
 // read a color from a color space in the row, and convert it to rgb
 template <typename Space>
 inline void fill_rgb(ColorSpace::Rgb* rgb, double x1, double x2, double x3, double x4=0.0){
-  Space(x1, x2, x3).ToRgb(rgb) ;
+  Space col(x1, x2, x3);
+  col.Cap();
+  col.ToRgb(rgb);
 }
 template <>
 inline void fill_rgb<ColorSpace::Cmyk>(ColorSpace::Rgb* rgb, double x1, double x2, double x3, double x4){
-  ColorSpace::Cmyk(x1, x2, x3, x4).ToRgb(rgb) ;
+  ColorSpace::Cmyk col(x1, x2, x3, x4);
+  col.Cap();
+  col.ToRgb(rgb);
+}
+template <typename Space>
+inline void fill_rgb(ColorSpace::Rgb* rgb, int x1, int x2, int x3, int x4=0){
+  Space col(x1, x2, x3);
+  col.Cap();
+  col.ToRgb(rgb);
+}
+template <>
+inline void fill_rgb<ColorSpace::Cmyk>(ColorSpace::Rgb* rgb, int x1, int x2, int x3, int x4){
+  ColorSpace::Cmyk col(x1, x2, x3, x4);
+  col.Cap();
+  col.ToRgb(rgb);
 }
 
 // these grab values from the Space type and use them to fill `row`
@@ -125,9 +141,15 @@ inline void grab(const Space&, double* x1, double* x2, double* x3, double* x4) ;
 
 template <>
 inline void grab<ColorSpace::Rgb>(const ColorSpace::Rgb& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.r ;
-  *x2 = color.g ;
-  *x3 = color.b ;
+  if (color.valid) {
+    *x1 = color.r ;
+    *x2 = color.g ;
+    *x3 = color.b ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 template <>
@@ -139,80 +161,147 @@ inline void grab<ColorSpace::Xyz>(const ColorSpace::Xyz& color, double* x1, doub
 
 template <>
 inline void grab<ColorSpace::Hsl>(const ColorSpace::Hsl& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.h ;
-  *x2 = color.s ;
-  *x3 = color.l ;
+  if (color.valid) {
+    *x1 = color.h ;
+    *x2 = color.s ;
+    *x3 = color.l ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 template <>
 inline void grab<ColorSpace::Lab>(const ColorSpace::Lab& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.l ;
-  *x2 = color.a ;
-  *x3 = color.b ;
+  if (color.valid) {
+    *x1 = color.l ;
+    *x2 = color.a ;
+    *x3 = color.b ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 template <>
 inline void grab<ColorSpace::Lch>(const ColorSpace::Lch& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.l ;
-  *x2 = color.c ;
-  *x3 = color.h ;
+  if (color.valid) {
+    *x1 = color.l ;
+    *x2 = color.c ;
+    *x3 = color.h ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 template <>
 inline void grab<ColorSpace::Luv>(const ColorSpace::Luv& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.l ;
-  *x2 = color.u ;
-  *x3 = color.v ;
+  if (color.valid) {
+    *x1 = color.l ;
+    *x2 = color.u ;
+    *x3 = color.v ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 template <>
 inline void grab<ColorSpace::Yxy>(const ColorSpace::Yxy& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.y1 ;
-  *x2 = color.x ;
-  *x3 = color.y2 ;
+  if (color.valid) {
+    *x1 = color.y1 ;
+    *x2 = color.x ;
+    *x3 = color.y2 ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 template <>
 inline void grab<ColorSpace::Cmy>(const ColorSpace::Cmy& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.c ;
-  *x2 = color.m ;
-  *x3 = color.y ;
+  if (color.valid) {
+    *x1 = color.c ;
+    *x2 = color.m ;
+    *x3 = color.y ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 template <>
 inline void grab<ColorSpace::Cmyk>(const ColorSpace::Cmyk& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.c ;
-  *x2 = color.m ;
-  *x3 = color.y ;
-  *x4 = color.k ;
+  if (color.valid) {
+    *x1 = color.c ;
+    *x2 = color.m ;
+    *x3 = color.y ;
+    *x4 = color.k ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+    *x4 = R_NaReal ;
+  }
 }
 
 template <>
 inline void grab<ColorSpace::Hsv>(const ColorSpace::Hsv& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.h ;
-  *x2 = color.s ;
-  *x3 = color.v ;
+  if (color.valid) {
+    *x1 = color.h ;
+    *x2 = color.s ;
+    *x3 = color.v ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 template <>
 inline void grab<ColorSpace::Hsb>(const ColorSpace::Hsb& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.h ;
-  *x2 = color.s ;
-  *x3 = color.b ;
+  if (color.valid) {
+    *x1 = color.h ;
+    *x2 = color.s ;
+    *x3 = color.b ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 template <>
 inline void grab<ColorSpace::HunterLab>(const ColorSpace::HunterLab& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.l ;
-  *x2 = color.a ;
-  *x3 = color.b ;
+  if (color.valid) {
+    *x1 = color.l ;
+    *x2 = color.a ;
+    *x3 = color.b ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 template <>
 inline void grab<ColorSpace::Hcl>(const ColorSpace::Hcl& color, double* x1, double* x2, double* x3, double* x4){
-  *x1 = color.h ;
-  *x2 = color.c ;
-  *x3 = color.l ;
+  if (color.valid) {
+    *x1 = color.h ;
+    *x2 = color.c ;
+    *x3 = color.l ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
 }
 
 #endif

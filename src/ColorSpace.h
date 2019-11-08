@@ -12,8 +12,11 @@ namespace ColorSpace {
 		virtual void Initialize(Rgb *color) = 0;
 		virtual void ToRgb(Rgb *color) = 0;
 		virtual void Copy(IColorSpace *color) = 0;
+		virtual void Cap() = 0;
 		template <typename TColorSpace>
 		void To(TColorSpace *color);
+		
+		bool valid;
 	};
 
 
@@ -22,10 +25,12 @@ namespace ColorSpace {
 
 		Rgb();
 		Rgb(double r, double g, double b);
+		Rgb(int r, int g, int b);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 	
 	template <typename TColorSpace>
@@ -46,10 +51,12 @@ namespace ColorSpace {
 
 		Xyz();
 		Xyz(double x, double y, double z);
+		Xyz(int x, int y, int z);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 
 	struct Hsl : public IColorSpace {
@@ -57,10 +64,12 @@ namespace ColorSpace {
 
 		Hsl();
 		Hsl(double h, double s, double l);
+		Hsl(int h, int s, int l);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 
 	struct Lab : public IColorSpace {
@@ -68,10 +77,12 @@ namespace ColorSpace {
 
 		Lab();
 		Lab(double l, double a, double b);
+		Lab(int l, int a, int b);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 
 	struct Lch : public IColorSpace {
@@ -79,10 +90,12 @@ namespace ColorSpace {
 
 		Lch();
 		Lch(double l, double c, double h);
+		Lch(int l, int c, int h);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 
 	struct Luv : public IColorSpace {
@@ -90,10 +103,12 @@ namespace ColorSpace {
 
 		Luv();
 		Luv(double l, double u, double v);
+		Luv(int l, int u, int v);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 
 	struct Yxy : public IColorSpace {
@@ -101,10 +116,12 @@ namespace ColorSpace {
 
 		Yxy();
 		Yxy(double y1, double x, double y2);
+		Yxy(int y1, int x, int y2);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 
 	struct Cmy : public IColorSpace {
@@ -112,10 +129,12 @@ namespace ColorSpace {
 
 		Cmy();
 		Cmy(double c, double m, double y);
+		Cmy(int c, int m, int y);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 
 	struct Cmyk : public IColorSpace {
@@ -123,10 +142,12 @@ namespace ColorSpace {
 
 		Cmyk();
 		Cmyk(double c, double m, double y, double k);
+		Cmyk(int c, int m, int y, int k);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 
 	struct Hsv : public IColorSpace {
@@ -134,10 +155,12 @@ namespace ColorSpace {
 
 		Hsv();
 		Hsv(double h, double s, double v);
+		Hsv(int h, int s, int v);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 
 	struct Hsb : public IColorSpace {
@@ -145,10 +168,12 @@ namespace ColorSpace {
 
 		Hsb();
 		Hsb(double h, double s, double b);
+		Hsb(int h, int s, int b);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 
 	struct HunterLab : public IColorSpace {
@@ -156,10 +181,12 @@ namespace ColorSpace {
 
 		HunterLab();
 		HunterLab(double l, double a, double b);
+		HunterLab(int l, int a, int b);
 
 		virtual void Initialize(Rgb *color);
 		virtual void ToRgb(Rgb *color);
 		virtual void Copy(IColorSpace *color);
+		virtual void Cap();
 	};
 	
 	struct Hcl : public IColorSpace {
@@ -167,10 +194,12 @@ namespace ColorSpace {
 	  
 	  Hcl();
 	  Hcl(double h, double c, double l);
+	  Hcl(int h, int c, int l);
 	  
 	  virtual void Initialize(Rgb *color);
 	  virtual void ToRgb(Rgb *color);
 	  virtual void Copy(IColorSpace *color);
+	  virtual void Cap();
 	};
 	
 }

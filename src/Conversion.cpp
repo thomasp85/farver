@@ -18,17 +18,32 @@ namespace ColorSpace {
 
 
 	void RgbConverter::ToColorSpace(Rgb *color, Rgb *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		item->r = color->r;
 		item->g = color->g;
 		item->b = color->b;
 	}
 	void RgbConverter::ToColor(Rgb *color, Rgb *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		color->r = item->r;
 		color->g = item->g;
 		color->b = item->b;
 	}
 
 	void XyzConverter::ToColorSpace(Rgb *color, Xyz *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		double r = color->r / 255.0;
 		double g = color->g / 255.0;
 		double b = color->b / 255.0;
@@ -42,6 +57,11 @@ namespace ColorSpace {
 		item->z = r*0.0193339 + g*0.1191920 + b*0.9503041;
 	}
 	void XyzConverter::ToColor(Rgb *color, Xyz *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		double x = item->x / 100.0;
 		double y = item->y / 100.0;
 		double z = item->z / 100.0;
@@ -69,6 +89,11 @@ namespace ColorSpace {
 	}
 
 	void HslConverter::ToColorSpace(Rgb *color, Hsl *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		double r = color->r / 255.0;
 		double g = color->g / 255.0;
 		double b = color->b / 255.0;
@@ -104,6 +129,11 @@ namespace ColorSpace {
 		item->l *= 100;
 	}
 	void HslConverter::ToColor(Rgb *color, Hsl *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		double h = item->h / 360;
 		double s = item->s / 100;
 		double l = item->l / 100;
@@ -124,6 +154,11 @@ namespace ColorSpace {
 	}
 
 	void LabConverter::ToColorSpace(Rgb *color, Lab *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 	  const Xyz &white = XyzConverter::whiteReference;
 		Xyz xyz;
 
@@ -142,6 +177,11 @@ namespace ColorSpace {
 		item->b = 200 * (y - z);
 	}
 	void LabConverter::ToColor(Rgb *color, Lab *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 	  const Xyz &white = XyzConverter::whiteReference;
 	  
 		double y = (item->l + 16.0) / 116.0;
@@ -161,6 +201,11 @@ namespace ColorSpace {
 	}
 
 	void LchConverter::ToColorSpace(Rgb *color, Lch *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		Lab lab;
 
 		LabConverter::ToColorSpace(color, &lab);
@@ -181,6 +226,11 @@ namespace ColorSpace {
 		item->h = h;
 	}
 	void LchConverter::ToColor(Rgb *color, Lch *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		Lab lab;
 
 		item->h = item->h * M_PI / 180;
@@ -193,6 +243,11 @@ namespace ColorSpace {
 	}
 
 	void LuvConverter::ToColorSpace(Rgb *color, Luv *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		const Xyz &white = XyzConverter::whiteReference;
 		Xyz xyz;
 
@@ -206,6 +261,11 @@ namespace ColorSpace {
 		item->v = 117 * item->l * (((temp > 1e-3) ? (xyz.y / temp) : 0) - white.y / tempr);
 	}
 	void LuvConverter::ToColor(Rgb *color, Luv *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		const Xyz &white = XyzConverter::whiteReference;
 		Xyz xyz;
 
@@ -227,6 +287,11 @@ namespace ColorSpace {
 	}
 
 	void YxyConverter::ToColorSpace(Rgb *color, Yxy *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		Xyz xyz;
 
 		XyzConverter::ToColorSpace(color, &xyz);
@@ -236,6 +301,11 @@ namespace ColorSpace {
 		item->y2 = (temp==0) ? 0 : (xyz.y / temp);
 	}
 	void YxyConverter::ToColor(Rgb *color, Yxy *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		Xyz xyz;
 
 		xyz.x = item->x*(item->y1 / item->y2);
@@ -245,17 +315,32 @@ namespace ColorSpace {
 	}
 
 	void CmyConverter::ToColorSpace(Rgb *color, Cmy *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		item->c = 1 - color->r / 255;
 		item->m = 1 - color->g / 255;
 		item->y = 1 - color->b / 255;
 	}
 	void CmyConverter::ToColor(Rgb *color, Cmy *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		color->r = (1 - item->c) * 255;
 		color->g = (1 - item->m) * 255;
 		color->b = (1 - item->y) * 255;
 	}
 
 	void CmykConverter::ToColorSpace(Rgb *color, Cmyk *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		Cmy cmy;
 
 		CmyConverter::ToColorSpace(color, &cmy);
@@ -277,6 +362,11 @@ namespace ColorSpace {
 		}
 	}
 	void CmykConverter::ToColor(Rgb *color, Cmyk *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		Cmy cmy;
 
 		cmy.c = item->c * (1 - item->k) + item->k;
@@ -286,6 +376,11 @@ namespace ColorSpace {
 	}
 
 	void HsvConverter::ToColorSpace(Rgb *color, Hsv *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		double r = color->r / 255.0;
 		double g = color->g / 255.0;
 		double b = color->b / 255.0;
@@ -316,6 +411,11 @@ namespace ColorSpace {
 		}
 	}
 	void HsvConverter::ToColor(Rgb *color, Hsv *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		int range = (int)std::floor(item->h / 60);
 		double c = item->v*item->s;
 		double x = c*(1 - std::abs(std::fmod(item->h / 60, 2) - 1));
@@ -356,6 +456,11 @@ namespace ColorSpace {
 	}
 
 	void HsbConverter::ToColorSpace(Rgb *color, Hsb *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		Hsv hsv;
 
 		HsvConverter::ToColorSpace(color, &hsv);
@@ -364,6 +469,11 @@ namespace ColorSpace {
 		item->b = hsv.v;
 	}
 	void HsbConverter::ToColor(Rgb *color, Hsb *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		Hsv hsv;
 
 		hsv.h = item->h;
@@ -373,6 +483,11 @@ namespace ColorSpace {
 	}
 
 	void HunterLabConverter::ToColorSpace(Rgb *color, HunterLab *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 		Xyz xyz;
 
 		XyzConverter::ToColorSpace(color, &xyz);
@@ -381,6 +496,11 @@ namespace ColorSpace {
 		item->b = (xyz.y != 0) ? (7.0*(xyz.y - 0.847*xyz.z) / std::sqrt(xyz.y)) : 0;
 	}
 	void HunterLabConverter::ToColor(Rgb *color, HunterLab *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 		double x = (item->a / 17.5) *(item->l / 10.0);
 		double y = item->l*item->l / 100;
 		double z = item->b / 7.0 * item->l / 10.0;
@@ -390,6 +510,11 @@ namespace ColorSpace {
 	}
 	
 	void HclConverter::ToColorSpace(Rgb *color, Hcl *item) {
+	  if (!color->valid) {
+	    item->valid = false;
+	    return;
+	  }
+	  item->valid = true;
 	  Luv luv;
 	  
 	  LuvConverter::ToColorSpace(color, &luv);
@@ -410,6 +535,11 @@ namespace ColorSpace {
 	  item->h = h;
 	}
 	void HclConverter::ToColor(Rgb *color, Hcl *item) {
+	  if (!item->valid) {
+	    color->valid = false;
+	    return;
+	  }
+	  color->valid = true;
 	  Luv luv;
 	  
 	  item->h = item->h * M_PI / 180;

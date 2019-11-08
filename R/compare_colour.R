@@ -4,6 +4,8 @@
 #' provides 5 different algorithms, ranging from simple euclidean distance in 
 #' RGB space, to different perceptual measures such as CIE2000.
 #' 
+#' @inheritSection  convert_colour Handling of non-finite and out of bounds values
+#' 
 #' @param from,to Numeric matrices with colours to compare - the format is the 
 #' same as that for [convert_colour()]. If `to` is not set `from` will be 
 #' compared with itself and only the upper triangle will get calculated

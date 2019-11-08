@@ -67,7 +67,7 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
   }
   for (int i = 0; i < n; ++i) {
     if (colour_is_int) {
-      fill_rgb<From>(&rgb, colour_i[offset1 + i], colour_i[offset2 + i], colour_i[offset3 + i], n_channels == 4 ? colour_i[offset4 + i] : 0.0);
+      fill_rgb<From>(&rgb, colour_i[offset1 + i], colour_i[offset2 + i], colour_i[offset3 + i], n_channels == 4 ? colour_i[offset4 + i] : 0);
     } else {
       fill_rgb<From>(&rgb, colour_d[offset1 + i], colour_d[offset2 + i], colour_d[offset3 + i], n_channels == 4 ? colour_d[offset4 + i] : 0.0);
     }

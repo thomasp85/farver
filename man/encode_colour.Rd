@@ -36,6 +36,17 @@ support taking input from any colour space.
 The output may differ slightly from that of \code{\link[grDevices:rgb]{grDevices::rgb()}} since
 \code{rgb()} doesn't round numeric values correctly.
 }
+\section{Handling of non-finite and out of bounds values}{
+
+\code{NA}, \code{NaN}, \code{-Inf}, and \code{Inf} are treated as invalid input and will result
+in \code{NA} values for the colour. If a given colourspace has finite bounds in
+some of their channels, the input will be capped before conversion, and the
+output will be capped before returning, so that both input and output colours
+are valid colours in their respective space. This means that converting back
+and forth between two colourspaces may result in a change in the colour if
+the gamut of one of the spaces is less than the other.
+}
+
 \seealso{
 Other encoding and decoding functions: \code{\link{decode_colour}}
 }

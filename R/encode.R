@@ -4,6 +4,8 @@
 #' format used in farver (matrix or data.frame with colours in rows). It further
 #' support taking input from any colour space.
 #' 
+#' @inheritSection convert_colour Handling of non-finite and out of bounds values
+#' 
 #' @inheritParams convert_colour
 #' @param alpha A numeric vector between 0 and 1. Will be recycled to the number
 #' of rows in `colour`. If `NULL` or a single `NA` it will be ignored.
@@ -48,6 +50,8 @@ encode_c <- function(colour, alpha, from, white) {
 #' the standard form expected by farver (matrix with a row per colour). As with
 #' [encode_colour()] it can do colour conversion on the fly, meaning that you can 
 #' decode a hex string directly into any of the supported colour spaces.
+#' 
+#' @inheritSection convert_colour Handling of non-finite and out of bounds values
 #' 
 #' @param colour A character vector of hex-encoded values or a valid colour name
 #' as given in [grDevices::colours()].
