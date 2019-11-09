@@ -41,9 +41,14 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
     if (alpha_is_int) {
       alpha_i = INTEGER(alpha);
       first_alpha = alpha_i[0];
+      first_alpha = first_alpha == R_NaInt ? 255 : first_alpha;
     } else {
       alpha_d = REAL(alpha);
-      first_alpha = double2int(alpha_d[0]);
+      if (!R_finite(alpha_d[0])) {
+        first_alpha = 255;
+      } else {
+        first_alpha = double2int(alpha_d[0]);
+      }
     }
     first_alpha = cap0255(first_alpha) * 2;
     alpha1 = hex8[first_alpha];
@@ -70,6 +75,10 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
       fill_rgb<From>(&rgb, colour_i[offset1 + i], colour_i[offset2 + i], colour_i[offset3 + i], n_channels == 4 ? colour_i[offset4 + i] : 0);
     } else {
       fill_rgb<From>(&rgb, colour_d[offset1 + i], colour_d[offset2 + i], colour_d[offset3 + i], n_channels == 4 ? colour_d[offset4 + i] : 0.0);
+    }
+    if (!rgb.valid) {
+      SET_STRING_ELT(codes, i, R_NaString);
+      continue;
     }
     num = double2int(rgb.r);
     num = cap0255(num) * 2;
@@ -131,9 +140,14 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
     if (alpha_is_int) {
       alpha_i = INTEGER(alpha);
       first_alpha = alpha_i[0];
+      first_alpha = first_alpha == R_NaInt ? 255 : first_alpha;
     } else {
       alpha_d = REAL(alpha);
-      first_alpha = double2int(alpha_d[0]);
+      if (!R_finite(alpha_d[0])) {
+        first_alpha = 255;
+      } else {
+        first_alpha = double2int(alpha_d[0]);
+      }
     }
     first_alpha = cap0255(first_alpha) * 2;
     alpha1 = hex8[first_alpha];
@@ -150,20 +164,25 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
   bool colour_is_int = Rf_isInteger(colour);
   int num;
   if (colour_is_int) {
+    int r, g, b;
     colour_i = INTEGER(colour);
     for (int i = 0; i < n; ++i) {
-      num = colour_i[offset1 + i];
-      num = cap0255(num) * 2;
+      r = colour_i[offset1 + i];
+      g = colour_i[offset2 + i];
+      b = colour_i[offset3 + i];
+      if (r == R_NaInt || g == R_NaInt || b == R_NaInt) {
+        SET_STRING_ELT(codes, i, R_NaString);
+        continue;
+      }
+      num = cap0255(r) * 2;
       buf[1] = hex8[num];
       buf[2] = hex8[num + 1];
       
-      num = colour_i[offset2 + i];
-      num = cap0255(num) * 2;
+      num = cap0255(g) * 2;
       buf[3] = hex8[num];
       buf[4] = hex8[num + 1];
       
-      num = colour_i[offset3 + i];
-      num = cap0255(num) * 2;
+      num = cap0255(b) * 2;
       buf[5] = hex8[num];
       buf[6] = hex8[num + 1];
       
@@ -186,20 +205,25 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
       SET_STRING_ELT(codes, i, Rf_mkChar(buf));
     }
   } else {
+    double r, g, b;
     colour_d = REAL(colour);
     for (int i = 0; i < n; ++i) {
-      num = double2int(colour_d[offset1 + i]);
-      num = cap0255(num) * 2;
+      r = colour_d[offset1 + i];
+      g = colour_d[offset2 + i];
+      b = colour_d[offset3 + i];
+      if (!(R_finite(r) && R_finite(g) && R_finite(b))) {
+        SET_STRING_ELT(codes, i, R_NaString);
+        continue;
+      }
+      num = cap0255(double2int(r)) * 2;
       buf[1] = hex8[num];
       buf[2] = hex8[num + 1];
       
-      num = double2int(colour_d[offset2 + i]);
-      num = cap0255(num) * 2;
+      num = cap0255(double2int(g)) * 2;
       buf[3] = hex8[num];
       buf[4] = hex8[num + 1];
       
-      num = double2int(colour_d[offset3 + i]);
-      num = cap0255(num) * 2;
+      num = cap0255(double2int(b)) * 2;
       buf[5] = hex8[num];
       buf[6] = hex8[num + 1];
       
@@ -291,13 +315,16 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
   bool has_alpha;
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
-    const char* col = Rf_translateCharUTF8(code);
     if (code == R_NaString) {
-      rgb.r = 255;
-      rgb.g = 255;
-      rgb.b = 255;
-      a = 1.0;
-    } else if (col[0] == '#') {
+      colours_p[offset1 + i] = R_NaReal;
+      colours_p[offset2 + i] = R_NaReal;
+      colours_p[offset3 + i] = R_NaReal;
+      if (n_cols > 3) colours_p[offset4 + i] = R_NaReal;
+      if (n_cols > 4) colours_p[offset5 + i] = R_NaReal;
+      continue;
+    }
+    const char* col = Rf_translateCharUTF8(code);
+    if (col[0] == '#') {
       nchar = strlen(col);
       has_alpha = nchar == 9;
       if (!has_alpha && nchar != 7) {
@@ -364,13 +391,21 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white) {
   bool has_alpha;
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
-    const char* col = CHAR(code);
     if (code == R_NaString) {
-      r = 255;
-      g = 255;
-      b = 255;
-      a = 1.0;
-    } else if (col[0] == '#') {
+      if (get_alpha) {
+        colours_d[offset1 + i] = R_NaReal;
+        colours_d[offset2 + i] = R_NaReal;
+        colours_d[offset3 + i] = R_NaReal;
+        colours_d[offset4 + i] = R_NaReal;
+      } else {
+        colours_i[offset1 + i] = R_NaInt;
+        colours_i[offset2 + i] = R_NaInt;
+        colours_i[offset3 + i] = R_NaInt;
+      }
+      continue;
+    }
+    const char* col = CHAR(code);
+    if (col[0] == '#') {
       nchar = strlen(col);
       has_alpha = nchar == 9;
       if (!has_alpha && nchar != 7) {

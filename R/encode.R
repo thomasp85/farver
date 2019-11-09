@@ -83,5 +83,5 @@ decode_colour <- function(colour, alpha = FALSE, to = 'rgb', white = 'D65') {
 }
 
 decode_c <- function(colour, alpha, to, white) {
-  .Call('decode_c', colour, alpha, as.integer(to), white, PACKAGE = 'farver')
+  .Call('decode_c', as.character(colour), alpha, as.integer(to), white, PACKAGE = 'farver')
 }
