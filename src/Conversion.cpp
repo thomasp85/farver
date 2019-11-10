@@ -4,6 +4,8 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <algorithm>
+#include <R.h>
+#include <Rinternals.h>
 
 namespace ColorSpace {
 	double Hue_2_RGB(double v1, double v2, double vh) {
@@ -268,20 +270,30 @@ namespace ColorSpace {
 	  color->valid = true;
 		const Xyz &white = XyzConverter::whiteReference;
 		Xyz xyz;
-
-		double y = (item->l > XyzConverter::eps*XyzConverter::kappa) ? POW3((item->l + 16) / 116) : (item->l / XyzConverter::kappa);
-		double tempr = white.x + 15 * white.y + 3 * white.z;
-		double up = 4 * white.x / tempr;
-		double vp = 9 * white.y / tempr;
-
-		double a = 1. / 3. * (52 * item->l / (item->u + 13 * item->l*up) - 1);
-		double b = -5 * y;
-		double x = (y*(39 * item->l / (item->v + 13 * item->l*vp) - 5) - b) / (a + 1. / 3.);
-		double z = x*a + b;
-
-		xyz.x = x * 100;
-		xyz.y = y * 100;
-		xyz.z = z * 100;
+		if (item->l == 0.0) {
+		  xyz.x = 0.0;
+		  xyz.y = 0.0;
+		  xyz.z = 0.0;
+		} else {
+		  double y = (item->l > XyzConverter::eps*XyzConverter::kappa) ? POW3((item->l + 16) / 116) : (item->l / XyzConverter::kappa);
+		  double tempr = white.x + 15 * white.y + 3 * white.z;
+		  double up = 4 * white.x / tempr;
+		  double vp = 9 * white.y / tempr;
+		  double a = 1. / 3. * (52 * item->l / (item->u + 13 * item->l*up) - 1);
+		  double b = -5 * y;
+		  double x = (y*(39 * item->l / (item->v + 13 * item->l*vp) - 5) - b) / (a + 1. / 3.);
+		  double z = x*a + b;
+		  /* Weird things can happen at the edge of 0.0*/
+		  if (!ISNAN(z)) {
+		    xyz.x = x * 100;
+		    xyz.y = y * 100;
+		    xyz.z = z * 100;
+		  } else {
+		    xyz.x = 0.0;
+		    xyz.y = 0.0;
+		    xyz.z = 0.0;
+		  }
+		}
 
 		XyzConverter::ToColor(color, &xyz);
 	}
