@@ -106,8 +106,12 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
           num = double2int(alpha_d[i]);
         }
         num = cap0255(num) * 2;
-        buf[7] = hex8[num];
-        buf[8] = hex8[num + 1];
+        if (num == 510) { // opaque
+          buf[7] = '\0';
+        } else {
+          buf[7] = hex8[num];
+          buf[8] = hex8[num + 1];
+        }
       }
     }
     
@@ -197,8 +201,12 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
             num = double2int(alpha_d[i]);
           }
           num = cap0255(num) * 2;
-          buf[7] = hex8[num];
-          buf[8] = hex8[num + 1];
+          if (num == 510) { // opaque
+            buf[7] = '\0';
+          } else {
+            buf[7] = hex8[num];
+            buf[8] = hex8[num + 1];
+          }
         }
       }
       
@@ -238,8 +246,12 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
             num = double2int(alpha_d[i]);
           }
           num = cap0255(num) * 2;
-          buf[7] = hex8[num];
-          buf[8] = hex8[num + 1];
+          if (num == 510) { // opaque
+            buf[7] = '\0';
+          } else {
+            buf[7] = hex8[num];
+            buf[8] = hex8[num + 1];
+          }
         }
       }
       

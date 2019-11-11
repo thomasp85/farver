@@ -37,7 +37,7 @@ encode_c <- function(colour, alpha, from, white) {
     alpha <- alpha * 255
     if (length(alpha) != 1) {
       alpha = rep_len(alpha, nrow(colour))
-    } else if (is.na(alpha)) {
+    } else if (is.na(alpha) || alpha == 1) {
       alpha = NULL
     }
   }

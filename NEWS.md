@@ -6,3 +6,5 @@
 * Add `encode_colour()` for converting colours in any colourspace into `#RRGGBB`
   format (#7)
 * Add `decode_colour()` for converting hexstrings into any colourspace
+* Fix bug in luv conversion where 0 in the l channel resulted in `NaN` results 
+  (#12)
