@@ -369,6 +369,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
         a = 1.0;
       }
     }
+    rgb.valid = true;
     ColorSpace::IConverter<To>::ToColorSpace(&rgb, &to);
     grab<To>(to, colours_p + offset1 + i, colours_p + offset2 + i, colours_p + offset3 + i, n_channels == 4 ? colours_p + offset4 + i : colours_p);
     if (get_alpha) {
