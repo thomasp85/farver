@@ -28,11 +28,10 @@
 #define CIE2000 4
 #define CMC 5
 
-
 SEXP convert_c(SEXP colour, SEXP from, SEXP to, SEXP white_from, SEXP white_to);
 SEXP compare_c(SEXP from, SEXP to, SEXP from_space, SEXP to_space, SEXP dist, SEXP sym, SEXP white_from, SEXP white_to);
 
-inline SEXP copy_names(SEXP from, SEXP to) {
+inline void copy_names(SEXP from, SEXP to) {
   SEXP names;
   bool from_matrix = Rf_isMatrix(from);
   if (from_matrix) {
@@ -41,7 +40,7 @@ inline SEXP copy_names(SEXP from, SEXP to) {
       names = VECTOR_ELT(names, 0);
     }
   } else {
-    names = PROTECT(Rf_getAttrib(from, Rf_install("names")));
+    names = PROTECT(Rf_getAttrib(from, R_NamesSymbol));
   }
   
   if (!Rf_isNull(names)) {
@@ -56,10 +55,9 @@ inline SEXP copy_names(SEXP from, SEXP to) {
   }
   
   UNPROTECT(1);
-  return to;
 }
 
-inline SEXP copy_names(SEXP from1, SEXP from2, SEXP to) {
+inline void copy_names(SEXP from1, SEXP from2, SEXP to) {
   SEXP names1, names2, names;
   bool from1_matrix = Rf_isMatrix(from1);
   bool from2_matrix = Rf_isMatrix(from2);
@@ -93,7 +91,6 @@ inline SEXP copy_names(SEXP from1, SEXP from2, SEXP to) {
   }
   
   UNPROTECT(2);
-  return to;
 }
 
 // returns the number of dimensions for a color space type

@@ -63,8 +63,9 @@ SEXP convert_dispatch_impl(SEXP colour, SEXP white_from, SEXP white_to) {
     grab<Space_To>(to, out_p + offset1 + i, out_p + offset2 + i, out_p + offset3 + i, ncol_out == 4 ? out_p + offset4 + i : out_p);
   }
   
+  copy_names(colour, out);
   UNPROTECT(1);
-  return copy_names(colour, out);
+  return out;
 }
 
 // this is a trick to do a runtime fake compile time dispatch
@@ -205,8 +206,9 @@ SEXP compare_dispatch_impl(SEXP from, SEXP to, int dist, bool sym, SEXP white_fr
     }
   }
   
+  copy_names(from, to, out);
   UNPROTECT(1);
-  return copy_names(from, to, out);
+  return out;
 }
 
 template <typename From>

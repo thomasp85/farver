@@ -144,3 +144,11 @@ load_colour_names <- function() {
   .Call('load_colour_names_c', all_colours, all_values, PACKAGE = 'farver')
   invisible()
 }
+
+as_character <- function(x) {
+  if (is.character(x)) return(x)
+  n <- names(x)
+  x <- as.character(x)
+  names(x) <- n
+  x
+}

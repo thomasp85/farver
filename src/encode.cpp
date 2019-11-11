@@ -119,8 +119,9 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
     SET_STRING_ELT(codes, i, Rf_mkChar(buf));
   }
   
+  copy_names(colour, codes);
   UNPROTECT(1);
-  return copy_names(colour, codes);
+  return codes;
 }
 
 template<>
@@ -259,8 +260,9 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
     }
   }
   
+  copy_names(colour, codes);
   UNPROTECT(1);
-  return copy_names(colour, codes);
+  return codes;
 }
 
 SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white) {
@@ -374,8 +376,9 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
     }
   }
   
+  copy_names(codes, colours);
   UNPROTECT(1);
-  return copy_names(codes, colours);
+  return colours;
 }
 
 template <>
@@ -465,8 +468,9 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white) {
     }
   }
   
+  copy_names(codes, colours);
   UNPROTECT(1);
-  return copy_names(codes, colours);
+  return colours;
 }
 
 SEXP decode_c(SEXP codes, SEXP alpha, SEXP to, SEXP white) {
