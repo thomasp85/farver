@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# farver
+# farver <a href='https://farver.data-imaginist.com'><img src='man/figures/logo.png' align="right" height="131.5" /></a>
 
 [![Travis-CI Build
 Status](https://travis-ci.org/thomasp85/farver.svg?branch=master)](https://travis-ci.org/thomasp85/farver)
@@ -95,7 +95,8 @@ compare_colour(spectrum, spectrum2, 'rgb', method = 'cie2000')[1:6, 1:6]
   - HSV
   - CIE L\*AB
   - Hunter LAB
-  - LCH
+  - LCH(ab)
+  - LCH(uv)
   - LUV
   - RGB
   - XYZ

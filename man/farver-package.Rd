@@ -6,6 +6,8 @@
 \alias{farver-package}
 \title{farver: Vectorised Colour Conversion and Comparison}
 \description{
+\if{html}{\figure{logo.png}{options: align='right'}}
+
 The encoding of colour can be handled in many different ways, using
     different colour spaces. As different colour spaces have different uses,
     efficient conversion between these representations are important. The 
