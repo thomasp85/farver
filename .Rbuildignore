@@ -5,3 +5,6 @@
 ^README\.Rmd$
 ^README-.*\.png$
 ^codecov\.yml$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
