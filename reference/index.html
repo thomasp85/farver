@@ -84,21 +84,32 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="../news/index.html">Changelog</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    News
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Release notes</li>
+    <li class="divider"></li>
+    <li>
+      <a href="../news/index.html">Change log</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/thomasp85/farver">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -129,35 +140,39 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-colour-space-conversion" class="hasAnchor"><a href="#section-colour-space-conversion" class="anchor"></a>Colour space conversion</h2>
+          <p class="section-desc"><p>This is the raison d’être of the package. Take a matrix or data frame with colour channels in the columns, and convert it from one colour space to another. Channels are automatically capped if they have defined bounds, and any <code>NaN</code>, <code>NA</code>, <code>Inf</code>, or <code>-Inf</code> values in the input will result in a row of <code>NA</code> values in the output.</p></p>
         </th>
       </tr>
       <tr>
         
         <td>
-          <p><code><a href="as_white_ref.html">as_white_ref()</a></code> </p>
+          <p><code><a href="convert_colour.html">convert_colour()</a></code> </p>
         </td>
-        <td><p>Convert value to a tristimulus values normalised to Y=100</p></td>
-      </tr><tr>
+        <td><p>Convert between colour spaces</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-colour-comparison" class="hasAnchor"><a href="#section-colour-comparison" class="anchor"></a>Colour comparison</h2>
+          <p class="section-desc"><p>Getting a numeric value describing the distance between two colours is not a trivial task, and several metrics have been devised for that. farver supports a range of these, and allows you to compare colours in any space with each others.</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="compare_colour.html">compare_colour()</a></code> </p>
         </td>
         <td><p>Calculate the distance between colours</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="convert_colour.html">convert_colour()</a></code> </p>
-        </td>
-        <td><p>Convert between colour spaces</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="decode_colour.html">decode_colour()</a></code> </p>
-        </td>
-        <td><p>Decode RGB hex-strings into colour values</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-converting-to-and-from-colour-strings" class="hasAnchor"><a href="#section-converting-to-and-from-colour-strings" class="anchor"></a>Converting to and from colour strings</h2>
+          <p class="section-desc"><p>The native format of colours in R (and other languages) is often hexadecimal encoded rgb values (<code>#RRGGBB</code>). farver provides utilities for easily going back and forth between this and any colour space.</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="encode_colour.html">encode_colour()</a></code> </p>
@@ -166,10 +181,18 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="farver-package.html">farver-package</a></code> </p>
+          <p><code><a href="decode_colour.html">decode_colour()</a></code> </p>
         </td>
-        <td><p>farver: Vectorised Colour Conversion and Comparison</p></td>
-      </tr><tr>
+        <td><p>Decode RGB hex-strings into colour values</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-colour-string-manipulation" class="hasAnchor"><a href="#section-colour-string-manipulation" class="anchor"></a>Colour string manipulation</h2>
+          <p class="section-desc"><p>As colours are often encoded as strings, manipulation of individual channels requires decoding. and then encoding. farver does away with that by providing a range of functions for directly manipulating channels in colour strings.</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="manip_channel.html">set_channel()</a></code> <code><a href="manip_channel.html">add_to_channel()</a></code> <code><a href="manip_channel.html">multiply_channel()</a></code> <code><a href="manip_channel.html">raise_channel()</a></code> <code><a href="manip_channel.html">cap_channel()</a></code> <code><a href="manip_channel.html">get_channel()</a></code> </p>
@@ -183,7 +206,10 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-colour-space-conversion">Colour space conversion</a></li>
+      <li><a href="#section-colour-comparison">Colour comparison</a></li>
+      <li><a href="#section-converting-to-and-from-colour-strings">Converting to and from colour strings</a></li>
+      <li><a href="#section-colour-string-manipulation">Colour string manipulation</a></li>
     </ul>
   </div>
 </div>
