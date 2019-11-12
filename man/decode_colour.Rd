@@ -45,6 +45,7 @@ the gamut of one of the spaces is less than the other.
 }
 
 \seealso{
-Other encoding and decoding functions: \code{\link{encode_colour}}
+Other encoding and decoding functions: \code{\link{encode_colour}},
+  \code{\link{manip_channel}}
 }
 \concept{encoding and decoding functions}

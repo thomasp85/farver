@@ -28,6 +28,21 @@ colour_dims <- list(
   yxy = c('y1', 'x', 'y2'),
   hcl = c('h', 'c', 'l')
 )
+colour_channel_index <- list(
+  cmy = c('c' = 1L, 'm' = 2L, 'y' = 3L),
+  cmyk = c('c' = 1L, 'm' = 2L, 'y' = 3L, 'k' = 4L),
+  hsl = c('h' = 1L, 's' = 2L, 'l' = 3L),
+  hsb = c('h' = 1L, 's' = 2L, 'b' = 3L),
+  hsv = c('h' = 1L, 's' = 2L, 'v' = 3L),
+  lab = c('l' = 1L, 'a' = 2L, 'b' = 3L),
+  hunterlab = c('l' = 1L, 'a' = 2L, 'b' = 3L),
+  lch = c('l' = 1L, 'c' = 2L, 'h' = 3L),
+  luv = c('l' = 1L, 'u' = 2L, 'v' = 3L),
+  rgb = c('r' = 1L, 'g' = 2L, 'b' = 3L),
+  xyz = c('x' = 1L, 'y' = 2L, 'z' = 3L),
+  yxy = c('y1' = 1L, 'x' = 2L, 'y2' = 3L),
+  hcl = c('h' = 1L, 'c' = 2L, 'l' = 3L)
+)
 distances <- c(
   "euclidean",
   "cie1976",
@@ -35,18 +50,31 @@ distances <- c(
   "cie2000",
   "cmc"
 )
+operations <- c(
+  "set",
+  "add",
+  "multiply",
+  "least",
+  "most"
+)
 
 colourspace_match <- function(colour) {
   m <- pmatch(tolower(colour), colourspaces)
-  if (is.na(m)) stop("Unknown colour space")
+  if (is.na(m)) stop("Unknown colour space", call. = FALSE)
   m
 }
 
 distance_match <- function(dist) {
   m <- pmatch(match.arg(tolower(dist), distances), distances)
-  if (is.na(m)) stop("Unknown distance measure")
+  if (is.na(m)) stop("Unknown distance measure", call. = FALSE)
   m
 }
+operation_match <- function(op) {
+  m <- pmatch(match.arg(tolower(op), operations), operations)
+  if (is.na(m)) stop("Unknown operation", call. = FALSE)
+  m
+}
+
 white_references <- list(
   "2" = list(
     A = c(0.44757, 0.40745),
