@@ -342,7 +342,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
       nchar = strlen(col);
       has_alpha = nchar == 9;
       if (!has_alpha && nchar != 7) {
-        Rf_error("Malformed colour string. Must contain either 6 or 8 hex values");
+        Rf_error("Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       rgb.r = hex2int(col[1]) * 16 + hex2int(col[2]);
       rgb.g = hex2int(col[3]) * 16 + hex2int(col[4]);
@@ -424,7 +424,7 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white) {
       nchar = strlen(col);
       has_alpha = nchar == 9;
       if (!has_alpha && nchar != 7) {
-        Rf_error("Malformed colour string. Must contain either 6 or 8 hex values");
+        Rf_error("Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       r = hex2int(col[1]) * 16 + hex2int(col[2]);
       g = hex2int(col[3]) * 16 + hex2int(col[4]);
