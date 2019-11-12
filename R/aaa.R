@@ -136,6 +136,8 @@ white_references <- list(
 #' 
 #' @return A 3-length vector with tristimulus values
 #' 
+#' @keywords internal
+#' 
 #' @export
 #' 
 #' @examples 

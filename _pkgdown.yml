@@ -8,3 +8,55 @@ authors:
 template:
   params:
     bootswatch: paper
+
+navbar:
+  left:
+    - icon: fa-home fa-lg
+      href: index.html
+    - text: Reference
+      href: reference/index.html
+    - text: News
+      menu:
+      - text: "Release notes"
+      - text: "------------------"
+      - text: "Change log"
+        href: news/index.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/thomasp85/farver
+
+reference:
+- title: Colour space conversion
+  desc: >
+    This is the raison d'être of the package. Take a matrix or data frame with
+    colour channels in the columns, and convert it from one colour space to 
+    another. Channels are automatically capped if they have defined bounds, and
+    any `NaN`, `NA`, `Inf`, or `-Inf` values in the input will result in a row
+    of `NA` values in the output.
+  contents:
+  - convert_colour
+- title: Colour comparison
+  desc: >
+    Getting a numeric value describing the distance between two colours is not a
+    trivial task, and several metrics have been devised for that. farver 
+    supports a range of these, and allows you to compare colours in any space
+    with each others.
+  contents:
+  - compare_colour
+- title: Converting to and from colour strings
+  desc: >
+    The native format of colours in R (and other languages) is often hexadecimal
+    encoded rgb values (`#RRGGBB`). farver provides utilities for easily going
+    back and forth between this and any colour space.
+  contents:
+  - encode_colour
+  - decode_colour
+- title: Colour string manipulation
+  desc: >
+    As colours are often encoded as strings, manipulation of individual channels
+    requires decoding. and then encoding. farver does away with that by 
+    providing a range of functions for directly manipulating channels in colour
+    strings.
+  contents:
+  - set_channel
+  

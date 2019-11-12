@@ -1,6 +1,6 @@
 Package: farver
 Type: Package
-Title: Vectorised Colour Conversion and Comparison
+Title: High Performance Colour Space Manipulation
 Version: 1.1.0.9999
 Authors@R:
     c(person(given = "Thomas Lin",

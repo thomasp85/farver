@@ -20,14 +20,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-The goal of `farver` is to provide very fast, vectorised conversion of colours
-between different colour spaces, as well as provide fast colour comparisons 
-(distance between colours). To this end it provides an interface to a modified 
+The goal of farver is to provide very fast, vectorised functions for 
+conversion of colours between different colour spaces, colour comparisons 
+(distance between colours), encoding/decoding, and channel manipulation in 
+colour strings. To this end it provides an interface to a modified 
 version of the [ColorSpace](https://github.com/berendeanicolae/ColorSpace) C++ 
 library developed by Berendea Nicolae.
 
 ## Installation
-`farver` can be installed from CRAN using `install.packages('farver')`. The 
+farver can be installed from CRAN using `install.packages('farver')`. The 
 development version can be installed from Github using `devtools`:
 
 ```{r, eval=FALSE}
@@ -36,22 +37,56 @@ devtools::install_github('thomasp85/farver')
 ```
 
 ## Use
-The main functions of the package are`convert_colour()` with an interface very
-much alike `grDevices::convertColor()`, and `compare_colour()` which allows you
-to calculate the distance between colours using different metrics
-
-### Conversion
+farver provides an alternative to the `grDevices::rgb()` and 
+`grDevices::col2rgb()` for encoding and decoding colours strings. The farver 
+functions are superficially equivalent but provides a uniform output format, and
+the option to encode and decode directly from/to other colour spaces.
 
 ```{r}
 library(farver)
 
-spectrum <- t(col2rgb(rainbow(10)))
+codes <- rainbow(10)
+codes
+
+spectrum <- decode_colour(codes)
 spectrum
 
-convert_colour(spectrum, 'rgb', 'lab')
+encode_colour(spectrum)
 ```
 
-### Comparison
+It also provides an alternative to `grDevices::convertColor()` to switch between
+colours spaces. If the origin is a colour string it is possible to decode 
+directly into the given colour space. Conversely, if the endpoint is a colour
+string it is also possible to encode directly from a given colour space.
+
+```{r}
+spectrum_lab <- convert_colour(spectrum, 'rgb', 'lab')
+spectrum_lab
+
+decode_colour(codes, to = 'lab')
+
+encode_colour(spectrum_lab, from = 'lab')
+```
+
+If colours are given as strings, manipulation of channels will normally require
+decoding, conversion to the correct colour space, manipulation of the given 
+channel, converting back to rgb and the encoding to string. farver provides a
+range of functions that allow you to change any channel in the supported spaces
+directly in colour strings:
+
+```{r}
+# Add a value to the channel
+add_to_channel(codes, channel = 'l', value = 1:10, space = 'lab')
+
+# Set a channel to a specific value
+set_channel(codes, 'alpha', c(0.3, 0.7))
+
+# Limit a channel to a given value
+cap_channel(codes, 'r', 200)
+```
+
+Lastly, farver also provides utilities for calculating the distance between
+colours, based on a range of different measures
 
 ```{r}
 spectrum2 <- t(col2rgb(heat.colors(10)))
@@ -102,9 +137,27 @@ timing <- bench::mark(
   farver = convert_colour(test, 'rgb', 'lab'),
   grDevices = convertColor(test, 'sRGB', 'Lab', scale.in = 255), 
   check = FALSE,
-  iterations = 100,
-  filter_gc = FALSE
+  min_iterations = 100
 )
 plot(timing, type = 'ridge')
 ```
 
+Still, if the start- and/or endpoint are colour strings the ability
+to decode and encode directly from/to any colour space will give a huge speed 
+up.
+
+```{r, message=FALSE}
+colour_strings <- colours()
+timing <- bench::mark(
+  farver = decode_colour(colour_strings, to = 'lab'),
+  grDevices = convertColor(t(col2rgb(colour_strings)), 'sRGB', 'Lab', scale.in = 255), 
+  check = FALSE,
+  min_iterations = 100
+)
+plot(timing, type = 'ridge')
+```
+
+## Code of Conduct
+Please note that the 'farver' project is released with a
+[Contributor Code of Conduct](https://farver.data-imaginist.com/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
