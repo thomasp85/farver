@@ -529,7 +529,7 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString ||
         (value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
-        (!value_is_int && !R_finite(one_value ? first_value_i : value_i[i]))) {
+        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
       SET_STRING_ELT(ret, i, R_NaString);
       continue;
     }
@@ -616,7 +616,7 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString ||
         (value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
-        (!value_is_int && !R_finite(one_value ? first_value_i : value_i[i]))) {
+        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
       SET_STRING_ELT(ret, i, R_NaString);
       continue;
     }
