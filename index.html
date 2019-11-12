@@ -98,64 +98,99 @@
 <a href="#farver" class="anchor"></a>farver <a href="https://farver.data-imaginist.com"><img src="reference/figures/logo.png" align="right" height="131.5"></a>
 </h1></div>
 
-<p>The goal of <code>farver</code> is to provide very fast, vectorised conversion of colours between different colour spaces, as well as provide fast colour comparisons (distance between colours). To this end it provides an interface to a modified version of the <a href="https://github.com/berendeanicolae/ColorSpace">ColorSpace</a> C++ library developed by Berendea Nicolae.</p>
+<p>The goal of farver is to provide very fast, vectorised functions for conversion of colours between different colour spaces, colour comparisons (distance between colours), encoding/decoding, and channel manipulation in colour strings. To this end it provides an interface to a modified version of the <a href="https://github.com/berendeanicolae/ColorSpace">ColorSpace</a> C++ library developed by Berendea Nicolae.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p><code>farver</code> can be installed from CRAN using <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages('farver')</a></code>. The development version can be installed from Github using <code>devtools</code>:</p>
+<p>farver can be installed from CRAN using <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages('farver')</a></code>. The development version can be installed from Github using <code>devtools</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># install.packages('devtools')</span></a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">'thomasp85/farver'</span>)</a></code></pre></div>
 </div>
 <div id="use" class="section level2">
 <h2 class="hasAnchor">
 <a href="#use" class="anchor"></a>Use</h2>
-<p>The main functions of the package are<code><a href="reference/convert_colour.html">convert_colour()</a></code> with an interface very much alike <code><a href="https://rdrr.io/r/grDevices/convertColor.html">grDevices::convertColor()</a></code>, and <code><a href="reference/compare_colour.html">compare_colour()</a></code> which allows you to calculate the distance between colours using different metrics</p>
-<div id="conversion" class="section level3">
-<h3 class="hasAnchor">
-<a href="#conversion" class="anchor"></a>Conversion</h3>
+<p>farver provides an alternative to the <code><a href="https://rdrr.io/r/grDevices/rgb.html">grDevices::rgb()</a></code> and <code><a href="https://rdrr.io/r/grDevices/col2rgb.html">grDevices::col2rgb()</a></code> for encoding and decoding colours strings. The farver functions are superficially equivalent but provides a uniform output format, and the option to encode and decode directly from/to other colour spaces.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(farver)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">spectrum &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="kw"><a href="https://rdrr.io/r/grDevices/col2rgb.html">col2rgb</a></span>(<span class="kw"><a href="https://rdrr.io/r/grDevices/palettes.html">rainbow</a></span>(<span class="dv">10</span>)))</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">spectrum</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt;       red green blue</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt;  [1,] 255     0    0</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt;  [2,] 255   153    0</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt;  [3,] 204   255    0</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt;  [4,]  51   255    0</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt;  [5,]   0   255  102</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt;  [6,]   0   255  255</span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt;  [7,]   0   102  255</span></a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt;  [8,]  51     0  255</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt;  [9,] 204     0  255</span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; [10,] 255     0  153</span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="kw"><a href="reference/convert_colour.html">convert_colour</a></span>(spectrum, <span class="st">'rgb'</span>, <span class="st">'lab'</span>)</a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt;              l         a           b</span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt;  [1,] 53.24079  80.09246   67.203197</span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt;  [2,] 72.26072  30.16539   77.224482</span></a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt;  [3,] 93.60533 -41.94504   90.274226</span></a>
-<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt;  [4,] 88.07403 -83.10813   83.593379</span></a>
-<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt;  [5,] 88.19634 -80.27943   57.926987</span></a>
-<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt;  [6,] 91.11322 -48.08753  -14.131186</span></a>
-<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt;  [7,] 47.90478  35.19678  -82.006104</span></a>
-<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#&gt;  [8,] 33.81896  79.70044 -105.279006</span></a>
-<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="co">#&gt;  [9,] 51.90416  90.99470  -74.834222</span></a>
-<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt; [10,] 55.65103  86.52861   -9.719051</span></a></code></pre></div>
-</div>
-<div id="comparison" class="section level3">
-<h3 class="hasAnchor">
-<a href="#comparison" class="anchor"></a>Comparison</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">spectrum2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="kw"><a href="https://rdrr.io/r/grDevices/col2rgb.html">col2rgb</a></span>(<span class="kw"><a href="https://rdrr.io/r/grDevices/palettes.html">heat.colors</a></span>(<span class="dv">10</span>)))</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw"><a href="reference/compare_colour.html">compare_colour</a></span>(spectrum, spectrum2, <span class="st">'rgb'</span>, <span class="dt">method =</span> <span class="st">'cie2000'</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>]</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;          [,1]     [,2]      [,3]     [,4]     [,5]     [,6]</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; [1,]  0.00000  1.95065  7.130898 15.53837 27.08237 39.88958</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; [2,] 29.50083 27.56585 22.402612 13.98117  2.41602 10.31341</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; [3,] 72.33606 70.32974 64.926436 55.98592 43.59987 30.24747</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; [4,] 85.84698 83.68842 77.854648 68.19997 55.06314 41.59064</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; [5,] 85.92110 83.79762 78.073545 68.67184 56.07682 43.42965</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; [6,] 70.95853 69.55274 65.907013 60.35739 53.72218 47.94387</span></a></code></pre></div>
-</div>
+<a class="sourceLine" id="cb2-3" data-line-number="3">codes &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/grDevices/palettes.html">rainbow</a></span>(<span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">codes</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt;  [1] "#FF0000FF" "#FF9900FF" "#CCFF00FF" "#33FF00FF" "#00FF66FF"</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt;  [6] "#00FFFFFF" "#0066FFFF" "#3300FFFF" "#CC00FFFF" "#FF0099FF"</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">spectrum &lt;-<span class="st"> </span><span class="kw"><a href="reference/decode_colour.html">decode_colour</a></span>(codes)</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">spectrum</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt;         r   g   b</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt;  [1,] 255   0   0</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt;  [2,] 255 153   0</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt;  [3,] 204 255   0</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt;  [4,]  51 255   0</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt;  [5,]   0 255 102</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt;  [6,]   0 255 255</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt;  [7,]   0 102 255</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt;  [8,]  51   0 255</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt;  [9,] 204   0 255</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; [10,] 255   0 153</span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="kw"><a href="reference/encode_colour.html">encode_colour</a></span>(spectrum)</a>
+<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt;  [1] "#FF0000" "#FF9900" "#CCFF00" "#33FF00" "#00FF66" "#00FFFF" "#0066FF"</span></a>
+<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt;  [8] "#3300FF" "#CC00FF" "#FF0099"</span></a></code></pre></div>
+<p>It also provides an alternative to <code><a href="https://rdrr.io/r/grDevices/convertColor.html">grDevices::convertColor()</a></code> to switch between colours spaces. If the origin is a colour string it is possible to decode directly into the given colour space. Conversely, if the endpoint is a colour string it is also possible to encode directly from a given colour space.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">spectrum_lab &lt;-<span class="st"> </span><span class="kw"><a href="reference/convert_colour.html">convert_colour</a></span>(spectrum, <span class="st">'rgb'</span>, <span class="st">'lab'</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">spectrum_lab</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;              l         a           b</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;  [1,] 53.24079  80.09246   67.203197</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt;  [2,] 72.26072  30.16539   77.224482</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt;  [3,] 93.60533 -41.94504   90.274226</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt;  [4,] 88.07403 -83.10813   83.593379</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt;  [5,] 88.19634 -80.27943   57.926987</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt;  [6,] 91.11322 -48.08753  -14.131186</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;  [7,] 47.90478  35.19678  -82.006104</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  [8,] 33.81896  79.70044 -105.279006</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt;  [9,] 51.90416  90.99470  -74.834222</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; [10,] 55.65103  86.52861   -9.719051</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="kw"><a href="reference/decode_colour.html">decode_colour</a></span>(codes, <span class="dt">to =</span> <span class="st">'lab'</span>)</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt;              l         a           b</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt;  [1,] 53.24079  80.09246   67.203197</span></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;  [2,] 72.26072  30.16539   77.224482</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt;  [3,] 93.60533 -41.94504   90.274226</span></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt;  [4,] 88.07403 -83.10813   83.593379</span></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt;  [5,] 88.19634 -80.27943   57.926987</span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt;  [6,] 91.11322 -48.08753  -14.131186</span></a>
+<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt;  [7,] 47.90478  35.19678  -82.006104</span></a>
+<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt;  [8,] 33.81896  79.70044 -105.279006</span></a>
+<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt;  [9,] 51.90416  90.99470  -74.834222</span></a>
+<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co">#&gt; [10,] 55.65103  86.52861   -9.719051</span></a>
+<a class="sourceLine" id="cb3-27" data-line-number="27"></a>
+<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="kw"><a href="reference/encode_colour.html">encode_colour</a></span>(spectrum_lab, <span class="dt">from =</span> <span class="st">'lab'</span>)</a>
+<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co">#&gt;  [1] "#FF0000" "#FF9900" "#CCFF00" "#33FF00" "#00FF66" "#00FFFF" "#0066FF"</span></a>
+<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="co">#&gt;  [8] "#3300FF" "#CC00FF" "#FF0099"</span></a></code></pre></div>
+<p>If colours are given as strings, manipulation of channels will normally require decoding, conversion to the correct colour space, manipulation of the given channel, converting back to rgb and the encoding to string. farver provides a range of functions that allow you to change any channel in the supported spaces directly in colour strings:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Add a value to the channel</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="reference/manip_channel.html">add_to_channel</a></span>(codes, <span class="dt">channel =</span> <span class="st">'l'</span>, <span class="dt">value =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">space =</span> <span class="st">'lab'</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt;  [1] "#FF0C03FF" "#FF9E0EFF" "#D5FF1CFF" "#48FF20FF" "#33FF74FF"</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt;  [6] "#3CFFFFFF" "#3D77FFFF" "#5A25FFFF" "#E839FFFF" "#FF41B4FF"</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co"># Set a channel to a specific value</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="kw"><a href="reference/manip_channel.html">set_channel</a></span>(codes, <span class="st">'alpha'</span>, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.3</span>, <span class="fl">0.7</span>))</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt;  [1] "#FF00004C" "#FF9900B2" "#CCFF004C" "#33FF00B2" "#00FF664C"</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt;  [6] "#00FFFFB2" "#0066FF4C" "#3300FFB2" "#CC00FF4C" "#FF0099B2"</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co"># Limit a channel to a given value</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="kw"><a href="reference/manip_channel.html">cap_channel</a></span>(codes, <span class="st">'r'</span>, <span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt;  [1] "#C80000FF" "#C89900FF" "#C8FF00FF" "#33FF00FF" "#00FF66FF"</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;  [6] "#00FFFFFF" "#0066FFFF" "#3300FFFF" "#C800FFFF" "#C80099FF"</span></a></code></pre></div>
+<p>Lastly, farver also provides utilities for calculating the distance between colours, based on a range of different measures</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">spectrum2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="kw"><a href="https://rdrr.io/r/grDevices/col2rgb.html">col2rgb</a></span>(<span class="kw"><a href="https://rdrr.io/r/grDevices/palettes.html">heat.colors</a></span>(<span class="dv">10</span>)))</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw"><a href="reference/compare_colour.html">compare_colour</a></span>(spectrum, spectrum2, <span class="st">'rgb'</span>, <span class="dt">method =</span> <span class="st">'cie2000'</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>]</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt;          [,1]     [,2]      [,3]     [,4]     [,5]     [,6]</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; [1,]  0.00000  1.95065  7.130898 15.53837 27.08237 39.88958</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; [2,] 29.50083 27.56585 22.402612 13.98117  2.41602 10.31341</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt; [3,] 72.33606 70.32974 64.926436 55.98592 43.59987 30.24747</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt; [4,] 85.84698 83.68842 77.854648 68.19997 55.06314 41.59064</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt; [5,] 85.92110 83.79762 78.073545 68.67184 56.07682 43.42965</span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; [6,] 70.95853 69.55274 65.907013 60.35739 53.72218 47.94387</span></a></code></pre></div>
 </div>
 <div id="supported-colour-spaces" class="section level2">
 <h2 class="hasAnchor">
@@ -198,17 +233,31 @@
 <h2 class="hasAnchor">
 <a href="#benchmark" class="anchor"></a>Benchmark</h2>
 <p><code>farver</code> is faster than its <code>grDevices</code> counterpart but less so than it was at its first release, as the colour conversion in grDevices has been improved since.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">test &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">300000</span>, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">255</span>), <span class="dt">ncol =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">timing &lt;-<span class="st"> </span>bench<span class="op">::</span><span class="kw">mark</span>(</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">  <span class="dt">farver =</span> <span class="kw"><a href="reference/convert_colour.html">convert_colour</a></span>(test, <span class="st">'rgb'</span>, <span class="st">'lab'</span>),</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">  <span class="dt">grDevices =</span> <span class="kw"><a href="https://rdrr.io/r/grDevices/convertColor.html">convertColor</a></span>(test, <span class="st">'sRGB'</span>, <span class="st">'Lab'</span>, <span class="dt">scale.in =</span> <span class="dv">255</span>), </a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">  <span class="dt">check =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">  <span class="dt">iterations =</span> <span class="dv">100</span>,</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">  <span class="dt">filter_gc =</span> <span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">)</a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(timing, <span class="dt">type =</span> <span class="st">'ridge'</span>)</a></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-5-1.png"><!-- --></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">test &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">300000</span>, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">255</span>), <span class="dt">ncol =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">timing &lt;-<span class="st"> </span>bench<span class="op">::</span><span class="kw">mark</span>(</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">  <span class="dt">farver =</span> <span class="kw"><a href="reference/convert_colour.html">convert_colour</a></span>(test, <span class="st">'rgb'</span>, <span class="st">'lab'</span>),</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">  <span class="dt">grDevices =</span> <span class="kw"><a href="https://rdrr.io/r/grDevices/convertColor.html">convertColor</a></span>(test, <span class="st">'sRGB'</span>, <span class="st">'Lab'</span>, <span class="dt">scale.in =</span> <span class="dv">255</span>), </a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">  <span class="dt">check =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">  <span class="dt">min_iterations =</span> <span class="dv">100</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(timing, <span class="dt">type =</span> <span class="st">'ridge'</span>)</a></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-7-1.png"><!-- --></p>
+<p>Still, if the start- and/or endpoint are colour strings the ability to decode and encode directly from/to any colour space will give a huge speed up.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">colour_strings &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/grDevices/colors.html">colours</a></span>()</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">timing &lt;-<span class="st"> </span>bench<span class="op">::</span><span class="kw">mark</span>(</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="dt">farver =</span> <span class="kw"><a href="reference/decode_colour.html">decode_colour</a></span>(colour_strings, <span class="dt">to =</span> <span class="st">'lab'</span>),</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">  <span class="dt">grDevices =</span> <span class="kw"><a href="https://rdrr.io/r/grDevices/convertColor.html">convertColor</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="kw"><a href="https://rdrr.io/r/grDevices/col2rgb.html">col2rgb</a></span>(colour_strings)), <span class="st">'sRGB'</span>, <span class="st">'Lab'</span>, <span class="dt">scale.in =</span> <span class="dv">255</span>), </a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">  <span class="dt">check =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">  <span class="dt">min_iterations =</span> <span class="dv">100</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">)</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(timing, <span class="dt">type =</span> <span class="st">'ridge'</span>)</a></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-8-1.png"><!-- --></p>
+</div>
+<div id="code-of-conduct" class="section level2">
+<h2 class="hasAnchor">
+<a href="#code-of-conduct" class="anchor"></a>Code of Conduct</h2>
+<p>Please note that the ‘farver’ project is released with a <a href="https://farver.data-imaginist.com/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
   </div>
