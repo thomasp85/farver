@@ -177,8 +177,8 @@ and forth between two colourspaces may result in a change in the colour if
 the gamut of one of the spaces is less than the other.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>r</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/col2rgb.html'>col2rgb</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fl'>10</span>)))
-<span class='no'>h</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/col2rgb.html'>col2rgb</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>heat.colors</a></span>(<span class='fl'>15</span>)))
+    <pre class="examples"><div class='input'><span class='no'>r</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='decode_colour.html'>decode_colour</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fl'>10</span>))
+<span class='no'>h</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='decode_colour.html'>decode_colour</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>heat.colors</a></span>(<span class='fl'>15</span>))
 
 <span class='co'># Compare two sets of colours</span>
 <span class='fu'>compare_colour</span>(<span class='no'>r</span>, <span class='no'>h</span>, <span class='st'>'rgb'</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'cie2000'</span>)</div><div class='output co'>#&gt;            [,1]     [,2]     [,3]     [,4]     [,5]      [,6]      [,7]
@@ -236,7 +236,43 @@ the gamut of one of the spaces is less than the other.</p>
 #&gt;  [7,]  8.957990  3.701201
 #&gt;  [8,] 11.098901 17.436529
 #&gt;  [9,]  0.000000  8.718964
-#&gt; [10,]  0.000000  0.000000</div></pre>
+#&gt; [10,]  0.000000  0.000000</div><div class='input'>
+<span class='co'># Compare colours from different colour spaces</span>
+<span class='no'>h_luv</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='convert_colour.html'>convert_colour</a></span>(<span class='no'>h</span>, <span class='st'>'rgb'</span>, <span class='st'>'luv'</span>)
+<span class='fu'>compare_colour</span>(<span class='no'>r</span>, <span class='no'>h_luv</span>, <span class='st'>'rgb'</span>, <span class='st'>'luv'</span>)</div><div class='output co'>#&gt;            [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]
+#&gt;  [1,] 221.42391 223.33260 222.10259 220.19485 217.94653 258.49652 252.61449
+#&gt;  [2,] 211.00494 208.71472 207.34795 204.88400 201.48888 191.50105 186.61530
+#&gt;  [3,] 222.60055 217.83061 216.81894 214.76743 211.67223 160.56650 158.64023
+#&gt;  [4,] 163.79160 157.88736 157.85141 157.37370 156.25322  81.15444  85.73625
+#&gt;  [5,] 172.21280 166.80877 167.20229 167.48420 167.39886 102.91513 108.70157
+#&gt;  [6,] 172.21280 166.80877 167.20229 167.48420 167.39886 102.91513 108.70157
+#&gt;  [7,]  54.32044  54.11822  55.50671  57.85567  60.93683  97.60800  97.94306
+#&gt;  [8,]  91.25125  97.18253  97.30218  97.99838  99.54864 175.56301 172.20740
+#&gt;  [9,] 176.21041 178.79094 177.65443 175.96093 174.06895 223.64689 217.87935
+#&gt; [10,] 221.42391 223.33260 222.10259 220.19485 217.94653 258.49652 252.61449
+#&gt;            [,8]      [,9]     [,10]     [,11]     [,12]     [,13]    [,14]
+#&gt;  [1,] 243.63170 231.07525 216.36111 200.73884 185.14279 175.73159 167.7826
+#&gt;  [2,] 181.03938 175.42619 170.58260 167.88722 167.58776 174.99006 183.4128
+#&gt;  [3,] 158.83883 162.52032 169.12935 178.93751 190.96264 207.27824 223.3232
+#&gt;  [4,]  94.53898 108.41226 125.43164 144.63089 164.85250 183.56105 201.9296
+#&gt;  [5,] 117.94448 131.41793 147.80578 166.19842 185.69747 202.50626 219.4242
+#&gt;  [6,] 117.94448 131.41793 147.80578 166.19842 185.69747 202.50626 219.4242
+#&gt;  [7,]  96.33300  93.16703  91.36879  92.30317  97.28179 100.28388 106.9846
+#&gt;  [8,] 165.01373 153.11953 138.72975 122.84691 107.17590  90.10055  74.9450
+#&gt;  [9,] 208.61852 195.20560 179.21379 161.83912 144.14249 131.86251 121.3031
+#&gt; [10,] 243.63170 231.07525 216.36111 200.73884 185.14279 175.73159 167.7826
+#&gt;           [,15]
+#&gt;  [1,] 160.98330
+#&gt;  [2,] 192.59464
+#&gt;  [3,] 239.26773
+#&gt;  [4,] 220.33149
+#&gt;  [5,] 236.74657
+#&gt;  [6,] 236.74657
+#&gt;  [7,] 116.87544
+#&gt;  [8,]  62.51013
+#&gt;  [9,] 112.29692
+#&gt; [10,] 160.98330</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

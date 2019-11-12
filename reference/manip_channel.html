@@ -182,6 +182,31 @@ vector in the case of <code>get_channel()</code>)</p>
     <div class='dont-index'><p>Other encoding and decoding functions: <code><a href='decode_colour.html'>decode_colour</a></code>,
   <code><a href='encode_colour.html'>encode_colour</a></code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>spectrum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fl'>10</span>)
+
+<span class='co'># set a specific channel</span>
+<span class='fu'>set_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>50</span>))</div><div class='output co'>#&gt;  [1] "#0A0000FF" "#329900FF" "#0AFF00FF" "#32FF00FF" "#0AFF66FF" "#32FFFFFF"
+#&gt;  [7] "#0A66FFFF" "#3200FFFF" "#0A00FFFF" "#320099FF"</div><div class='input'><span class='fu'>set_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>50</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;  [1] "#F40000FF" "#B86000FF" "#4B8600FF" "#009200FF" "#009100FF" "#008B8EFF"
+#&gt;  [7] "#1D6BFFFF" "#7A3FFFFF" "#C600F9FF" "#ED008AFF"</div><div class='input'><span class='fu'>set_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'alpha'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>, <span class='fl'>1</span>))</div><div class='output co'>#&gt;  [1] "#FF000080" "#FF9900"   "#CCFF0080" "#33FF00"   "#00FF6680" "#00FFFF"  
+#&gt;  [7] "#0066FF80" "#3300FF"   "#CC00FF80" "#FF0099"  </div><div class='input'>
+<span class='co'># Add value to channel</span>
+<span class='fu'>add_to_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>50</span>))</div><div class='output co'>#&gt;  [1] "#FF0000FF" "#FF9900FF" "#D6FF00FF" "#65FF00FF" "#0AFF66FF" "#32FFFFFF"
+#&gt;  [7] "#0A66FFFF" "#6500FFFF" "#D600FFFF" "#FF0099FF"</div><div class='input'><span class='fu'>add_to_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>50</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;  [1] "#FFB380FF" "#FFE663FF" "#DFFF2DFF" "#69FF41FF" "#55FF86FF" "#4BFFFFFF"
+#&gt;  [7] "#D6EAFFFF" "#EC9DFFFF" "#FFB7FFFF" "#FFB1FFFF"</div><div class='input'>
+<span class='co'># Multiply a channel</span>
+<span class='fu'>multiply_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>50</span>))</div><div class='output co'>#&gt;  [1] "#FF0000FF" "#FF9900FF" "#FFFF00FF" "#FFFF00FF" "#00FF66FF" "#00FFFFFF"
+#&gt;  [7] "#0066FFFF" "#FF00FFFF" "#FF00FFFF" "#FF0099FF"</div><div class='input'><span class='fu'>multiply_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>50</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;  [1] "#FFB380FF" "#FFE663FF" "#DFFF2DFF" "#69FF41FF" "#55FF86FF" "#4BFFFFFF"
+#&gt;  [7] "#DCF0FFFF" "#FFCCFFFF" "#FFB7FFFF" "#FFB1FFFF"</div><div class='input'>
+<span class='co'># set a lower bound on a channel</span>
+<span class='fu'>raise_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>50</span>))</div><div class='output co'>#&gt;  [1] "#FF0000FF" "#FF9900FF" "#CCFF00FF" "#33FF00FF" "#0AFF66FF" "#32FFFFFF"
+#&gt;  [7] "#0A66FFFF" "#3300FFFF" "#CC00FFFF" "#FF0099FF"</div><div class='input'><span class='fu'>raise_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>20</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;  [1] "#FF0000FF" "#FF9900FF" "#CCFF00FF" "#33FF00FF" "#00FF66FF" "#00FFFFFF"
+#&gt;  [7] "#0066FFFF" "#3300FFFF" "#CC00FFFF" "#FF0099FF"</div><div class='input'>
+<span class='co'># set an upper bound on a channel</span>
+<span class='fu'>cap_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>100</span>, <span class='fl'>50</span>))</div><div class='output co'>#&gt;  [1] "#640000FF" "#329900FF" "#64FF00FF" "#32FF00FF" "#00FF66FF" "#00FFFFFF"
+#&gt;  [7] "#0066FFFF" "#3200FFFF" "#6400FFFF" "#320099FF"</div><div class='input'><span class='fu'>cap_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>20</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;  [1] "#920000FF" "#631600FF" "#183B00FF" "#004200FF" "#004200FF" "#003F44FF"
+#&gt;  [7] "#0029AFFF" "#0000D6FF" "#6B00A4FF" "#900041FF"</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -189,6 +214,7 @@ vector in the case of <code>get_channel()</code>)</p>
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
       <li><a href="#see-also">See also</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

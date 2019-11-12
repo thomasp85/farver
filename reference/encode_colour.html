@@ -184,6 +184,19 @@ the gamut of one of the spaces is less than the other.</p>
     <div class='dont-index'><p>Other encoding and decoding functions: <code><a href='decode_colour.html'>decode_colour</a></code>,
   <code><a href='manip_channel.html'>manip_channel</a></code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>spectrum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='decode_colour.html'>decode_colour</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fl'>10</span>))
+
+<span class='fu'>encode_colour</span>(<span class='no'>spectrum</span>)</div><div class='output co'>#&gt;  [1] "#FF0000" "#FF9900" "#CCFF00" "#33FF00" "#00FF66" "#00FFFF" "#0066FF"
+#&gt;  [8] "#3300FF" "#CC00FF" "#FF0099"</div><div class='input'>
+<span class='co'># Attach alpha values</span>
+<span class='fu'>encode_colour</span>(<span class='no'>spectrum</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>, <span class='fl'>1</span>))</div><div class='output co'>#&gt;  [1] "#FF000080" "#FF9900"   "#CCFF0080" "#33FF00"   "#00FF6680" "#00FFFF"  
+#&gt;  [7] "#0066FF80" "#3300FF"   "#CC00FF80" "#FF0099"  </div><div class='input'>
+<span class='co'># Encode from a different colour space</span>
+<span class='no'>spectrum_hcl</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='convert_colour.html'>convert_colour</a></span>(<span class='no'>spectrum</span>, <span class='st'>'rgb'</span>, <span class='st'>'hcl'</span>)
+<span class='fu'>encode_colour</span>(<span class='no'>spectrum_hcl</span>, <span class='kw'>from</span> <span class='kw'>=</span> <span class='st'>'hcl'</span>)</div><div class='output co'>#&gt;  [1] "#FF0000" "#FF9900" "#CCFF00" "#33FF00" "#00FF66" "#00FFFF" "#0066FF"
+#&gt;  [8] "#3300FF" "#CC00FF" "#FF0099"</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -193,6 +206,7 @@ the gamut of one of the spaces is less than the other.</p>
       <li><a href="#note">Note</a></li>
       <li><a href="#handling-of-non-finite-and-out-of-bounds-values">Handling of non-finite and out of bounds values</a></li>
       <li><a href="#see-also">See also</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

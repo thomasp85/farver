@@ -189,8 +189,9 @@ the gamut of one of the spaces is less than the other.</p>
     <div class='dont-index'><p><code><a href='https://rdrr.io/r/grDevices/convertColor.html'>grDevices::convertColor()</a></code>, <code><a href='https://rdrr.io/r/grDevices/col2rgb.html'>grDevices::col2rgb()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>spectrum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/col2rgb.html'>col2rgb</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fl'>10</span>)))
-<span class='fu'>convert_colour</span>(<span class='no'>spectrum</span>, <span class='st'>'rgb'</span>, <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;              l         a          b
+    <pre class="examples"><div class='input'><span class='no'>spectrum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='decode_colour.html'>decode_colour</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fl'>10</span>))
+<span class='no'>spec_lab</span> <span class='kw'>&lt;-</span> <span class='fu'>convert_colour</span>(<span class='no'>spectrum</span>, <span class='st'>'rgb'</span>, <span class='st'>'lab'</span>)
+<span class='no'>spec_lab</span></div><div class='output co'>#&gt;              l         a          b
 #&gt;  [1,] 53.24079  80.09796   67.20432
 #&gt;  [2,] 72.26072  30.17136   77.22610
 #&gt;  [3,] 93.60533 -41.93879   90.27635
@@ -201,6 +202,18 @@ the gamut of one of the spaces is less than the other.</p>
 #&gt;  [8,] 33.81896  79.70472 -105.27489
 #&gt;  [9,] 51.90416  91.00028  -74.83009
 #&gt; [10,] 55.65103  86.53436   -9.71618</div><div class='input'>
+<span class='co'># Convert between different white references</span>
+<span class='fu'>convert_colour</span>(<span class='no'>spec_lab</span>, <span class='st'>'lab'</span>, <span class='st'>'lab'</span>, <span class='kw'>white_from</span> <span class='kw'>=</span> <span class='st'>'D65'</span>, <span class='kw'>white_to</span> <span class='kw'>=</span> <span class='st'>'F10'</span>)</div><div class='output co'>#&gt;              l         a           b
+#&gt;  [1,] 53.24080  80.09793   67.204334
+#&gt;  [2,] 72.26073  30.17134   77.226110
+#&gt;  [3,] 93.60534 -41.93880   90.276365
+#&gt;  [4,] 88.07403 -83.10282   83.595455
+#&gt;  [5,] 88.19634 -80.27406   57.929616
+#&gt;  [6,] 91.11322 -48.08151  -14.126901
+#&gt;  [7,] 47.90478  35.20131  -82.001964
+#&gt;  [8,] 33.81896  79.70473 -105.274888
+#&gt;  [9,] 51.90416  91.00027  -74.830083
+#&gt; [10,] 55.65103  86.53433   -9.716171</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
