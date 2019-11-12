@@ -71,7 +71,6 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
     colour_d = REAL(colour);
   }
   for (int i = 0; i < n; ++i) {
-    rgb.valid = true;
     if (colour_is_int) {
       fill_rgb<From>(&rgb, colour_i[offset1 + i], colour_i[offset2 + i], colour_i[offset3 + i], n_channels == 4 ? colour_i[offset4 + i] : 0);
     } else {
@@ -371,6 +370,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
       }
     }
     rgb.valid = true;
+    to.valid = true;
     ColorSpace::IConverter<To>::ToColorSpace(&rgb, &to);
     grab<To>(to, colours_p + offset1 + i, colours_p + offset2 + i, colours_p + offset3 + i, n_channels == 4 ? colours_p + offset4 + i : colours_p);
     if (get_alpha) {
