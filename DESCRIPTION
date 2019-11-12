@@ -32,6 +32,7 @@ SystemRequirements: C++11
 RoxygenNote: 6.1.1
 URL: https://github.com/thomasp85/farver
 BugReports: https://github.com/thomasp85/farver/issues
-Suggests: testthat,
+Suggests: 
+    testthat (>= 2.1.0),
     covr
 Roxygen: list(markdown=TRUE)
