@@ -71,6 +71,7 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
     colour_d = REAL(colour);
   }
   for (int i = 0; i < n; ++i) {
+    rgb.valid = true;
     if (colour_is_int) {
       fill_rgb<From>(&rgb, colour_i[offset1 + i], colour_i[offset2 + i], colour_i[offset3 + i], n_channels == 4 ? colour_i[offset4 + i] : 0);
     } else {
