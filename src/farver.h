@@ -108,6 +108,9 @@ inline int dimension<ColorSpace::Cmyk>(){
 template <typename Space>
 inline void fill_rgb(ColorSpace::Rgb* rgb, double x1, double x2, double x3, double x4=0.0){
   Space col(x1, x2, x3);
+  if (!col.valid) {
+    Rf_warning("Colour not valid with values: x1: %f, x2: %f, x3: %f", x1, x2, x3);
+  }
   col.Cap();
   col.ToRgb(rgb);
 }
