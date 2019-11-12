@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • farver</title>
+<title>Modify colour space channels in hex-encoded colour strings — manip_channel • farver</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,7 +42,10 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Modify colour space channels in hex-encoded colour strings — manip_channel" />
+<meta property="og:description" content="This set of functions allows you to modify colours as given by strings,
+whithout first decoding them. For large vectors of colour values this should
+provide a considerable speedup." />
 <meta property="og:image" content="https://farver.data-imaginist.com/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -63,7 +66,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -113,78 +116,81 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Modify colour space channels in hex-encoded colour strings</h1>
+    <small class="dont-index">Source: <a href='https://github.com/thomasp85/farver/blob/master/R/modify.R'><code>R/modify.R</code></a></small>
+    <div class="hidden name"><code>manip_channel.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>This set of functions allows you to modify colours as given by strings,
+whithout first decoding them. For large vectors of colour values this should
+provide a considerable speedup.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>set_channel</span>(<span class='no'>colour</span>, <span class='no'>channel</span>, <span class='no'>value</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>)
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="as_white_ref.html">as_white_ref()</a></code> </p>
-        </td>
-        <td><p>Convert value to a tristimulus values normalised to Y=100</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="compare_colour.html">compare_colour()</a></code> </p>
-        </td>
-        <td><p>Calculate the distance between colours</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="convert_colour.html">convert_colour()</a></code> </p>
-        </td>
-        <td><p>Convert between colour spaces</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="decode_colour.html">decode_colour()</a></code> </p>
-        </td>
-        <td><p>Decode RGB hex-strings into colour values</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="encode_colour.html">encode_colour()</a></code> </p>
-        </td>
-        <td><p>Encode colours into RGB hex-strings</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="farver-package.html">farver-package</a></code> </p>
-        </td>
-        <td><p>farver: Vectorised Colour Conversion and Comparison</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="manip_channel.html">set_channel()</a></code> <code><a href="manip_channel.html">add_to_channel()</a></code> <code><a href="manip_channel.html">multiply_channel()</a></code> <code><a href="manip_channel.html">raise_channel()</a></code> <code><a href="manip_channel.html">cap_channel()</a></code> <code><a href="manip_channel.html">get_channel()</a></code> </p>
-        </td>
-        <td><p>Modify colour space channels in hex-encoded colour strings</p></td>
-      </tr>
-    </tbody>
+<span class='fu'>add_to_channel</span>(<span class='no'>colour</span>, <span class='no'>channel</span>, <span class='no'>value</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>)
+
+<span class='fu'>multiply_channel</span>(<span class='no'>colour</span>, <span class='no'>channel</span>, <span class='no'>value</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>)
+
+<span class='fu'>raise_channel</span>(<span class='no'>colour</span>, <span class='no'>channel</span>, <span class='no'>value</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>)
+
+<span class='fu'>cap_channel</span>(<span class='no'>colour</span>, <span class='no'>channel</span>, <span class='no'>value</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>)
+
+<span class='fu'>get_channel</span>(<span class='no'>colour</span>, <span class='no'>channel</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>colour</th>
+      <td><p>A character string giving colours, either as hexadecimal
+strings or accepted colour names.</p></td>
+    </tr>
+    <tr>
+      <th>channel</th>
+      <td><p>The channel to modify or extract as a single letter, or
+<code>'alpha'</code> for the alpha channel.</p></td>
+    </tr>
+    <tr>
+      <th>value</th>
+      <td><p>The value to modify with</p></td>
+    </tr>
+    <tr>
+      <th>space</th>
+      <td><p>The colour space the channel pertains to. Allowed values are:
+<code>"cmy"</code>, <code>"cmyk"</code>, <code>"hsl"</code>, <code>"hsb"</code>, <code>"hsv"</code>, <code>"lab"</code> (CIE L*ab), <code>"hunterlab"</code>
+(Hunter Lab), <code>"lch"</code> (CIE Lch(ab) / polarLAB), <code>"luv"</code>, <code>"rgb"</code> (sRGB),
+<code>"xyz"</code>, <code>"yxy"</code> (CIE xyY), or <code>"hcl"</code> (CIE Lch(uv) / polarLuv)</p></td>
+    </tr>
+    <tr>
+      <th>white</th>
+      <td><p>The white reference of the channel colour space. Will only have
+an effect for relative colour spaces such as Lab and luv. Any value accepted
+by <code><a href='as_white_ref.html'>as_white_ref()</a></code> allowed.</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A character vector of the same length as <code>colour</code> (or a numeric
+vector in the case of <code>get_channel()</code>)</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other encoding and decoding functions: <code><a href='decode_colour.html'>decode_colour</a></code>,
+  <code><a href='encode_colour.html'>encode_colour</a></code></p></div>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#see-also">See also</a></li>
     </ul>
+
   </div>
 </div>
 
