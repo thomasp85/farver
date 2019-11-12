@@ -77,7 +77,6 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
       fill_rgb<From>(&rgb, colour_d[offset1 + i], colour_d[offset2 + i], colour_d[offset3 + i], n_channels == 4 ? colour_d[offset4 + i] : 0.0);
     }
     if (!rgb.valid) {
-      Rf_warning("Colour not valid\n");
       SET_STRING_ELT(codes, i, R_NaString);
       continue;
     }
