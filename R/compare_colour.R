@@ -27,14 +27,19 @@
 #' @export
 #' 
 #' @examples 
-#' r <- t(col2rgb(rainbow(10)))
-#' h <- t(col2rgb(heat.colors(15)))
+#' r <- decode_colour(rainbow(10))
+#' h <- decode_colour(heat.colors(15))
 #' 
 #' # Compare two sets of colours
 #' compare_colour(r, h, 'rgb', method = 'cie2000')
 #' 
 #' # Compare a set of colours with itself
 #' compare_colour(r, from_space = 'rgb', method = 'cmc')
+#' 
+#' # Compare colours from different colour spaces
+#' h_luv <- convert_colour(h, 'rgb', 'luv')
+#' compare_colour(r, h_luv, 'rgb', 'luv')
+#' 
 compare_colour <- function(from, to = NULL, from_space, to_space = from_space, method = 'euclidean', white_from = 'D65', white_to = white_from) {
   sym <- FALSE
   if (is.null(to)) {

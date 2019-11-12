@@ -43,8 +43,12 @@
 #' @export
 #' 
 #' @examples
-#' spectrum <- t(col2rgb(rainbow(10)))
-#' convert_colour(spectrum, 'rgb', 'lab')
+#' spectrum <- decode_colour(rainbow(10))
+#' spec_lab <- convert_colour(spectrum, 'rgb', 'lab')
+#' spec_lab
+#' 
+#' # Convert between different white references
+#' convert_colour(spec_lab, 'lab', 'lab', white_from = 'D65', white_to = 'F10')
 #' 
 convert_colour <- function(colour, from, to, white_from = 'D65', white_to = white_from) {
   res <- convert_c(colour, colourspace_match(from), colourspace_match(to), as_white_ref(white_from), as_white_ref(white_to))

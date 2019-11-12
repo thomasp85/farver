@@ -8,3 +8,5 @@
 * Add `decode_colour()` for converting hexstrings into any colourspace
 * Fix bug in luv conversion where 0 in the l channel resulted in `NaN` results 
   (#12)
+* Provide a family of channel manipulation functions to directly manipulate 
+  encodes strings

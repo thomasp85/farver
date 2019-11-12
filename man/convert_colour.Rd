@@ -52,8 +52,12 @@ the gamut of one of the spaces is less than the other.
 }
 
 \examples{
-spectrum <- t(col2rgb(rainbow(10)))
-convert_colour(spectrum, 'rgb', 'lab')
+spectrum <- decode_colour(rainbow(10))
+spec_lab <- convert_colour(spectrum, 'rgb', 'lab')
+spec_lab
+
+# Convert between different white references
+convert_colour(spec_lab, 'lab', 'lab', white_from = 'D65', white_to = 'F10')
 
 }
 \seealso{

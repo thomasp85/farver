@@ -25,6 +25,19 @@
 #' `rgb()` doesn't round numeric values correctly.
 #' 
 #' @export
+#' 
+#' @examples 
+#' spectrum <- decode_colour(rainbow(10))
+#' 
+#' encode_colour(spectrum)
+#' 
+#' # Attach alpha values
+#' encode_colour(spectrum, alpha = c(0.5, 1))
+#' 
+#' # Encode from a different colour space
+#' spectrum_hcl <- convert_colour(spectrum, 'rgb', 'hcl')
+#' encode_colour(spectrum_hcl, from = 'hcl')
+#' 
 encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
   if (from != 'rgb') {
     white <- as_white_ref(white)

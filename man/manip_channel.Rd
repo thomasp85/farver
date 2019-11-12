@@ -49,6 +49,31 @@ This set of functions allows you to modify colours as given by strings,
 whithout first decoding them. For large vectors of colour values this should
 provide a considerable speedup.
 }
+\examples{
+spectrum <- rainbow(10)
+
+# set a specific channel
+set_channel(spectrum, 'r', c(10, 50))
+set_channel(spectrum, 'l', 50, space = 'lab')
+set_channel(spectrum, 'alpha', c(0.5, 1))
+
+# Add value to channel
+add_to_channel(spectrum, 'r', c(10, 50))
+add_to_channel(spectrum, 'l', 50, space = 'lab')
+
+# Multiply a channel
+multiply_channel(spectrum, 'r', c(10, 50))
+multiply_channel(spectrum, 'l', 50, space = 'lab')
+
+# set a lower bound on a channel
+raise_channel(spectrum, 'r', c(10, 50))
+raise_channel(spectrum, 'l', 20, space = 'lab')
+
+# set an upper bound on a channel
+cap_channel(spectrum, 'r', c(100, 50))
+cap_channel(spectrum, 'l', 20, space = 'lab')
+
+}
 \seealso{
 Other encoding and decoding functions: \code{\link{decode_colour}},
   \code{\link{encode_colour}}

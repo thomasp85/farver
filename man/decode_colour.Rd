@@ -44,6 +44,17 @@ and forth between two colourspaces may result in a change in the colour if
 the gamut of one of the spaces is less than the other.
 }
 
+\examples{
+# basic use
+decode_colour(c('#43e1f6', 'steelblue', '#67ce9fe4'))
+
+# Return alpha as well (no alpha value is interpreted as 1)
+decode_colour(c('#43e1f6', 'steelblue', '#67ce9fe4'), alpha = TRUE)
+
+# Decode directly into specific colour space
+decode_colour(c('#43e1f6', 'steelblue', '#67ce9fe4'), to = 'lch')
+
+}
 \seealso{
 Other encoding and decoding functions: \code{\link{encode_colour}},
   \code{\link{manip_channel}}

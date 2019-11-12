@@ -47,6 +47,19 @@ and forth between two colourspaces may result in a change in the colour if
 the gamut of one of the spaces is less than the other.
 }
 
+\examples{
+spectrum <- decode_colour(rainbow(10))
+
+encode_colour(spectrum)
+
+# Attach alpha values
+encode_colour(spectrum, alpha = c(0.5, 1))
+
+# Encode from a different colour space
+spectrum_hcl <- convert_colour(spectrum, 'rgb', 'hcl')
+encode_colour(spectrum_hcl, from = 'hcl')
+
+}
 \seealso{
 Other encoding and decoding functions: \code{\link{decode_colour}},
   \code{\link{manip_channel}}

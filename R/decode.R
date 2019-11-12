@@ -26,6 +26,17 @@
 #' @family encoding and decoding functions
 #' 
 #' @export
+#' 
+#' @examples 
+#' # basic use
+#' decode_colour(c('#43e1f6', 'steelblue', '#67ce9fe4'))
+#' 
+#' # Return alpha as well (no alpha value is interpreted as 1)
+#' decode_colour(c('#43e1f6', 'steelblue', '#67ce9fe4'), alpha = TRUE)
+#' 
+#' # Decode directly into specific colour space
+#' decode_colour(c('#43e1f6', 'steelblue', '#67ce9fe4'), to = 'lch')
+#' 
 decode_colour <- function(colour, alpha = FALSE, to = 'rgb', white = 'D65') {
   #if (to != 'rgb') {
   white <- as_white_ref(white)
