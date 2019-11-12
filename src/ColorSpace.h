@@ -16,7 +16,7 @@ namespace ColorSpace {
 		template <typename TColorSpace>
 		void To(TColorSpace *color);
 		
-		bool valid;
+		bool valid = true;
 	};
 
 
