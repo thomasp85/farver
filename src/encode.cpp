@@ -32,11 +32,13 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
   int n = Rf_nrows(colour);
   SEXP codes = PROTECT(Rf_allocVector(STRSXP, n));
   bool has_alpha = !Rf_isNull(alpha);
-  char alpha1, alpha2;
-  bool alpha_is_int, one_alpha;
-  char* buf;
-  int* alpha_i;
-  double* alpha_d;
+  char alpha1 = '\0';
+  char alpha2 = '\0';
+  bool alpha_is_int = false;
+  bool one_alpha = false;
+  char* buf = NULL;
+  int* alpha_i = NULL;
+  double* alpha_d = NULL;
   if (has_alpha) {
     buf = buffera;
     alpha_is_int = Rf_isInteger(alpha);
@@ -65,8 +67,8 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
   int offset3 = offset2 + n;
   int offset4 = offset3 + n;
   
-  int* colour_i;
-  double* colour_d;
+  int* colour_i = NULL;
+  double* colour_d = NULL;
   bool colour_is_int = Rf_isInteger(colour);
   int num;
   if (colour_is_int) {
@@ -136,11 +138,13 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
   int n = Rf_nrows(colour);
   SEXP codes = PROTECT(Rf_allocVector(STRSXP, n));
   bool has_alpha = !Rf_isNull(alpha);
-  char alpha1, alpha2;
-  bool alpha_is_int, one_alpha;
-  char* buf;
-  int* alpha_i;
-  double* alpha_d;
+  char alpha1 = '\0';
+  char alpha2 = '\0';
+  bool alpha_is_int = false;
+  bool one_alpha = false;
+  char* buf = NULL;
+  int* alpha_i = NULL;
+  double* alpha_d = NULL;
   if (has_alpha) {
     buf = buffera;
     alpha_is_int = Rf_isInteger(alpha);
@@ -168,8 +172,8 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
   int offset2 = offset1 + n;
   int offset3 = offset2 + n;
   
-  int* colour_i;
-  double* colour_d;
+  int* colour_i = NULL;
+  double* colour_d = NULL;
   bool colour_is_int = Rf_isInteger(colour);
   int num;
   if (colour_is_int) {
@@ -391,8 +395,8 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white) {
   int n = LENGTH(codes);
   ColourMap& named_colours = get_named_colours();
   SEXP colours;
-  double* colours_d;
-  int* colours_i;
+  double* colours_d = NULL;
+  int* colours_i = NULL;
   if (get_alpha) {
     colours = PROTECT(Rf_allocMatrix(REALSXP, n, 4));
     colours_d = REAL(colours);
@@ -505,10 +509,10 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
   int n = LENGTH(codes);
   
   bool one_value = LENGTH(value) == 1;
-  int first_value_i;
-  double first_value_d;
-  int* value_i;
-  double* value_d;
+  int first_value_i = 0;
+  double first_value_d = 0.0;
+  int* value_i = NULL;
+  double* value_d = NULL;
   bool value_is_int = Rf_isInteger(value);
   if (value_is_int) {
     value_i = INTEGER(value);
@@ -593,10 +597,10 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
   int n = LENGTH(codes);
   
   bool one_value = LENGTH(value) == 1;
-  int first_value_i;
-  double first_value_d;
-  int* value_i;
-  double* value_d;
+  int first_value_i = 0;
+  double first_value_d = 0.0;
+  int* value_i = NULL;
+  double* value_d = NULL;
   bool value_is_int = Rf_isInteger(value);
   if (value_is_int) {
     value_i = INTEGER(value);
@@ -679,10 +683,10 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op) {
   int n = LENGTH(codes);
   
   bool one_value = LENGTH(value) == 1;
-  int first_value_i;
-  double first_value_d;
-  int* value_i;
-  double* value_d;
+  int first_value_i = 0;
+  double first_value_d = 0.0;
+  int* value_i = NULL;
+  double* value_d = NULL;
   bool value_is_int = Rf_isInteger(value);
   if (value_is_int) {
     value_i = INTEGER(value);
@@ -837,7 +841,8 @@ SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white) 
   SEXP ret = PROTECT(Rf_allocVector(INTSXP, n));
   int* ret_p = INTEGER(ret);
   ColourMap& named_colours = get_named_colours();
-  int val, nchar;
+  int val = 0;
+  int nchar = 0;
   
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);

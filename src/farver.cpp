@@ -36,8 +36,8 @@ SEXP convert_dispatch_impl(SEXP colour, SEXP white_from, SEXP white_to) {
   int offset2 = offset1 + n;
   int offset3 = offset2 + n;
   int offset4 = offset3 + n;
-  double* colour_d;
-  int* colour_i;
+  double* colour_d = NULL;
+  int* colour_i = NULL;
   bool colour_is_int = Rf_isInteger(colour);
   if (colour_is_int) {
     colour_i = INTEGER(colour);
@@ -163,8 +163,10 @@ SEXP compare_dispatch_impl(SEXP from, SEXP to, int dist, bool sym, SEXP white_fr
   int moffset2 = moffset1 + n;
   int moffset3 = moffset2 + n;
   int moffset4 = moffset3 + n;
-  double *from_d, *to_d;
-  int *from_i, *to_i;
+  double* from_d = NULL;
+  double* to_d = NULL;
+  int* from_i = NULL;
+  int* to_i = NULL;
   bool from_is_int = Rf_isInteger(from);
   bool to_is_int = Rf_isInteger(to);
   if (from_is_int) {
@@ -179,7 +181,7 @@ SEXP compare_dispatch_impl(SEXP from, SEXP to, int dist, bool sym, SEXP white_fr
   }
   SEXP out = PROTECT(Rf_allocMatrix(REALSXP, n, m));
   double* out_p = REAL(out);
-  double temp;
+  double temp = 0.0;
   
   ColorSpace::Rgb from_rgb, to_rgb;
   
