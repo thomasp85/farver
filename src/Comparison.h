@@ -20,7 +20,9 @@ namespace ColorSpace {
 		};
 
 		struct Application {
-			double kl, k1, k2;
+			double kl = 0.0;
+		  double k1 = 0.0;
+		  double k2 = 0.0;
 			Application(APPLICATION appType);
 		};
 
