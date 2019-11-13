@@ -7,8 +7,8 @@
 Status](https://travis-ci.org/thomasp85/farver.svg?branch=master)](https://travis-ci.org/thomasp85/farver)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/thomasp85/farver?branch=master&svg=true)](https://ci.appveyor.com/project/thomasp85/farver)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version-ago/farver)](http://cran.r-project.org/package=farver)
-[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/farver)](http://cran.r-project.org/package=farver)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version-ago/farver)](https://cran.r-project.org/package=farver)
+[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/farver)](https://cran.r-project.org/package=farver)
 [![Coverage
 Status](https://img.shields.io/codecov/c/github/thomasp85/farver/master.svg)](https://codecov.io/github/thomasp85/farver?branch=master)
 

@@ -1,3 +1,5 @@
+Fixed cran URLs to https as requested
+
 Major release with no breaking changes
 
 ## Test environments
