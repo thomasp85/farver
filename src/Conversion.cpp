@@ -5,6 +5,7 @@
 #include <cmath>
 #include <algorithm>
 #include <R.h>
+#define R_NO_REMAP
 #include <Rinternals.h>
 
 namespace ColorSpace {

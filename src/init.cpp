@@ -1,9 +1,10 @@
+#include "farver.h"
+#include "encode.h"
 #include <R.h>
+#define R_NO_REMAP
 #include <Rinternals.h>
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
-#include "farver.h"
-#include "encode.h"
 
 static ColourMap* named_colours;
 

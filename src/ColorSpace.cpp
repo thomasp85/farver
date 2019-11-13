@@ -1,7 +1,8 @@
-#include <R.h>
-#include <Rinternals.h>
 #include "ColorSpace.h"
 #include "Conversion.h"
+#include <R.h>
+#define R_NO_REMAP
+#include <Rinternals.h>
 
 namespace ColorSpace {
 	Rgb::Rgb() {}

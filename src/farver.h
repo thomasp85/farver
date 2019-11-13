@@ -1,9 +1,10 @@
 #ifndef FARVER_INCLUDED
 #define FARVER_INCLUDED
 
-#include <R.h>
-#include <Rinternals.h>
 #include "ColorSpace.h"
+#include <R.h>
+#define R_NO_REMAP
+#include <Rinternals.h>
 
 // these are used in the dispatcher functions
 // this is one-based in the same order as the `colourspaces` 

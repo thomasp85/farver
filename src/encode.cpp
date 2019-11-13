@@ -42,7 +42,7 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
   if (has_alpha) {
     buf = buffera;
     alpha_is_int = Rf_isInteger(alpha);
-    one_alpha = LENGTH(alpha) == 1;
+    one_alpha = Rf_length(alpha) == 1;
     int first_alpha;
     if (alpha_is_int) {
       alpha_i = INTEGER(alpha);
@@ -148,7 +148,7 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
   if (has_alpha) {
     buf = buffera;
     alpha_is_int = Rf_isInteger(alpha);
-    one_alpha = LENGTH(alpha) == 1;
+    one_alpha = Rf_length(alpha) == 1;
     int first_alpha;
     if (alpha_is_int) {
       alpha_i = INTEGER(alpha);
@@ -296,7 +296,7 @@ SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white) {
 
 SEXP load_colour_names_c(SEXP name, SEXP value) {
   ColourMap& named_colours = get_named_colours();
-  int n = LENGTH(name);
+  int n = Rf_length(name);
   if (n != Rf_ncols(value)) {
     Rf_error("name and value must have the same length");
   }
@@ -318,7 +318,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
   bool get_alpha = LOGICAL(alpha)[0];
   int n_channels = dimension<To>();
   int n_cols = get_alpha ? n_channels + 1 : n_channels;
-  int n = LENGTH(codes);
+  int n = Rf_length(codes);
   ColourMap& named_colours = get_named_colours();
   SEXP colours = PROTECT(Rf_allocMatrix(REALSXP, n, n_cols));
   double* colours_p = REAL(colours);
@@ -392,7 +392,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
 template <>
 SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white) {
   bool get_alpha = LOGICAL(alpha)[0];
-  int n = LENGTH(codes);
+  int n = Rf_length(codes);
   ColourMap& named_colours = get_named_colours();
   SEXP colours;
   double* colours_d = NULL;
@@ -506,9 +506,9 @@ template <typename Space>
 SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white) {
   int chan = INTEGER(channel)[0];
   int operation = INTEGER(op)[0];
-  int n = LENGTH(codes);
+  int n = Rf_length(codes);
   
-  bool one_value = LENGTH(value) == 1;
+  bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
   double first_value_d = 0.0;
   int* value_i = NULL;
@@ -594,9 +594,9 @@ template <>
 SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white) {
   int chan = INTEGER(channel)[0];
   int operation = INTEGER(op)[0];
-  int n = LENGTH(codes);
+  int n = Rf_length(codes);
   
-  bool one_value = LENGTH(value) == 1;
+  bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
   double first_value_d = 0.0;
   int* value_i = NULL;
@@ -680,9 +680,9 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
 
 SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op) {
   int operation = INTEGER(op)[0];
-  int n = LENGTH(codes);
+  int n = Rf_length(codes);
   
-  bool one_value = LENGTH(value) == 1;
+  bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
   double first_value_d = 0.0;
   int* value_i = NULL;
@@ -787,7 +787,7 @@ SEXP encode_channel_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op,
 template <typename Space>
 SEXP decode_channel_impl(SEXP codes, SEXP channel, SEXP white) {
   int chan = INTEGER(channel)[0];
-  int n = LENGTH(codes);
+  int n = Rf_length(codes);
   
   SEXP ret = PROTECT(Rf_allocVector(REALSXP, n));
   double* ret_p = REAL(ret);
@@ -836,7 +836,7 @@ SEXP decode_channel_impl(SEXP codes, SEXP channel, SEXP white) {
 template <>
 SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white) {
   int chan = INTEGER(channel)[0];
-  int n = LENGTH(codes);
+  int n = Rf_length(codes);
   
   SEXP ret = PROTECT(Rf_allocVector(INTSXP, n));
   int* ret_p = INTEGER(ret);
@@ -895,7 +895,7 @@ SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white) 
 }
 
 SEXP decode_alpha_impl(SEXP codes) {
-  int n = LENGTH(codes);
+  int n = Rf_length(codes);
   
   SEXP ret = PROTECT(Rf_allocVector(REALSXP, n));
   double* ret_p = REAL(ret);

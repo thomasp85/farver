@@ -1,11 +1,12 @@
 #ifndef ENCODE_INCLUDED
 #define ENCODE_INCLUDED
 
-#include <R.h>
-#include <Rinternals.h>
 #include <unordered_map>
 #include <string>
 #include "ColorSpace.h"
+#include <R.h>
+#define R_NO_REMAP
+#include <Rinternals.h>
 
 #define OP_SET 1
 #define OP_ADD 2
