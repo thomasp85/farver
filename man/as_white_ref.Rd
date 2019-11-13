@@ -29,3 +29,4 @@ as_white_ref('D65')
 # Using chromaticity values
 as_white_ref(c(0.3, 0.4))
 }
+\keyword{internal}

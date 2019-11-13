@@ -4,7 +4,7 @@
 \name{farver-package}
 \alias{farver}
 \alias{farver-package}
-\title{farver: Vectorised Colour Conversion and Comparison}
+\title{farver: High Performance Colour Space Manipulation}
 \description{
 \if{html}{\figure{logo.png}{options: align='right'}}
 
@@ -34,3 +34,4 @@ Authors:
 }
 
 }
+\keyword{internal}
