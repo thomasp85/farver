@@ -562,7 +562,6 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
     }
     colour.Cap();
     colour.ToRgb(&rgb);
-    strcpy(buffera, col);
     
     if (!(R_finite(rgb.r) && R_finite(rgb.g) && R_finite(rgb.b))) {
       SET_STRING_ELT(ret, i, R_NaString);
