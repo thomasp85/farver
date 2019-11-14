@@ -7,7 +7,7 @@ static char hex8[] = "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C
 static char buffer[] = "#000000";
 static char buffera[] = "#00000000";
 
-#ifdef __BIG_ENDIAN__ 
+#ifdef WORDS_BIGENDIAN 
 #include <cmath>
 inline int double2int(double d) {
   return (int)std::round(d);
