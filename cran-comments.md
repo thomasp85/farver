@@ -1,6 +1,5 @@
-Fixed cran URLs to https as requested
-
-Major release with no breaking changes
+Address issues on Solaris as reported by BDR. Cannot reproduce on R-Hub, so I 
+hope this resolves it
 
 ## Test environments
 * local OS X install, R 3.6.0
