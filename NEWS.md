@@ -1,3 +1,5 @@
+# farver (development version)
+
 # farver 2.0.1
 
 * Fixed symbol remapping issues on Solaris
