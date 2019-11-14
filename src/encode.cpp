@@ -7,10 +7,18 @@ static char hex8[] = "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C
 static char buffer[] = "#000000";
 static char buffera[] = "#00000000";
 
+#ifdef __BIG_ENDIAN__ 
+#include <cmath>
+inline int double2int(double d) {
+  return (int)std::round(d);
+}
+#else
 inline int double2int(double d) {
   d += 6755399441055744.0;
   return reinterpret_cast<int&>(d);
 }
+#endif
+
 inline int cap0255(int x) {
   return x < 0 ? 0 : (x > 255 ? 255 : x);
 }
