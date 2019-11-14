@@ -27,6 +27,7 @@ test_that("adding channel works", {
   cols_lch_mod[, 'c'] <- cols_lch_mod[, 'c'] + 1:10
   expect_equal(add_to_channel(codes, 'c', 1:10, 'lch'), encode_colour(cols_lch_mod, from = 'lch'))
   
+  skip_on_os('linux') # Rounding difference on someones aarch64/ppc64le processor
   expect_equal(add_to_channel(codes_alpha, 'alpha', (1:10)/10), encode_colour(cols, alpha = alpha + (1:10)/10))
 })
 
