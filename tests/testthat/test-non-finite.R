@@ -7,8 +7,8 @@ bad_colours <- cbind(
 
 test_that("non-finite values are treated correctly", {
   expect_error(decode_colour(bad_codes), 'Malformed colour string `#345`')
-  expect_true(all(is.na(decode_colour(bad_codes[-1]))[3:4, ]))
-  expect_false(any(is.na(decode_colour(bad_codes[-1]))[1:2, ]))
+  suppressWarnings(expect_true(all(is.na(decode_colour(bad_codes[-1]))[3:4, ])))
+  suppressWarnings(expect_false(any(is.na(decode_colour(bad_codes[-1]))[1:2, ])))
   
   expect_true(all(is.na(encode_colour(bad_colours))[2:5]))
   expect_false(any(is.na(encode_colour(bad_colours))[c(1,6)]))
