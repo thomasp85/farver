@@ -145,7 +145,8 @@ the standard form expected by farver (matrix with a row per colour). As with
 decode a hex string directly into any of the supported colour spaces.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>decode_colour</span>(<span class='no'>colour</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>)</pre>
+    <pre class="usage"><span class='fu'>decode_colour</span>(<span class='no'>colour</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>,
+  <span class='kw'>na_value</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,6 +174,13 @@ assumed 1. If <code>FALSE</code> any alpha channel is ignored.</p></td>
       <td><p>The white reference of the output colour space. Will only have
 an effect for relative colour spaces such as Lab and luv. Any value accepted
 by <code><a href='as_white_ref.html'>as_white_ref()</a></code> allowed.</p></td>
+    </tr>
+    <tr>
+      <th>na_value</th>
+      <td><p>A valid colour string or <code>NA</code> to use when <code>colour</code> contains
+<code>NA</code> elements. The general approach in farver is to carry <code>NA</code> values over,
+but if you want to mimick <code><a href='https://rdrr.io/r/grDevices/col2rgb.html'>col2rgb()</a></code> you should set
+<code>na_value = '#ffffff00'</code>, i.e. treat <code>NA</code> as transparent white.</p></td>
     </tr>
     </table>
 
