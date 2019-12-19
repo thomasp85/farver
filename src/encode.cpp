@@ -28,6 +28,14 @@ inline int hex2int(const int x) {
   }
   return (x & 0xf) + (x >> 6) + ((x >> 6) << 3);
 }
+inline std::string prepare_code(const char* col) {
+  std::string code(col);
+  // Remove whitespace
+  code.erase(std::remove(code.begin(), code.end(), ' '), code.end());
+  std::transform(code.begin(), code.end(), code.begin(),
+                 [](unsigned char c){ return std::tolower(c); });
+  return code;
+}
 
 template <typename From>
 SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
@@ -375,7 +383,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
         a = 1.0;
       }
     } else {
-      ColourMap::iterator it = named_colours.find(std::string(col));
+      ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
         colours_p[offset1 + i] = R_NaReal;
         colours_p[offset2 + i] = R_NaReal;
@@ -463,7 +471,7 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
         a = 1.0;
       }
     } else {
-      ColourMap::iterator it = named_colours.find(std::string(col));
+      ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
         if (get_alpha) {
           colours_d[offset1 + i] = R_NaReal;
@@ -567,7 +575,7 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
       rgb.b = hex2int(col[5]) * 16 + hex2int(col[6]);
       strcpy(buffera, col);
     } else {
-      ColourMap::iterator it = named_colours.find(std::string(col));
+      ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
         SET_STRING_ELT(ret, i, R_NaString);
         continue;
@@ -650,7 +658,7 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
       }
       strcpy(buffera, col);
     } else {
-      ColourMap::iterator it = named_colours.find(std::string(col));
+      ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
         SET_STRING_ELT(ret, i, R_NaString);
         continue;
@@ -739,7 +747,7 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op) {
         alpha = hex2int(buffera[7]) * 16 + hex2int(buffera[8]);
       }
     } else {
-      ColourMap::iterator it = named_colours.find(std::string(col));
+      ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
         SET_STRING_ELT(ret, i, R_NaString);
         continue;
@@ -832,7 +840,7 @@ SEXP decode_channel_impl(SEXP codes, SEXP channel, SEXP white) {
       rgb.g = hex2int(col[3]) * 16 + hex2int(col[4]);
       rgb.b = hex2int(col[5]) * 16 + hex2int(col[6]);
     } else {
-      ColourMap::iterator it = named_colours.find(std::string(col));
+      ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
         ret_p[i] = R_NaReal;
         continue;
@@ -887,7 +895,7 @@ SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white) 
         break;
       }
     } else {
-      ColourMap::iterator it = named_colours.find(std::string(col));
+      ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
         ret_p[i] = R_NaInt;
         continue;
@@ -942,7 +950,7 @@ SEXP decode_alpha_impl(SEXP codes) {
         val = 1.0;
       }
     } else {
-      ColourMap::iterator it = named_colours.find(std::string(col));
+      ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
         ret_p[i] = R_NaReal;
         continue;
