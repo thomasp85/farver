@@ -322,7 +322,7 @@ SEXP load_colour_names_c(SEXP name, SEXP value) {
 }
 
 template <typename To>
-SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
+SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
   bool get_alpha = LOGICAL(alpha)[0];
   int n_channels = dimension<To>();
   int n_cols = get_alpha ? n_channels + 1 : n_channels;
@@ -330,6 +330,8 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
   ColourMap& named_colours = get_named_colours();
   SEXP colours = PROTECT(Rf_allocMatrix(REALSXP, n, n_cols));
   double* colours_p = REAL(colours);
+  SEXP na_code = STRING_ELT(na, 0);
+  bool na_is_na = na_code == R_NaString;
   int offset1 = 0;
   int offset2 = offset1 + n;
   int offset3 = offset2 + n;
@@ -346,12 +348,15 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString) {
-      colours_p[offset1 + i] = R_NaReal;
-      colours_p[offset2 + i] = R_NaReal;
-      colours_p[offset3 + i] = R_NaReal;
-      if (n_cols > 3) colours_p[offset4 + i] = R_NaReal;
-      if (n_cols > 4) colours_p[offset5 + i] = R_NaReal;
-      continue;
+      if (na_is_na) {
+        colours_p[offset1 + i] = R_NaReal;
+        colours_p[offset2 + i] = R_NaReal;
+        colours_p[offset3 + i] = R_NaReal;
+        if (n_cols > 3) colours_p[offset4 + i] = R_NaReal;
+        if (n_cols > 4) colours_p[offset5 + i] = R_NaReal;
+        continue;
+      }
+      code = na_code;
     }
     const char* col = Rf_translateCharUTF8(code);
     if (col[0] == '#') {
@@ -398,13 +403,16 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white) {
 }
 
 template <>
-SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white) {
+SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
   bool get_alpha = LOGICAL(alpha)[0];
   int n = Rf_length(codes);
   ColourMap& named_colours = get_named_colours();
   SEXP colours;
   double* colours_d = NULL;
   int* colours_i = NULL;
+  SEXP na_code = STRING_ELT(na, 0);
+  bool na_is_na = na_code == R_NaString;
+  
   if (get_alpha) {
     colours = PROTECT(Rf_allocMatrix(REALSXP, n, 4));
     colours_d = REAL(colours);
@@ -423,19 +431,22 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white) {
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString) {
-      if (get_alpha) {
-        colours_d[offset1 + i] = R_NaReal;
-        colours_d[offset2 + i] = R_NaReal;
-        colours_d[offset3 + i] = R_NaReal;
-        colours_d[offset4 + i] = R_NaReal;
-      } else {
-        colours_i[offset1 + i] = R_NaInt;
-        colours_i[offset2 + i] = R_NaInt;
-        colours_i[offset3 + i] = R_NaInt;
+      if (na_is_na) {
+        if (get_alpha) {
+          colours_d[offset1 + i] = R_NaReal;
+          colours_d[offset2 + i] = R_NaReal;
+          colours_d[offset3 + i] = R_NaReal;
+          colours_d[offset4 + i] = R_NaReal;
+        } else {
+          colours_i[offset1 + i] = R_NaInt;
+          colours_i[offset2 + i] = R_NaInt;
+          colours_i[offset3 + i] = R_NaInt;
+        }
+        continue;
       }
-      continue;
+      code = na_code;
     }
-    const char* col = CHAR(code);
+    const char* col = Rf_translateCharUTF8(code);
     if (col[0] == '#') {
       nchar = strlen(col);
       has_alpha = nchar == 9;
@@ -452,7 +463,7 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white) {
         a = 1.0;
       }
     } else {
-      ColourMap::iterator it = named_colours.find(std::string(Rf_translateCharUTF8(STRING_ELT(codes, i))));
+      ColourMap::iterator it = named_colours.find(std::string(col));
       if (it == named_colours.end()) {
         if (get_alpha) {
           colours_d[offset1 + i] = R_NaReal;
@@ -489,21 +500,21 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white) {
   return colours;
 }
 
-SEXP decode_c(SEXP codes, SEXP alpha, SEXP to, SEXP white) {
+SEXP decode_c(SEXP codes, SEXP alpha, SEXP to, SEXP white, SEXP na) {
   switch (INTEGER(to)[0]) {
-    case CMY: return decode_impl<ColorSpace::Cmy>(codes, alpha, white);
-    case CMYK: return decode_impl<ColorSpace::Cmyk>(codes, alpha, white);
-    case HSL: return decode_impl<ColorSpace::Hsl>(codes, alpha, white);
-    case HSB: return decode_impl<ColorSpace::Hsb>(codes, alpha, white);
-    case HSV: return decode_impl<ColorSpace::Hsv>(codes, alpha, white);
-    case LAB: return decode_impl<ColorSpace::Lab>(codes, alpha, white);
-    case HUNTERLAB: return decode_impl<ColorSpace::HunterLab>(codes, alpha, white);
-    case LCH: return decode_impl<ColorSpace::Lch>(codes, alpha, white);
-    case LUV: return decode_impl<ColorSpace::Luv>(codes, alpha, white);
-    case RGB: return decode_impl<ColorSpace::Rgb>(codes, alpha, white);
-    case XYZ: return decode_impl<ColorSpace::Xyz>(codes, alpha, white);
-    case YXY: return decode_impl<ColorSpace::Yxy>(codes, alpha, white);
-    case HCL: return decode_impl<ColorSpace::Hcl>(codes, alpha, white);
+    case CMY: return decode_impl<ColorSpace::Cmy>(codes, alpha, white, na);
+    case CMYK: return decode_impl<ColorSpace::Cmyk>(codes, alpha, white, na);
+    case HSL: return decode_impl<ColorSpace::Hsl>(codes, alpha, white, na);
+    case HSB: return decode_impl<ColorSpace::Hsb>(codes, alpha, white, na);
+    case HSV: return decode_impl<ColorSpace::Hsv>(codes, alpha, white, na);
+    case LAB: return decode_impl<ColorSpace::Lab>(codes, alpha, white, na);
+    case HUNTERLAB: return decode_impl<ColorSpace::HunterLab>(codes, alpha, white, na);
+    case LCH: return decode_impl<ColorSpace::Lch>(codes, alpha, white, na);
+    case LUV: return decode_impl<ColorSpace::Luv>(codes, alpha, white, na);
+    case RGB: return decode_impl<ColorSpace::Rgb>(codes, alpha, white, na);
+    case XYZ: return decode_impl<ColorSpace::Xyz>(codes, alpha, white, na);
+    case YXY: return decode_impl<ColorSpace::Yxy>(codes, alpha, white, na);
+    case HCL: return decode_impl<ColorSpace::Hcl>(codes, alpha, white, na);
   }
   
   // never happens

@@ -16,7 +16,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"convert_c", (DL_FUNC) &convert_c, 5},
   {"compare_c", (DL_FUNC) &compare_c, 8},
   {"encode_c", (DL_FUNC) &encode_c, 4},
-  {"decode_c", (DL_FUNC) &decode_c, 4},
+  {"decode_c", (DL_FUNC) &decode_c, 5},
   {"encode_channel_c", (DL_FUNC) &encode_channel_c, 6},
   {"decode_channel_c", (DL_FUNC) &decode_channel_c, 4},
   {"load_colour_names_c", (DL_FUNC) &load_colour_names_c, 2},

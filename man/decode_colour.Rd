@@ -4,7 +4,8 @@
 \alias{decode_colour}
 \title{Decode RGB hex-strings into colour values}
 \usage{
-decode_colour(colour, alpha = FALSE, to = "rgb", white = "D65")
+decode_colour(colour, alpha = FALSE, to = "rgb", white = "D65",
+  na_value = NA)
 }
 \arguments{
 \item{colour}{A character vector of hex-encoded values or a valid colour name
@@ -22,6 +23,11 @@ assumed 1. If \code{FALSE} any alpha channel is ignored.}
 \item{white}{The white reference of the output colour space. Will only have
 an effect for relative colour spaces such as Lab and luv. Any value accepted
 by \code{\link[=as_white_ref]{as_white_ref()}} allowed.}
+
+\item{na_value}{A valid colour string or \code{NA} to use when \code{colour} contains
+\code{NA} elements. The general approach in farver is to carry \code{NA} values over,
+but if you want to mimick \code{\link[=col2rgb]{col2rgb()}} you should set
+\code{na_value = '#ffffff00'}, i.e. treat \code{NA} as transparent white.}
 }
 \value{
 A numeric matrix with a row for each element in \code{colour} and either

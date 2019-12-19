@@ -1,5 +1,8 @@
 # farver (development version)
 
+* Small adjustments to support super weird architectures (#15, #16)
+* `decode_colour()` now allows you to specify how `NA` should get interpreted
+
 # farver 2.0.1
 
 * Fixed symbol remapping issues on Solaris
