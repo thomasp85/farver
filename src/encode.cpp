@@ -385,6 +385,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
+        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
         colours_p[offset1 + i] = R_NaReal;
         colours_p[offset2 + i] = R_NaReal;
         colours_p[offset3 + i] = R_NaReal;
@@ -473,6 +474,7 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
+        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
         if (get_alpha) {
           colours_d[offset1 + i] = R_NaReal;
           colours_d[offset2 + i] = R_NaReal;
@@ -577,6 +579,7 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
+        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
         SET_STRING_ELT(ret, i, R_NaString);
         continue;
       }
@@ -660,6 +663,7 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
+        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
         SET_STRING_ELT(ret, i, R_NaString);
         continue;
       }
@@ -749,6 +753,7 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op) {
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
+        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
         SET_STRING_ELT(ret, i, R_NaString);
         continue;
       }
@@ -842,6 +847,7 @@ SEXP decode_channel_impl(SEXP codes, SEXP channel, SEXP white) {
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
+        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
         ret_p[i] = R_NaReal;
         continue;
       }
@@ -897,6 +903,7 @@ SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white) 
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
+        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
         ret_p[i] = R_NaInt;
         continue;
       }
@@ -952,6 +959,7 @@ SEXP decode_alpha_impl(SEXP codes) {
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
+        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
         ret_p[i] = R_NaReal;
         continue;
       }
