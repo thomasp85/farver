@@ -160,9 +160,9 @@ SEXP compare_dispatch_impl(SEXP from, SEXP to, int dist, bool sym, SEXP white_fr
   int noffset3 = noffset2 + n;
   int noffset4 = noffset3 + n;
   int moffset1 = 0;
-  int moffset2 = moffset1 + n;
-  int moffset3 = moffset2 + n;
-  int moffset4 = moffset3 + n;
+  int moffset2 = moffset1 + m;
+  int moffset3 = moffset2 + m;
+  int moffset4 = moffset3 + m;
   double* from_d = NULL;
   double* to_d = NULL;
   int* from_i = NULL;
