@@ -1,4 +1,4 @@
-# farver (development version)
+# farver 2.0.2
 
 * Small adjustments to support super weird architectures (#15, #16)
 * `decode_colour()` now allows you to specify how `NA` should get interpreted
