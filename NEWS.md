@@ -2,6 +2,11 @@
 
 * Small adjustments to support super weird architectures (#15, #16)
 * `decode_colour()` now allows you to specify how `NA` should get interpreted
+* Fixed a major bug in colour comparison
+* Colour names are now stripped of whitespace and converted to lower-case before
+  conversion, making it behave like `col2rgb()`
+* A warning is now emitted if an unknown colour name is passed into any decoding
+  function
 
 # farver 2.0.1
 
