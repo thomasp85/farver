@@ -10,13 +10,13 @@
 |collate  |en_US.UTF-8                  |
 |ctype    |en_US.UTF-8                  |
 |tz       |Europe/Copenhagen            |
-|date     |2019-11-13                   |
+|date     |2019-12-20                   |
 
 # Dependencies
 
 |package |old   |new        |Δ  |
 |:-------|:-----|:----------|:--|
-|farver  |1.1.0 |1.1.0.9999 |*  |
+|farver  |2.0.1 |2.0.1.9000 |*  |
 
 # Revdeps
 
