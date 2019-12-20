@@ -26,7 +26,7 @@ inline int cap0255(int x) {
 }
 inline int hex2int(const int x) {
   if (!std::isxdigit(x)) {
-    Rf_error("Invalid hexadecimal digit");
+    Rf_errorcall(R_NilValue, "Invalid hexadecimal digit");
   }
   return (x & 0xf) + (x >> 6) + ((x >> 6) << 3);
 }
@@ -43,7 +43,7 @@ template <typename From>
 SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
   int n_channels = dimension<From>();
   if (Rf_ncols(colour) < n_channels) {
-    Rf_error("Colour in this format must contain at least %i columns", n_channels);
+    Rf_errorcall(R_NilValue, "Colour in this format must contain at least %i columns", n_channels);
   }
   static ColorSpace::Rgb rgb;
   ColorSpace::XyzConverter::SetWhiteReference(REAL(white)[0], REAL(white)[1], REAL(white)[2]);
@@ -151,7 +151,7 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
 template<>
 SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
   if (Rf_ncols(colour) < 3) {
-    Rf_error("Colour in RGB format must contain at least 3 columns");
+    Rf_errorcall(R_NilValue, "Colour in RGB format must contain at least 3 columns");
   }
   int n = Rf_nrows(colour);
   SEXP codes = PROTECT(Rf_allocVector(STRSXP, n));
@@ -316,7 +316,7 @@ SEXP load_colour_names_c(SEXP name, SEXP value) {
   ColourMap& named_colours = get_named_colours();
   int n = Rf_length(name);
   if (n != Rf_ncols(value)) {
-    Rf_error("name and value must have the same length");
+    Rf_errorcall(R_NilValue, "name and value must have the same length");
   }
   int* values = INTEGER(value);
   int it = 0;
@@ -373,7 +373,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
       nchar = strlen(col);
       has_alpha = nchar == 9;
       if (!has_alpha && nchar != 7) {
-        Rf_error("Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       rgb.r = hex2int(col[1]) * 16 + hex2int(col[2]);
       rgb.g = hex2int(col[3]) * 16 + hex2int(col[4]);
@@ -387,7 +387,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
-        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
+        Rf_errorcall(R_NilValue, "Unknown colour name: %s", col);
         colours_p[offset1 + i] = R_NaReal;
         colours_p[offset2 + i] = R_NaReal;
         colours_p[offset3 + i] = R_NaReal;
@@ -462,7 +462,7 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
       nchar = strlen(col);
       has_alpha = nchar == 9;
       if (!has_alpha && nchar != 7) {
-        Rf_error("Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       r = hex2int(col[1]) * 16 + hex2int(col[2]);
       g = hex2int(col[3]) * 16 + hex2int(col[4]);
@@ -476,7 +476,7 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
-        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
+        Rf_errorcall(R_NilValue, "Unknown colour name: %s", col);
         if (get_alpha) {
           colours_d[offset1 + i] = R_NaReal;
           colours_d[offset2 + i] = R_NaReal;
@@ -572,7 +572,7 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
     if (col[0] == '#') {
       nchar = strlen(col);
       if (nchar != 9 && nchar != 7) {
-        Rf_error("Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       rgb.r = hex2int(col[1]) * 16 + hex2int(col[2]);
       rgb.g = hex2int(col[3]) * 16 + hex2int(col[4]);
@@ -581,7 +581,7 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
-        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
+        Rf_errorcall(R_NilValue, "Unknown colour name: %s", col);
         SET_STRING_ELT(ret, i, R_NaString);
         continue;
       }
@@ -659,13 +659,13 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
     if (col[0] == '#') {
       nchar = strlen(col);
       if (nchar != 9 && nchar != 7) {
-        Rf_error("Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       strcpy(buffera, col);
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
-        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
+        Rf_errorcall(R_NilValue, "Unknown colour name: %s", col);
         SET_STRING_ELT(ret, i, R_NaString);
         continue;
       }
@@ -744,7 +744,7 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op) {
     if (col[0] == '#') {
       nchar = strlen(col);
       if (nchar != 9 && nchar != 7) {
-        Rf_error("Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       strcpy(buffera, col);
       if (strlen(buffera) == 7) {
@@ -755,7 +755,7 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op) {
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
-        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
+        Rf_errorcall(R_NilValue, "Unknown colour name: %s", col);
         SET_STRING_ELT(ret, i, R_NaString);
         continue;
       }
@@ -841,7 +841,7 @@ SEXP decode_channel_impl(SEXP codes, SEXP channel, SEXP white) {
     if (col[0] == '#') {
       nchar = strlen(col);
       if (nchar != 9 && nchar != 7) {
-        Rf_error("Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       rgb.r = hex2int(col[1]) * 16 + hex2int(col[2]);
       rgb.g = hex2int(col[3]) * 16 + hex2int(col[4]);
@@ -849,7 +849,7 @@ SEXP decode_channel_impl(SEXP codes, SEXP channel, SEXP white) {
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
-        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
+        Rf_errorcall(R_NilValue, "Unknown colour name: %s", col);
         ret_p[i] = R_NaReal;
         continue;
       }
@@ -889,7 +889,7 @@ SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white) 
     if (col[0] == '#') {
       nchar = strlen(col);
       if (nchar != 9 && nchar != 7) {
-        Rf_error("Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       switch (chan) {
       case 1: 
@@ -905,7 +905,7 @@ SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white) 
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
-        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
+        Rf_errorcall(R_NilValue, "Unknown colour name: %s", col);
         ret_p[i] = R_NaInt;
         continue;
       }
@@ -951,7 +951,7 @@ SEXP decode_alpha_impl(SEXP codes) {
       nchar = strlen(col);
       has_alpha = nchar == 9;
       if (!has_alpha && nchar != 7) {
-        Rf_error("Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       if (has_alpha) {
         val = (hex2int(col[7]) * 16 + hex2int(col[8])) / 255.0;
@@ -961,7 +961,7 @@ SEXP decode_alpha_impl(SEXP codes) {
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
-        Rf_warningcall(R_NilValue, "Unknown colour name: %s", col);
+        Rf_errorcall(R_NilValue, "Unknown colour name: %s", col);
         ret_p[i] = R_NaReal;
         continue;
       }
