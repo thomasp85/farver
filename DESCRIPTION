@@ -30,7 +30,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 SystemRequirements: C++11
 RoxygenNote: 6.1.1
-URL: https://github.com/thomasp85/farver
+URL: https://farver.data-imaginist.com, https://github.com/thomasp85/farver
 BugReports: https://github.com/thomasp85/farver/issues
 Suggests: 
     testthat (>= 2.1.0),
