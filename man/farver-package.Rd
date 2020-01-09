@@ -19,6 +19,7 @@ The encoding of colour can be handled in many different ways, using
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://farver.data-imaginist.com}
   \item \url{https://github.com/thomasp85/farver}
   \item Report bugs at \url{https://github.com/thomasp85/farver/issues}
 }
