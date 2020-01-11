@@ -12,7 +12,7 @@ namespace ColorSpace {
 		a->ToRgb(&rgb_a);
 		b->ToRgb(&rgb_b);
 
-		return std::sqrt(SQR(rgb_a.r - rgb_b.r) + SQR(rgb_a.g - rgb_b.g) + SQR(rgb_a.b - rgb_a.b));
+		return std::sqrt(SQR(rgb_a.r - rgb_b.r) + SQR(rgb_a.g - rgb_b.g) + SQR(rgb_a.b - rgb_b.b));
 	}
 
 	double Cie1976Comparison::Compare(IColorSpace *a, IColorSpace *b) {
