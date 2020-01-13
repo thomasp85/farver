@@ -358,7 +358,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
   bool has_alpha;
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
-    if (code == R_NaString) {
+    if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
       if (na_is_na) {
         colours_p[offset1 + i] = R_NaReal;
         colours_p[offset2 + i] = R_NaReal;
@@ -442,7 +442,7 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
   bool has_alpha;
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
-    if (code == R_NaString) {
+    if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
       if (na_is_na) {
         if (get_alpha) {
           colours_d[offset1 + i] = R_NaReal;
