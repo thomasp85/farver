@@ -6,7 +6,7 @@
 \alias{farver-package}
 \title{farver: High Performance Colour Space Manipulation}
 \description{
-\if{html}{\figure{logo.png}{options: align='right'}}
+\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
 
 The encoding of colour can be handled in many different ways, using
     different colour spaces. As different colour spaces have different uses,
@@ -26,12 +26,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Thomas Lin Pedersen \email{thomasp85@gmail.com} (0000-0002-5147-4711)
+\strong{Maintainer}: Thomas Lin Pedersen \email{thomasp85@gmail.com} (\href{https://orcid.org/0000-0002-5147-4711}{ORCID})
 
 Authors:
 \itemize{
   \item Berendea Nicolae (Author of the ColorSpace C++ library)
-  \item Romain François \email{romain@purrple.cat} (0000-0002-2444-4226)
+  \item Romain François \email{romain@purrple.cat} (\href{https://orcid.org/0000-0002-2444-4226}{ORCID})
 }
 
 }

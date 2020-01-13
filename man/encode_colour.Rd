@@ -25,7 +25,7 @@ effect for relative colour spaces such as Lab and luv. Any value accepted by
 \code{\link[=as_white_ref]{as_white_ref()}} allowed.}
 }
 \value{
-A character vector with colours encoded as \code{#RRGGBB(AA)}
+A character vector with colours encoded as \verb{#RRGGBB(AA)}
 }
 \description{
 This is a version of \code{\link[grDevices:rgb]{grDevices::rgb()}} that works with the standard colour
@@ -61,7 +61,8 @@ encode_colour(spectrum_hcl, from = 'hcl')
 
 }
 \seealso{
-Other encoding and decoding functions: \code{\link{decode_colour}},
-  \code{\link{manip_channel}}
+Other encoding and decoding functions: 
+\code{\link{decode_colour}()},
+\code{\link{manip_channel}}
 }
 \concept{encoding and decoding functions}

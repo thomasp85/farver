@@ -4,8 +4,15 @@
 \alias{compare_colour}
 \title{Calculate the distance between colours}
 \usage{
-compare_colour(from, to = NULL, from_space, to_space = from_space,
-  method = "euclidean", white_from = "D65", white_to = white_from)
+compare_colour(
+  from,
+  to = NULL,
+  from_space,
+  to_space = from_space,
+  method = "euclidean",
+  white_from = "D65",
+  white_to = white_from
+)
 }
 \arguments{
 \item{from, to}{Numeric matrices with colours to compare - the format is the

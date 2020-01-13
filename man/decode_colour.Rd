@@ -4,8 +4,7 @@
 \alias{decode_colour}
 \title{Decode RGB hex-strings into colour values}
 \usage{
-decode_colour(colour, alpha = FALSE, to = "rgb", white = "D65",
-  na_value = NA)
+decode_colour(colour, alpha = FALSE, to = "rgb", white = "D65", na_value = NA)
 }
 \arguments{
 \item{colour}{A character vector of hex-encoded values or a valid colour name
@@ -27,7 +26,7 @@ by \code{\link[=as_white_ref]{as_white_ref()}} allowed.}
 \item{na_value}{A valid colour string or \code{NA} to use when \code{colour} contains
 \code{NA} elements. The general approach in farver is to carry \code{NA} values over,
 but if you want to mimick \code{\link[=col2rgb]{col2rgb()}} you should set
-\code{na_value = '#ffffff00'}, i.e. treat \code{NA} as transparent white.}
+\code{na_value = 'transparent'}, i.e. treat \code{NA} as transparent white.}
 }
 \value{
 A numeric matrix with a row for each element in \code{colour} and either
@@ -62,7 +61,8 @@ decode_colour(c('#43e1f6', 'steelblue', '#67ce9fe4'), to = 'lch')
 
 }
 \seealso{
-Other encoding and decoding functions: \code{\link{encode_colour}},
-  \code{\link{manip_channel}}
+Other encoding and decoding functions: 
+\code{\link{encode_colour}()},
+\code{\link{manip_channel}}
 }
 \concept{encoding and decoding functions}

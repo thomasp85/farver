@@ -10,17 +10,52 @@
 \alias{get_channel}
 \title{Modify colour space channels in hex-encoded colour strings}
 \usage{
-set_channel(colour, channel, value, space = "rgb", white = "D65")
+set_channel(
+  colour,
+  channel,
+  value,
+  space = "rgb",
+  white = "D65",
+  na_value = NA
+)
 
-add_to_channel(colour, channel, value, space = "rgb", white = "D65")
+add_to_channel(
+  colour,
+  channel,
+  value,
+  space = "rgb",
+  white = "D65",
+  na_value = NA
+)
 
-multiply_channel(colour, channel, value, space = "rgb", white = "D65")
+multiply_channel(
+  colour,
+  channel,
+  value,
+  space = "rgb",
+  white = "D65",
+  na_value = NA
+)
 
-raise_channel(colour, channel, value, space = "rgb", white = "D65")
+raise_channel(
+  colour,
+  channel,
+  value,
+  space = "rgb",
+  white = "D65",
+  na_value = NA
+)
 
-cap_channel(colour, channel, value, space = "rgb", white = "D65")
+cap_channel(
+  colour,
+  channel,
+  value,
+  space = "rgb",
+  white = "D65",
+  na_value = NA
+)
 
-get_channel(colour, channel, space = "rgb", white = "D65")
+get_channel(colour, channel, space = "rgb", white = "D65", na_value = NA)
 }
 \arguments{
 \item{colour}{A character string giving colours, either as hexadecimal
@@ -39,6 +74,11 @@ strings or accepted colour names.}
 \item{white}{The white reference of the channel colour space. Will only have
 an effect for relative colour spaces such as Lab and luv. Any value accepted
 by \code{\link[=as_white_ref]{as_white_ref()}} allowed.}
+
+\item{na_value}{A valid colour string or \code{NA} to use when \code{colour} contains
+\code{NA} elements. The general approach in farver is to carry \code{NA} values over,
+but if you want to mimick \code{\link[=col2rgb]{col2rgb()}} you should set
+\code{na_value = 'transparent'}, i.e. treat \code{NA} as transparent white.}
 }
 \value{
 A character vector of the same length as \code{colour} (or a numeric
@@ -75,7 +115,8 @@ cap_channel(spectrum, 'l', 20, space = 'lab')
 
 }
 \seealso{
-Other encoding and decoding functions: \code{\link{decode_colour}},
-  \code{\link{encode_colour}}
+Other encoding and decoding functions: 
+\code{\link{decode_colour}()},
+\code{\link{encode_colour}()}
 }
 \concept{encoding and decoding functions}

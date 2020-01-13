@@ -29,7 +29,7 @@ Description: The encoding of colour can be handled in many different ways, using
 License: MIT + file LICENSE
 Encoding: UTF-8
 SystemRequirements: C++11
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 URL: https://farver.data-imaginist.com, https://github.com/thomasp85/farver
 BugReports: https://github.com/thomasp85/farver/issues
 Suggests: 

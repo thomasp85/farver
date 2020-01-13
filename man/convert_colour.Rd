@@ -4,8 +4,7 @@
 \alias{convert_colour}
 \title{Convert between colour spaces}
 \usage{
-convert_colour(colour, from, to, white_from = "D65",
-  white_to = white_from)
+convert_colour(colour, from, to, white_from = "D65", white_to = white_from)
 }
 \arguments{
 \item{colour}{A numeric matrix (or an object coercible to one) with colours
