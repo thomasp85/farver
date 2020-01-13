@@ -326,6 +326,7 @@ SEXP load_colour_names_c(SEXP name, SEXP value) {
     col.r = values[it++];
     col.g = values[it++];
     col.b = values[it++];
+    col.a = values[it++];
     named_colours[colour_name] = col;
   }
   return R_NilValue;
@@ -398,7 +399,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
         rgb.r = it->second.r;
         rgb.g = it->second.g;
         rgb.b = it->second.b;
-        a = 1.0;
+        a = it->second.a;
       }
     }
     ColorSpace::IConverter<To>::ToColorSpace(&rgb, &to);
@@ -492,7 +493,7 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
         r = it->second.r;
         g = it->second.g;
         b = it->second.b;
-        a = 1.0;
+        a = it->second.a;
       }
     }
     if (get_alpha) {

@@ -22,7 +22,7 @@
 #' @param na_value A valid colour string or `NA` to use when `colour` contains
 #' `NA` elements. The general approach in farver is to carry `NA` values over,
 #' but if you want to mimick [col2rgb()] you should set 
-#' `na_value = '#ffffff00'`, i.e. treat `NA` as transparent white.
+#' `na_value = 'transparent'`, i.e. treat `NA` as transparent white.
 #' 
 #' 
 #' @return A numeric matrix with a row for each element in `colour` and either 
@@ -43,9 +43,9 @@
 #' decode_colour(c('#43e1f6', 'steelblue', '#67ce9fe4'), to = 'lch')
 #' 
 decode_colour <- function(colour, alpha = FALSE, to = 'rgb', white = 'D65', na_value = NA) {
-  #if (to != 'rgb') {
-  white <- as_white_ref(white)
-  #}
+  if (to != 'rgb') {
+    white <- as_white_ref(white)
+  }
   alpha <- isTRUE(alpha)
   colours <- decode_c(colour, alpha, colourspace_match(to), white, na_value)
   colnames(colours) <- c(colour_dims[[to]], if (alpha) 'alpha' else NULL)

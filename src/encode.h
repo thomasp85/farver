@@ -29,6 +29,7 @@ struct rgb_colour {
   int r;
   int g;
   int b;
+  int a;
 };
 typedef std::unordered_map<std::string, rgb_colour> ColourMap;
 
