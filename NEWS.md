@@ -1,6 +1,9 @@
 # farver (development version)
 
 * Allowing `"NA"` and `"transparent"` as valid colour names
+* How NA should be treated can now be set in all functions accepting colour 
+  names
+
 # farver 2.0.2
 
 * Small adjustments to support super weird architectures (#15, #16)
