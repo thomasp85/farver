@@ -145,8 +145,7 @@ the standard form expected by farver (matrix with a row per colour). As with
 decode a hex string directly into any of the supported colour spaces.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>decode_colour</span>(<span class='no'>colour</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>,
-  <span class='kw'>na_value</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
+    <pre class="usage"><span class='fu'>decode_colour</span>(<span class='no'>colour</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>, <span class='kw'>na_value</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,7 +179,7 @@ by <code><a href='as_white_ref.html'>as_white_ref()</a></code> allowed.</p></td>
       <td><p>A valid colour string or <code>NA</code> to use when <code>colour</code> contains
 <code>NA</code> elements. The general approach in farver is to carry <code>NA</code> values over,
 but if you want to mimick <code><a href='https://rdrr.io/r/grDevices/col2rgb.html'>col2rgb()</a></code> you should set
-<code>na_value = '#ffffff00'</code>, i.e. treat <code>NA</code> as transparent white.</p></td>
+<code>na_value = 'transparent'</code>, i.e. treat <code>NA</code> as transparent white.</p></td>
     </tr>
     </table>
 
@@ -201,8 +200,9 @@ and forth between two colourspaces may result in a change in the colour if
 the gamut of one of the spaces is less than the other.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other encoding and decoding functions: <code><a href='encode_colour.html'>encode_colour</a></code>,
-  <code><a href='manip_channel.html'>manip_channel</a></code></p></div>
+    <div class='dont-index'><p>Other encoding and decoding functions: 
+<code><a href='encode_colour.html'>encode_colour</a>()</code>,
+<code><a href='manip_channel.html'>manip_channel</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># basic use</span>

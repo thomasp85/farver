@@ -137,6 +137,11 @@
 <h1 class="page-header">
 <a href="#farver-development-version" class="anchor"></a>farver (development version)<small> Unreleased </small>
 </h1>
+<ul>
+<li>Fixed a bug in colour comparison where the blue channel got ignored (<a href='https://github.com/thomasp85/farver/issues/20'>#20</a>, <a href='https://github.com/krlmlr'>@krlmlr</a>)</li>
+<li>Allowing <code>"NA"</code> and <code>"transparent"</code> as valid colour names</li>
+<li>How NA should be treated can now be set in all functions accepting colour names</li>
+</ul>
 </div>
     <div id="farver-2-0-2" class="section level1">
 <h1 class="page-header">
@@ -149,7 +154,7 @@
 <li>Fixed a major bug in colour comparison</li>
 <li>Colour names are now stripped of whitespace and converted to lower-case before conversion, making it behave like <code><a href="https://rdrr.io/r/grDevices/col2rgb.html">col2rgb()</a></code>
 </li>
-<li>A warning is now emitted if an unknown colour name is passed into any decoding function</li>
+<li>An error is now emitted if an unknown colour name is passed into any decoding function</li>
 </ul>
 </div>
     <div id="farver-2-0-1" class="section level1">
