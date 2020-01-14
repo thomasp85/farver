@@ -171,14 +171,25 @@ as_white_ref <- function(x, fow = 2) {
 }
 
 load_colour_names <- function() {
-  .Call('load_colour_names_c', all_colours, all_values, PACKAGE = 'farver')
+  .Call('load_colour_names_c', 
+        c(all_colours, as.character(seq_along(def_palette) - 1L)), 
+        cbind(all_values, def_palette_values), 
+        PACKAGE = 'farver')
   invisible()
 }
-
-as_character <- function(x) {
+as_colour_code <- function(x) {
   if (is.character(x)) return(x)
   n <- names(x)
-  x <- as.character(x)
+  if (is.numeric(x)) {
+    if (any(x <= 0, na.rm = TRUE)) {
+      stop("colours encodes as numbers must be positive", call. = FALSE)
+    }
+    x <- as.integer(x)
+    x <- ifelse(x == 0, 1, ((x - 1) %% (length(def_palette) - 1)) + 2)
+    x <- def_palette[x]
+  } else {
+    x <- as.character(x)
+  }
   names(x) <- n
   x
 }

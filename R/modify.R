@@ -124,7 +124,7 @@ encode_channel_c <- function(colour, channel, value, space, op, white, na_value)
     if (is.na(channel)) stop('Invalid channel for this colourspace', call. = FALSE)
   }
   
-  .Call('encode_channel_c', as_character(colour), as.integer(channel), value, as.integer(space), as.integer(op), white, as.character(na_value), PACKAGE = 'farver')
+  .Call('encode_channel_c', as_colour_code(colour), as.integer(channel), value, as.integer(space), as.integer(op), white, as.character(na_value), PACKAGE = 'farver')
 }
 
 decode_channel_c <- function(colour, channel, space, white, na_value) {
@@ -137,5 +137,5 @@ decode_channel_c <- function(colour, channel, space, white, na_value) {
     if (is.na(channel)) stop('Invalid channel for this colourspace', call. = FALSE)
   }
   
-  .Call('decode_channel_c', as_character(colour), as.integer(channel), as.integer(space), white, as.character(na_value), PACKAGE = 'farver')
+  .Call('decode_channel_c', as_colour_code(colour), as.integer(channel), as.integer(space), white, as.character(na_value), PACKAGE = 'farver')
 }

@@ -32,6 +32,14 @@ inline int hex2int(const int x) {
 }
 inline std::string prepare_code(const char* col) {
   std::string code(col);
+  if (isdigit(col[0])) {
+    int col_num = atoi(col);
+    if (col_num == 0) {
+      code = "0";
+    } else {
+      code = std::to_string(((col_num - 1) % 8) + 1);
+    }
+  }
   // Remove whitespace
   code.erase(std::remove(code.begin(), code.end(), ' '), code.end());
   std::transform(code.begin(), code.end(), code.begin(),

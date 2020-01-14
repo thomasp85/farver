@@ -5,6 +5,8 @@
 * Allowing `"NA"` and `"transparent"` as valid colour names
 * How NA should be treated can now be set in all functions accepting colour 
   names
+* farver now accepts legacy colour specifications as integers indexing into
+  `palette()` as well as integers represented as characters
 
 # farver 2.0.2
 
