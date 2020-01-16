@@ -1,3 +1,5 @@
+# farver (development version)
+
 # farver 2.0.3
 
 * Fixed a bug in colour comparison where the blue channel got ignored 
