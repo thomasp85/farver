@@ -14,8 +14,9 @@ for \code{'cmyk'} it means four columns.}
 
 \item{from, to}{The input and output colour space. Allowed values are: \code{"cmy"},
 \code{"cmyk"}, \code{"hsl"}, \code{"hsb"}, \code{"hsv"}, \code{"lab"} (CIE L*ab), \code{"hunterlab"}
-(Hunter Lab), \code{"lch"} (CIE Lch(ab) / polarLAB), \code{"luv"}, \code{"rgb"} (sRGB),
-\code{"xyz"}, \code{"yxy"} (CIE xyY), or \code{"hcl"} (CIE Lch(uv) / polarLuv)}
+(Hunter Lab), \code{"oklab"}, \code{"lch"} (CIE Lch(ab) / polarLAB), \code{"luv"},
+\code{"rgb"} (sRGB), \code{"xyz"}, \code{"yxy"} (CIE xyY), \code{"hcl"} (CIE Lch(uv) / polarLuv),
+or \code{"oklch"} (Polar form of oklab)}
 
 \item{white_from, white_to}{The white reference of the from and to colour
 space. Will only have an effect for relative colour spaces such as Lab and

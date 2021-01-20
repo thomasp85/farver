@@ -202,6 +202,32 @@ namespace ColorSpace {
 	  virtual void Cap();
 	};
 	
+	struct OkLab : public IColorSpace {
+	  double l, a, b;
+	  
+	  OkLab();
+	  OkLab(double l, double a, double b);
+	  OkLab(int l, int a, int b);
+	  
+	  virtual void Initialize(Rgb *color);
+	  virtual void ToRgb(Rgb *color);
+	  virtual void Copy(IColorSpace *color);
+	  virtual void Cap();
+	};
+	
+	struct OkLch : public IColorSpace {
+	  double l, c, h;
+	  
+	  OkLch();
+	  OkLch(double l, double c, double h);
+	  OkLch(int l, int c, int h);
+	  
+	  virtual void Initialize(Rgb *color);
+	  virtual void ToRgb(Rgb *color);
+	  virtual void Copy(IColorSpace *color);
+	  virtual void Cap();
+	};
+	
 }
 
 #endif // COLOR_SPACE_H

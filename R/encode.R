@@ -11,8 +11,9 @@
 #' of rows in `colour`. If `NULL` or a single `NA` it will be ignored.
 #' @param from The input colour space. Allowed values are: `"cmy"`, 
 #' `"cmyk"`, `"hsl"`, `"hsb"`, `"hsv"`, `"lab"` (CIE L*ab), `"hunterlab"` 
-#' (Hunter Lab), `"lch"` (CIE Lch(ab) / polarLAB), `"luv"`, `"rgb"` (sRGB), 
-#' `"xyz"`, `"yxy"` (CIE xyY), or `"hcl"` (CIE Lch(uv) / polarLuv)
+#' (Hunter Lab), `"oklab"`, `"lch"` (CIE Lch(ab) / polarLAB), `"luv"`, 
+#' `"rgb"` (sRGB), `"xyz"`, `"yxy"` (CIE xyY), `"hcl"` (CIE Lch(uv) / polarLuv),
+#' or `"oklch"` (Polar form of oklab)
 #' @param white The white reference of the input colour space. Will only have an 
 #' effect for relative colour spaces such as Lab and luv. Any value accepted by 
 #' [as_white_ref()] allowed.

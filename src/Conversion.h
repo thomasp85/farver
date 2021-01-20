@@ -15,6 +15,8 @@ namespace ColorSpace {
 	struct Hsb;
 	struct HunterLab;
 	struct Hcl;
+	struct OkLab;
+	struct OkLch;
 
 	template <typename TColorSpace>
 	struct IConverter {
@@ -116,6 +118,20 @@ namespace ColorSpace {
 	  static void ToColor(Rgb *color, Hcl *item);
 	};
 	typedef IConverter<Hcl> HclConverter;
+	
+	template <>
+	struct IConverter<OkLab> {
+	  static void ToColorSpace(Rgb *color, OkLab *item);
+	  static void ToColor(Rgb *color, OkLab *item);
+	};
+	typedef IConverter<OkLab> OkLabConverter;
+	
+	template <>
+	struct IConverter<OkLch> {
+	  static void ToColorSpace(Rgb *color, OkLch *item);
+	  static void ToColor(Rgb *color, OkLch *item);
+	};
+	typedef IConverter<OkLch> OkLchConverter;
 }
 
 #endif // RGB_CONVERTER_H

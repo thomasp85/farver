@@ -22,6 +22,8 @@
 #define XYZ 11
 #define YXY 12
 #define HCL 13
+#define OKLAB 14
+#define OKLCH 15
 
 #define EUCLIDEAN 1
 #define CIE1976 2
@@ -295,6 +297,32 @@ inline void grab<ColorSpace::Hcl>(const ColorSpace::Hcl& color, double* x1, doub
     *x1 = color.h ;
     *x2 = color.c ;
     *x3 = color.l ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
+}
+
+template <>
+inline void grab<ColorSpace::OkLab>(const ColorSpace::OkLab& color, double* x1, double* x2, double* x3, double* x4){
+  if (color.valid) {
+    *x1 = color.l ;
+    *x2 = color.a ;
+    *x3 = color.b ;
+  } else {
+    *x1 = R_NaReal ;
+    *x2 = R_NaReal ;
+    *x3 = R_NaReal ;
+  }
+}
+
+template <>
+inline void grab<ColorSpace::OkLch>(const ColorSpace::OkLch& color, double* x1, double* x2, double* x3, double* x4){
+  if (color.valid) {
+    *x1 = color.l ;
+    *x2 = color.c ;
+    *x3 = color.h ;
   } else {
     *x1 = R_NaReal ;
     *x2 = R_NaReal ;

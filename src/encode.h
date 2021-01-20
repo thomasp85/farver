@@ -243,6 +243,36 @@ inline void modify_channel<ColorSpace::Hcl>(ColorSpace::Hcl& color, double value
   }
 }
 
+template <>
+inline void modify_channel<ColorSpace::OkLab>(ColorSpace::OkLab& color, double value, int channel, int op){
+  switch (channel) {
+  case 1: 
+    color.l = mod_val(color.l, value, op);
+    break;
+  case 2:
+    color.a = mod_val(color.a, value, op);
+    break;
+  case 3:
+    color.b = mod_val(color.b, value, op);
+    break;
+  }
+}
+
+template <>
+inline void modify_channel<ColorSpace::OkLch>(ColorSpace::OkLch& color, double value, int channel, int op){
+  switch (channel) {
+  case 1: 
+    color.l = mod_val(color.l, value, op);
+    break;
+  case 2:
+    color.c = mod_val(color.c, value, op);
+    break;
+  case 3:
+    color.h = mod_val(color.h, value, op);
+    break;
+  }
+}
+
 
 template <typename Space>
 inline double grab_channel(Space&,int channel);
@@ -374,6 +404,26 @@ inline double grab_channel<ColorSpace::Hcl>(ColorSpace::Hcl& color, int channel)
   case 1: return color.h;
   case 2: return color.c;
   case 3: return color.l;
+  }
+  return 0.0;
+}
+
+template <>
+inline double grab_channel<ColorSpace::OkLab>(ColorSpace::OkLab& color, int channel){
+  switch (channel) {
+  case 1: return color.l;
+  case 2: return color.a;
+  case 3: return color.b;
+  }
+  return 0.0;
+}
+
+template <>
+inline double grab_channel<ColorSpace::OkLch>(ColorSpace::OkLch& color, int channel){
+  switch (channel) {
+  case 1: return color.l;
+  case 2: return color.c;
+  case 3: return color.h;
   }
   return 0.0;
 }

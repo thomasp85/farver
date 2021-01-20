@@ -314,6 +314,8 @@ SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white) {
     case XYZ: return encode_impl<ColorSpace::Xyz>(colour, alpha, white);
     case YXY: return encode_impl<ColorSpace::Yxy>(colour, alpha, white);
     case HCL: return encode_impl<ColorSpace::Hcl>(colour, alpha, white);
+    case OKLAB: return encode_impl<ColorSpace::OkLab>(colour, alpha, white);
+    case OKLCH: return encode_impl<ColorSpace::OkLch>(colour, alpha, white);
   }
   
   // never happens
@@ -536,6 +538,8 @@ SEXP decode_c(SEXP codes, SEXP alpha, SEXP to, SEXP white, SEXP na) {
     case XYZ: return decode_impl<ColorSpace::Xyz>(codes, alpha, white, na);
     case YXY: return decode_impl<ColorSpace::Yxy>(codes, alpha, white, na);
     case HCL: return decode_impl<ColorSpace::Hcl>(codes, alpha, white, na);
+    case OKLAB: return decode_impl<ColorSpace::OkLab>(codes, alpha, white, na);
+    case OKLCH: return decode_impl<ColorSpace::OkLch>(codes, alpha, white, na);
   }
   
   // never happens
@@ -858,6 +862,8 @@ SEXP encode_channel_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op,
     case XYZ: return encode_channel_impl<ColorSpace::Xyz>(codes, channel, value, op, white, na);
     case YXY: return encode_channel_impl<ColorSpace::Yxy>(codes, channel, value, op, white, na);
     case HCL: return encode_channel_impl<ColorSpace::Hcl>(codes, channel, value, op, white, na);
+    case OKLAB: return encode_channel_impl<ColorSpace::OkLab>(codes, channel, value, op, white, na);
+    case OKLCH: return encode_channel_impl<ColorSpace::OkLch>(codes, channel, value, op, white, na);
   }
   
   // never happens
@@ -1058,6 +1064,8 @@ SEXP decode_channel_c(SEXP codes, SEXP channel, SEXP space, SEXP white, SEXP na)
   case XYZ: return decode_channel_impl<ColorSpace::Xyz>(codes, channel, white, na);
   case YXY: return decode_channel_impl<ColorSpace::Yxy>(codes, channel, white, na);
   case HCL: return decode_channel_impl<ColorSpace::Hcl>(codes, channel, white, na);
+  case OKLAB: return decode_channel_impl<ColorSpace::OkLab>(codes, channel, white, na);
+  case OKLCH: return decode_channel_impl<ColorSpace::OkLch>(codes, channel, white, na);
   }
   
   // never happens

@@ -68,8 +68,9 @@ strings or accepted colour names.}
 
 \item{space}{The colour space the channel pertains to. Allowed values are:
 \code{"cmy"}, \code{"cmyk"}, \code{"hsl"}, \code{"hsb"}, \code{"hsv"}, \code{"lab"} (CIE L*ab), \code{"hunterlab"}
-(Hunter Lab), \code{"lch"} (CIE Lch(ab) / polarLAB), \code{"luv"}, \code{"rgb"} (sRGB),
-\code{"xyz"}, \code{"yxy"} (CIE xyY), or \code{"hcl"} (CIE Lch(uv) / polarLuv)}
+(Hunter Lab), \code{"oklab"} , \code{"lch"} (CIE Lch(ab) / polarLAB), \code{"luv"},
+\code{"rgb"} (sRGB), \code{"xyz"}, \code{"yxy"} (CIE xyY), \code{"hcl"} (CIE Lch(uv) / polarLuv),
+or \code{"oklch"} (Polar form of oklab)}
 
 \item{white}{The white reference of the channel colour space. Will only have
 an effect for relative colour spaces such as Lab and luv. Any value accepted

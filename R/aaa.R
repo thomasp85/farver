@@ -1,17 +1,19 @@
 colourspaces <- c(
-  "cmy",       # 0
-  "cmyk",      # 1
-  "hsl",       # 2
-  "hsb",       # 3
-  "hsv",       # 4
-  "lab",       # 5
-  "hunterlab", # 6
-  "lch",       # 7
-  "luv",       # 8
-  "rgb",       # 9
-  "xyz",       # 10
-  "yxy",       # 11
-  "hcl"        # 11
+  "cmy",       # 1
+  "cmyk",      # 2
+  "hsl",       # 3
+  "hsb",       # 4
+  "hsv",       # 5
+  "lab",       # 6
+  "hunterlab", # 7
+  "lch",       # 8
+  "luv",       # 9
+  "rgb",       # 10
+  "xyz",       # 11
+  "yxy",       # 12
+  "hcl",       # 13
+  "oklab",     # 14
+  "oklch"      # 15
 )
 colour_dims <- list(
   cmy = c('c', 'm', 'y'),
@@ -26,7 +28,9 @@ colour_dims <- list(
   rgb = c('r', 'g', 'b'),
   xyz = c('x', 'y', 'z'),
   yxy = c('y1', 'x', 'y2'),
-  hcl = c('h', 'c', 'l')
+  hcl = c('h', 'c', 'l'),
+  oklab = c('l', 'a', 'b'),
+  oklch = c('l', 'c', 'h')
 )
 colour_channel_index <- list(
   cmy = c('c' = 1L, 'm' = 2L, 'y' = 3L),
@@ -41,7 +45,9 @@ colour_channel_index <- list(
   rgb = c('r' = 1L, 'g' = 2L, 'b' = 3L),
   xyz = c('x' = 1L, 'y' = 2L, 'z' = 3L),
   yxy = c('y1' = 1L, 'x' = 2L, 'y2' = 3L),
-  hcl = c('h' = 1L, 'c' = 2L, 'l' = 3L)
+  hcl = c('h' = 1L, 'c' = 2L, 'l' = 3L),
+  oklab = c('l' = 1L, 'a' = 2L, 'b' = 3L),
+  oklch = c('l' = 1L, 'c' = 2L, 'h' = 3L)
 )
 distances <- c(
   "euclidean",

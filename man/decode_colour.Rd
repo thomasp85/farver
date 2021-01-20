@@ -8,7 +8,7 @@ decode_colour(colour, alpha = FALSE, to = "rgb", white = "D65", na_value = NA)
 }
 \arguments{
 \item{colour}{A character vector of hex-encoded values or a valid colour name
-as given in \code{\link[grDevices:colours]{grDevices::colours()}}.}
+as given in \code{\link[grDevices:colors]{grDevices::colours()}}.}
 
 \item{alpha}{If \code{TRUE} the alpha channel will be returned as well (scaled
 between 0 and 1). If no alpha channel exists in the colour it will be
@@ -16,8 +16,9 @@ assumed 1. If \code{FALSE} any alpha channel is ignored.}
 
 \item{to}{The output colour space. Allowed values are: \code{"cmy"},
 \code{"cmyk"}, \code{"hsl"}, \code{"hsb"}, \code{"hsv"}, \code{"lab"} (CIE L*ab), \code{"hunterlab"}
-(Hunter Lab), \code{"lch"} (CIE Lch(ab) / polarLAB), \code{"luv"}, \code{"rgb"} (sRGB),
-\code{"xyz"}, \code{"yxy"} (CIE xyY), or \code{"hcl"} (CIE Lch(uv) / polarLuv)}
+(Hunter Lab), \code{"oklab"}, \code{"lch"} (CIE Lch(ab) / polarLAB), \code{"luv"},
+\code{"rgb"} (sRGB), \code{"xyz"}, \code{"yxy"} (CIE xyY), \code{"hcl"} (CIE Lch(uv) / polarLuv),
+or \code{"oklch"} (Polar form of oklab)}
 
 \item{white}{The white reference of the output colour space. Will only have
 an effect for relative colour spaces such as Lab and luv. Any value accepted

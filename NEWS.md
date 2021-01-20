@@ -1,5 +1,7 @@
 # farver (development version)
 
+* Added support for OKLab and OKLch (polar version of OKLab) colour spaces
+
 # farver 2.0.3
 
 * Fixed a bug in colour comparison where the blue channel got ignored 

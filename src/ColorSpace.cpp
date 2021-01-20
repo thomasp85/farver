@@ -353,5 +353,55 @@ namespace ColorSpace {
     c = c < 0.0 ? 0.0 : c;
     l = l < 0.0 ? 0.0 : (l > 100.0 ? 100.0 : l);
   }
+
+  OkLab::OkLab() {}
+  OkLab::OkLab(double l, double a, double b) : l(l), a(a), b(b) {
+    valid = R_finite(l) && R_finite(a) && R_finite(b);
+  }
+  OkLab::OkLab(int l, int a, int b) : l(l), a(a), b(b) {
+    valid = !(l == R_NaInt || a == R_NaInt || b == R_NaInt);
+  }
+  void OkLab::Initialize(Rgb *color) {
+    OkLabConverter::ToColorSpace(color, this);
+  }
+  void OkLab::ToRgb(Rgb *color) {
+    OkLabConverter::ToColor(color, this);
+  }
+  void OkLab::Copy(IColorSpace *color) {
+    OkLab *lab = static_cast<OkLab*>(color);
+    lab->l = l;
+    lab->a = a;
+    lab->b = b;
+    lab->valid = valid;
+  }
+  void OkLab::Cap() {
+    if (!valid) return;
+    l = l < 0.0 ? 0.0 : (l > 1.0 ? 1.0 : l);
+  }
+
+OkLch::OkLch() {}
+OkLch::OkLch(double l, double c, double h) : l(l), c(c), h(h) {
+  valid = R_finite(l) && R_finite(c) && R_finite(h);
+}
+OkLch::OkLch(int l, int c, int h) : l(l), c(c), h(h) {
+  valid = !(l == R_NaInt || c == R_NaInt || h == R_NaInt);
+}
+void OkLch::Initialize(Rgb *color) {
+  OkLchConverter::ToColorSpace(color, this);
+}
+void OkLch::ToRgb(Rgb *color) {
+  OkLchConverter::ToColor(color, this);
+}
+void OkLch::Copy(IColorSpace *color) {
+  OkLch *lch = static_cast<OkLch*>(color);
+  lch->l = l;
+  lch->c = c;
+  lch->h = h;
+  lch->valid = valid;
+}
+void OkLch::Cap() {
+  if (!valid) return;
+  l = l < 0.0 ? 0.0 : (l > 1.0 ? 1.0 : l);
+}
 }
 
