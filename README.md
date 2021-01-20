@@ -3,14 +3,14 @@
 
 # farver <a href='https://farver.data-imaginist.com'><img src='man/figures/logo.png' align="right" height="131.5" /></a>
 
-[![Travis-CI Build
-Status](https://travis-ci.org/thomasp85/farver.svg?branch=master)](https://travis-ci.org/thomasp85/farver)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/thomasp85/farver?branch=master&svg=true)](https://ci.appveyor.com/project/thomasp85/farver)
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/thomasp85/farver/workflows/R-CMD-check/badge.svg)](https://github.com/thomasp85/farver/actions)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version-ago/farver)](https://cran.r-project.org/package=farver)
 [![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/farver)](https://cran.r-project.org/package=farver)
-[![Coverage
-Status](https://img.shields.io/codecov/c/github/thomasp85/farver/master.svg)](https://codecov.io/github/thomasp85/farver?branch=master)
+[![Codecov test
+coverage](https://codecov.io/gh/thomasp85/farver/branch/master/graph/badge.svg)](https://codecov.io/gh/thomasp85/farver?branch=master)
+<!-- badges: end -->
 
 The goal of farver is to provide very fast, vectorised functions for
 conversion of colours between different colour spaces, colour
@@ -43,8 +43,8 @@ library(farver)
 
 codes <- rainbow(10)
 codes
-#>  [1] "#FF0000FF" "#FF9900FF" "#CCFF00FF" "#33FF00FF" "#00FF66FF"
-#>  [6] "#00FFFFFF" "#0066FFFF" "#3300FFFF" "#CC00FFFF" "#FF0099FF"
+#>  [1] "#FF0000" "#FF9900" "#CCFF00" "#33FF00" "#00FF66" "#00FFFF" "#0066FF"
+#>  [8] "#3300FF" "#CC00FF" "#FF0099"
 
 spectrum <- decode_colour(codes)
 spectrum
@@ -113,18 +113,18 @@ channel in the supported spaces directly in colour strings:
 ``` r
 # Add a value to the channel
 add_to_channel(codes, channel = 'l', value = 1:10, space = 'lab')
-#>  [1] "#FF0C03FF" "#FF9E0EFF" "#D5FF1CFF" "#48FF20FF" "#33FF74FF"
-#>  [6] "#3CFFFFFF" "#3D77FFFF" "#5A25FFFF" "#E839FFFF" "#FF41B4FF"
+#>  [1] "#FF0C03" "#FF9E0E" "#D5FF1C" "#48FF20" "#33FF74" "#3CFFFF" "#3D77FF"
+#>  [8] "#5A25FF" "#E839FF" "#FF41B4"
 
 # Set a channel to a specific value
 set_channel(codes, 'alpha', c(0.3, 0.7))
-#>  [1] "#FF00004C" "#FF9900B2" "#CCFF004C" "#33FF00B2" "#00FF664C"
-#>  [6] "#00FFFFB2" "#0066FF4C" "#3300FFB2" "#CC00FF4C" "#FF0099B2"
+#>  [1] "#FF00004C" "#FF9900B2" "#CCFF004C" "#33FF00B2" "#00FF664C" "#00FFFFB2"
+#>  [7] "#0066FF4C" "#3300FFB2" "#CC00FF4C" "#FF0099B2"
 
 # Limit a channel to a given value
 cap_channel(codes, 'r', 200)
-#>  [1] "#C80000FF" "#C89900FF" "#C8FF00FF" "#33FF00FF" "#00FF66FF"
-#>  [6] "#00FFFFFF" "#0066FFFF" "#3300FFFF" "#C800FFFF" "#C80099FF"
+#>  [1] "#C80000" "#C89900" "#C8FF00" "#33FF00" "#00FF66" "#00FFFF" "#0066FF"
+#>  [8] "#3300FF" "#C800FF" "#C80099"
 ```
 
 Lastly, farver also provides utilities for calculating the distance
@@ -154,8 +154,10 @@ compare_colour(spectrum, spectrum2, 'rgb', method = 'cie2000')[1:6, 1:6]
   - HSV
   - CIE L\*AB
   - Hunter LAB
+  - OK LAB
   - LCH(ab)
   - LCH(uv)
+  - LCH(OK)
   - LUV
   - RGB
   - XYZ
