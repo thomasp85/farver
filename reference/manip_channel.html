@@ -17,23 +17,27 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -46,8 +50,7 @@
 <meta property="og:description" content="This set of functions allows you to modify colours as given by strings,
 whithout first decoding them. For large vectors of colour values this should
 provide a considerable speedup." />
-<meta property="og:image" content="https://farver.data-imaginist.com/logo.png" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:image" content="https://farver.data-imaginist.com/logo.svg" />
 
 
 
@@ -65,7 +68,7 @@ provide a considerable speedup." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -87,7 +90,7 @@ provide a considerable speedup." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -115,7 +118,7 @@ provide a considerable speedup." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/thomasp85/farver">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -143,52 +146,52 @@ whithout first decoding them. For large vectors of colour values this should
 provide a considerable speedup.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>set_channel</span>(
-  <span class='no'>colour</span>,
-  <span class='no'>channel</span>,
-  <span class='no'>value</span>,
-  <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>,
-  <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>,
-  <span class='kw'>na_value</span> <span class='kw'>=</span> <span class='fl'>NA</span>
-)
+    <pre class="usage"><span class='fu'>set_channel</span><span class='op'>(</span>
+  <span class='va'>colour</span>,
+  <span class='va'>channel</span>,
+  <span class='va'>value</span>,
+  space <span class='op'>=</span> <span class='st'>"rgb"</span>,
+  white <span class='op'>=</span> <span class='st'>"D65"</span>,
+  na_value <span class='op'>=</span> <span class='cn'>NA</span>
+<span class='op'>)</span>
 
-<span class='fu'>add_to_channel</span>(
-  <span class='no'>colour</span>,
-  <span class='no'>channel</span>,
-  <span class='no'>value</span>,
-  <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>,
-  <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>,
-  <span class='kw'>na_value</span> <span class='kw'>=</span> <span class='fl'>NA</span>
-)
+<span class='fu'>add_to_channel</span><span class='op'>(</span>
+  <span class='va'>colour</span>,
+  <span class='va'>channel</span>,
+  <span class='va'>value</span>,
+  space <span class='op'>=</span> <span class='st'>"rgb"</span>,
+  white <span class='op'>=</span> <span class='st'>"D65"</span>,
+  na_value <span class='op'>=</span> <span class='cn'>NA</span>
+<span class='op'>)</span>
 
-<span class='fu'>multiply_channel</span>(
-  <span class='no'>colour</span>,
-  <span class='no'>channel</span>,
-  <span class='no'>value</span>,
-  <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>,
-  <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>,
-  <span class='kw'>na_value</span> <span class='kw'>=</span> <span class='fl'>NA</span>
-)
+<span class='fu'>multiply_channel</span><span class='op'>(</span>
+  <span class='va'>colour</span>,
+  <span class='va'>channel</span>,
+  <span class='va'>value</span>,
+  space <span class='op'>=</span> <span class='st'>"rgb"</span>,
+  white <span class='op'>=</span> <span class='st'>"D65"</span>,
+  na_value <span class='op'>=</span> <span class='cn'>NA</span>
+<span class='op'>)</span>
 
-<span class='fu'>raise_channel</span>(
-  <span class='no'>colour</span>,
-  <span class='no'>channel</span>,
-  <span class='no'>value</span>,
-  <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>,
-  <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>,
-  <span class='kw'>na_value</span> <span class='kw'>=</span> <span class='fl'>NA</span>
-)
+<span class='fu'>raise_channel</span><span class='op'>(</span>
+  <span class='va'>colour</span>,
+  <span class='va'>channel</span>,
+  <span class='va'>value</span>,
+  space <span class='op'>=</span> <span class='st'>"rgb"</span>,
+  white <span class='op'>=</span> <span class='st'>"D65"</span>,
+  na_value <span class='op'>=</span> <span class='cn'>NA</span>
+<span class='op'>)</span>
 
-<span class='fu'>cap_channel</span>(
-  <span class='no'>colour</span>,
-  <span class='no'>channel</span>,
-  <span class='no'>value</span>,
-  <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>,
-  <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>,
-  <span class='kw'>na_value</span> <span class='kw'>=</span> <span class='fl'>NA</span>
-)
+<span class='fu'>cap_channel</span><span class='op'>(</span>
+  <span class='va'>colour</span>,
+  <span class='va'>channel</span>,
+  <span class='va'>value</span>,
+  space <span class='op'>=</span> <span class='st'>"rgb"</span>,
+  white <span class='op'>=</span> <span class='st'>"D65"</span>,
+  na_value <span class='op'>=</span> <span class='cn'>NA</span>
+<span class='op'>)</span>
 
-<span class='fu'>get_channel</span>(<span class='no'>colour</span>, <span class='no'>channel</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"rgb"</span>, <span class='kw'>white</span> <span class='kw'>=</span> <span class='st'>"D65"</span>, <span class='kw'>na_value</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
+<span class='fu'>get_channel</span><span class='op'>(</span><span class='va'>colour</span>, <span class='va'>channel</span>, space <span class='op'>=</span> <span class='st'>"rgb"</span>, white <span class='op'>=</span> <span class='st'>"D65"</span>, na_value <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -211,8 +214,9 @@ strings or accepted colour names.</p></td>
       <th>space</th>
       <td><p>The colour space the channel pertains to. Allowed values are:
 <code>"cmy"</code>, <code>"cmyk"</code>, <code>"hsl"</code>, <code>"hsb"</code>, <code>"hsv"</code>, <code>"lab"</code> (CIE L*ab), <code>"hunterlab"</code>
-(Hunter Lab), <code>"lch"</code> (CIE Lch(ab) / polarLAB), <code>"luv"</code>, <code>"rgb"</code> (sRGB),
-<code>"xyz"</code>, <code>"yxy"</code> (CIE xyY), or <code>"hcl"</code> (CIE Lch(uv) / polarLuv)</p></td>
+(Hunter Lab), <code>"oklab"</code> , <code>"lch"</code> (CIE Lch(ab) / polarLAB), <code>"luv"</code>,
+<code>"rgb"</code> (sRGB), <code>"xyz"</code>, <code>"yxy"</code> (CIE xyY), <code>"hcl"</code> (CIE Lch(uv) / polarLuv),
+or <code>"oklch"</code> (Polar form of oklab)</p></td>
     </tr>
     <tr>
       <th>white</th>
@@ -240,40 +244,46 @@ vector in the case of <code>get_channel()</code>)</p>
 <code><a href='encode_colour.html'>encode_colour</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>spectrum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fl'>10</span>)
+    <pre class="examples"><div class='input'><span class='va'>spectrum</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>
 
 <span class='co'># set a specific channel</span>
-<span class='fu'>set_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>50</span>))</div><div class='output co'>#&gt;  [1] "#0A0000FF" "#329900FF" "#0AFF00FF" "#32FF00FF" "#0AFF66FF" "#32FFFFFF"
-#&gt;  [7] "#0A66FFFF" "#3200FFFF" "#0A00FFFF" "#320099FF"</div><div class='input'><span class='fu'>set_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>50</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;  [1] "#F40000FF" "#B86000FF" "#4B8600FF" "#009200FF" "#009100FF" "#008B8EFF"
-#&gt;  [7] "#1D6BFFFF" "#7A3FFFFF" "#C600F9FF" "#ED008AFF"</div><div class='input'><span class='fu'>set_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'alpha'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>, <span class='fl'>1</span>))</div><div class='output co'>#&gt;  [1] "#FF000080" "#FF9900"   "#CCFF0080" "#33FF00"   "#00FF6680" "#00FFFF"  
+<span class='fu'>set_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#0A0000" "#329900" "#0AFF00" "#32FF00" "#0AFF66" "#32FFFF" "#0A66FF"
+#&gt;  [8] "#3200FF" "#0A00FF" "#320099"</div><div class='input'><span class='fu'>set_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>50</span>, space <span class='op'>=</span> <span class='st'>'lab'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#F40000" "#B86000" "#4B8600" "#009200" "#009100" "#008B8E" "#1D6BFF"
+#&gt;  [8] "#7A3FFF" "#C600F9" "#ED008A"</div><div class='input'><span class='fu'>set_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'alpha'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.5</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#FF000080" "#FF9900"   "#CCFF0080" "#33FF00"   "#00FF6680" "#00FFFF"  
 #&gt;  [7] "#0066FF80" "#3300FF"   "#CC00FF80" "#FF0099"  </div><div class='input'>
 <span class='co'># Add value to channel</span>
-<span class='fu'>add_to_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>50</span>))</div><div class='output co'>#&gt;  [1] "#FF0000FF" "#FF9900FF" "#D6FF00FF" "#65FF00FF" "#0AFF66FF" "#32FFFFFF"
-#&gt;  [7] "#0A66FFFF" "#6500FFFF" "#D600FFFF" "#FF0099FF"</div><div class='input'><span class='fu'>add_to_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>50</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;  [1] "#FFB380FF" "#FFE663FF" "#DFFF2DFF" "#69FF41FF" "#55FF86FF" "#4BFFFFFF"
-#&gt;  [7] "#D6EAFFFF" "#EC9DFFFF" "#FFB7FFFF" "#FFB1FFFF"</div><div class='input'>
+<span class='fu'>add_to_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#FF0000" "#FF9900" "#D6FF00" "#65FF00" "#0AFF66" "#32FFFF" "#0A66FF"
+#&gt;  [8] "#6500FF" "#D600FF" "#FF0099"</div><div class='input'><span class='fu'>add_to_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>50</span>, space <span class='op'>=</span> <span class='st'>'lab'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#FFB380" "#FFE663" "#DFFF2D" "#69FF41" "#55FF86" "#4BFFFF" "#D6EAFF"
+#&gt;  [8] "#EC9DFF" "#FFB7FF" "#FFB1FF"</div><div class='input'>
 <span class='co'># Multiply a channel</span>
-<span class='fu'>multiply_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>50</span>))</div><div class='output co'>#&gt;  [1] "#FF0000FF" "#FF9900FF" "#FFFF00FF" "#FFFF00FF" "#00FF66FF" "#00FFFFFF"
-#&gt;  [7] "#0066FFFF" "#FF00FFFF" "#FF00FFFF" "#FF0099FF"</div><div class='input'><span class='fu'>multiply_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>50</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;  [1] "#FFB380FF" "#FFE663FF" "#DFFF2DFF" "#69FF41FF" "#55FF86FF" "#4BFFFFFF"
-#&gt;  [7] "#DCF0FFFF" "#FFCCFFFF" "#FFB7FFFF" "#FFB1FFFF"</div><div class='input'>
+<span class='fu'>multiply_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#FF0000" "#FF9900" "#FFFF00" "#FFFF00" "#00FF66" "#00FFFF" "#0066FF"
+#&gt;  [8] "#FF00FF" "#FF00FF" "#FF0099"</div><div class='input'><span class='fu'>multiply_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>50</span>, space <span class='op'>=</span> <span class='st'>'lab'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#FFB380" "#FFE663" "#DFFF2D" "#69FF41" "#55FF86" "#4BFFFF" "#DCF0FF"
+#&gt;  [8] "#FFCCFF" "#FFB7FF" "#FFB1FF"</div><div class='input'>
 <span class='co'># set a lower bound on a channel</span>
-<span class='fu'>raise_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>50</span>))</div><div class='output co'>#&gt;  [1] "#FF0000FF" "#FF9900FF" "#CCFF00FF" "#33FF00FF" "#0AFF66FF" "#32FFFFFF"
-#&gt;  [7] "#0A66FFFF" "#3300FFFF" "#CC00FFFF" "#FF0099FF"</div><div class='input'><span class='fu'>raise_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>20</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;  [1] "#FF0000FF" "#FF9900FF" "#CCFF00FF" "#33FF00FF" "#00FF66FF" "#00FFFFFF"
-#&gt;  [7] "#0066FFFF" "#3300FFFF" "#CC00FFFF" "#FF0099FF"</div><div class='input'>
+<span class='fu'>raise_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#FF0000" "#FF9900" "#CCFF00" "#33FF00" "#0AFF66" "#32FFFF" "#0A66FF"
+#&gt;  [8] "#3300FF" "#CC00FF" "#FF0099"</div><div class='input'><span class='fu'>raise_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>20</span>, space <span class='op'>=</span> <span class='st'>'lab'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#FF0000" "#FF9900" "#CCFF00" "#33FF00" "#00FF66" "#00FFFF" "#0066FF"
+#&gt;  [8] "#3300FF" "#CC00FF" "#FF0099"</div><div class='input'>
 <span class='co'># set an upper bound on a channel</span>
-<span class='fu'>cap_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>100</span>, <span class='fl'>50</span>))</div><div class='output co'>#&gt;  [1] "#640000FF" "#329900FF" "#64FF00FF" "#32FF00FF" "#00FF66FF" "#00FFFFFF"
-#&gt;  [7] "#0066FFFF" "#3200FFFF" "#6400FFFF" "#320099FF"</div><div class='input'><span class='fu'>cap_channel</span>(<span class='no'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>20</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>'lab'</span>)</div><div class='output co'>#&gt;  [1] "#920000FF" "#631600FF" "#183B00FF" "#004200FF" "#004200FF" "#003F44FF"
-#&gt;  [7] "#0029AFFF" "#0000D6FF" "#6B00A4FF" "#900041FF"</div><div class='input'>
+<span class='fu'>cap_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'r'</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#640000" "#329900" "#64FF00" "#32FF00" "#00FF66" "#00FFFF" "#0066FF"
+#&gt;  [8] "#3200FF" "#6400FF" "#320099"</div><div class='input'><span class='fu'>cap_channel</span><span class='op'>(</span><span class='va'>spectrum</span>, <span class='st'>'l'</span>, <span class='fl'>20</span>, space <span class='op'>=</span> <span class='st'>'lab'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "#920000" "#631600" "#183B00" "#004200" "#004200" "#003F44" "#0029AF"
+#&gt;  [8] "#0000D6" "#6B00A4" "#900041"</div><div class='input'>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -284,7 +294,7 @@ vector in the case of <code>get_channel()</code>)</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

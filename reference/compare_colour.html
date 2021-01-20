@@ -17,23 +17,27 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -46,8 +50,7 @@
 <meta property="og:description" content="There are many ways to measure the distance between colours. farver
 provides 5 different algorithms, ranging from simple euclidean distance in
 RGB space, to different perceptual measures such as CIE2000." />
-<meta property="og:image" content="https://farver.data-imaginist.com/logo.png" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:image" content="https://farver.data-imaginist.com/logo.svg" />
 
 
 
@@ -65,7 +68,7 @@ RGB space, to different perceptual measures such as CIE2000." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -87,7 +90,7 @@ RGB space, to different perceptual measures such as CIE2000." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -115,7 +118,7 @@ RGB space, to different perceptual measures such as CIE2000." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/thomasp85/farver">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -143,15 +146,15 @@ provides 5 different algorithms, ranging from simple euclidean distance in
 RGB space, to different perceptual measures such as CIE2000.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>compare_colour</span>(
-  <span class='no'>from</span>,
-  <span class='kw'>to</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>from_space</span>,
-  <span class='kw'>to_space</span> <span class='kw'>=</span> <span class='no'>from_space</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"euclidean"</span>,
-  <span class='kw'>white_from</span> <span class='kw'>=</span> <span class='st'>"D65"</span>,
-  <span class='kw'>white_to</span> <span class='kw'>=</span> <span class='no'>white_from</span>
-)</pre>
+    <pre class="usage"><span class='fu'>compare_colour</span><span class='op'>(</span>
+  <span class='va'>from</span>,
+  to <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>from_space</span>,
+  to_space <span class='op'>=</span> <span class='va'>from_space</span>,
+  method <span class='op'>=</span> <span class='st'>"euclidean"</span>,
+  white_from <span class='op'>=</span> <span class='st'>"D65"</span>,
+  white_to <span class='op'>=</span> <span class='va'>white_from</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -198,11 +201,12 @@ and forth between two colourspaces may result in a change in the colour if
 the gamut of one of the spaces is less than the other.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>r</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='decode_colour.html'>decode_colour</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fl'>10</span>))
-<span class='no'>h</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='decode_colour.html'>decode_colour</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>heat.colors</a></span>(<span class='fl'>15</span>))
+    <pre class="examples"><div class='input'><span class='va'>r</span> <span class='op'>&lt;-</span> <span class='fu'><a href='decode_colour.html'>decode_colour</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>h</span> <span class='op'>&lt;-</span> <span class='fu'><a href='decode_colour.html'>decode_colour</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>heat.colors</a></span><span class='op'>(</span><span class='fl'>15</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Compare two sets of colours</span>
-<span class='fu'>compare_colour</span>(<span class='no'>r</span>, <span class='no'>h</span>, <span class='st'>'rgb'</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'cie2000'</span>)</div><div class='output co'>#&gt;           [,1]       [,2]      [,3]     [,4]     [,5]     [,6]      [,7]
+<span class='fu'>compare_colour</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>h</span>, <span class='st'>'rgb'</span>, method <span class='op'>=</span> <span class='st'>'cie2000'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;           [,1]       [,2]      [,3]     [,4]     [,5]     [,6]      [,7]
 #&gt;  [1,]  0.00000  0.9533762  3.000824  6.57770 11.40975 17.52601 24.723573
 #&gt;  [2,] 29.50083 28.5558177 26.521813 22.95539 18.11996 11.98805  4.775709
 #&gt;  [3,] 72.33606 71.3575538 69.242820 65.50814 60.39647 53.85364 46.123120
@@ -236,7 +240,8 @@ the gamut of one of the spaces is less than the other.</p>
 #&gt;  [9,] 67.87546
 #&gt; [10,] 59.84362</div><div class='input'>
 <span class='co'># Compare a set of colours with itself</span>
-<span class='fu'>compare_colour</span>(<span class='no'>r</span>, <span class='kw'>from_space</span> <span class='kw'>=</span> <span class='st'>'rgb'</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>'cmc'</span>)</div><div class='output co'>#&gt;       [,1]     [,2]      [,3]      [,4]      [,5]     [,6]      [,7]     [,8]
+<span class='fu'>compare_colour</span><span class='op'>(</span><span class='va'>r</span>, from_space <span class='op'>=</span> <span class='st'>'rgb'</span>, method <span class='op'>=</span> <span class='st'>'cmc'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;       [,1]     [,2]      [,3]      [,4]      [,5]     [,6]      [,7]     [,8]
 #&gt;  [1,]    0 10.52597 18.003563 15.958871 15.623504 23.06674  5.030710 11.74396
 #&gt;  [2,]    0  0.00000  9.732855 12.581267  7.948242 12.62015  9.568638 21.39777
 #&gt;  [3,]    0  0.00000  0.000000  5.729119  1.877060 14.58716 16.089339 22.78038
@@ -259,8 +264,9 @@ the gamut of one of the spaces is less than the other.</p>
 #&gt;  [9,]  0.000000  8.718964
 #&gt; [10,]  0.000000  0.000000</div><div class='input'>
 <span class='co'># Compare colours from different colour spaces</span>
-<span class='no'>h_luv</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='convert_colour.html'>convert_colour</a></span>(<span class='no'>h</span>, <span class='st'>'rgb'</span>, <span class='st'>'luv'</span>)
-<span class='fu'>compare_colour</span>(<span class='no'>r</span>, <span class='no'>h_luv</span>, <span class='st'>'rgb'</span>, <span class='st'>'luv'</span>)</div><div class='output co'>#&gt;            [,1]      [,2]     [,3]     [,4]     [,5]     [,6]     [,7]     [,8]
+<span class='va'>h_luv</span> <span class='op'>&lt;-</span> <span class='fu'><a href='convert_colour.html'>convert_colour</a></span><span class='op'>(</span><span class='va'>h</span>, <span class='st'>'rgb'</span>, <span class='st'>'luv'</span><span class='op'>)</span>
+<span class='fu'>compare_colour</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>h_luv</span>, <span class='st'>'rgb'</span>, <span class='st'>'luv'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;            [,1]      [,2]     [,3]     [,4]     [,5]     [,6]     [,7]     [,8]
 #&gt;  [1,] 269.75047 266.98290 261.3195 252.2761 241.5891 230.1999 219.2811 209.6951
 #&gt;  [2,] 206.44011 205.64789 204.2222 202.5385 201.6224 202.1931 204.6754 209.0740
 #&gt;  [3,] 174.78715 176.24962 179.5202 185.5461 194.0407 204.9786 217.7871 231.7625
@@ -284,15 +290,10 @@ the gamut of one of the spaces is less than the other.</p>
 #&gt; [10,] 198.3929 185.2913 174.2208 164.6657 165.4737 173.6139 198.0978</div><div class='input'>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#handling-of-non-finite-and-out-of-bounds-values">Handling of non-finite and out of bounds values</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -303,7 +304,7 @@ the gamut of one of the spaces is less than the other.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
