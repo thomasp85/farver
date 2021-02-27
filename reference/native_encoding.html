@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Changelog • farver</title>
+<title>Convert to and from the R native colour representation — native-encoding • farver</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,16 @@
 
 
 
-<meta property="og:title" content="Changelog" />
+<meta property="og:title" content="Convert to and from the R native colour representation — native-encoding" />
+<meta property="og:description" content="Colours in R are internally encoded as integers when they are passed around
+to graphics devices. The encoding splits the 32 bytes in the integer between
+red, green, blue, and alpha, so that each get 8 bytes, equivalent to 256
+values. It is very seldom that an R user is subjected to this representation,
+but it is present in the nativeRaster format which can be obtained from
+e.g. capturing the content of a graphic device (using dev.cap()) or reading
+in PNG files using png::readPNG(native = TRUE). It is very rare that you
+might need to convert back and forth between this format, but it is provided
+here for completeness." />
 <meta property="og:image" content="https://farver.data-imaginist.com/logo.svg" />
 
 
@@ -66,7 +75,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-news">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -132,75 +141,65 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/thomasp85/farver/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+    <h1>Convert to and from the R native colour representation</h1>
+    <small class="dont-index">Source: <a href='https://github.com/thomasp85/farver/blob/master/R/native.R'><code>R/native.R</code></a></small>
+    <div class="hidden name"><code>native_encoding.Rd</code></div>
     </div>
 
-    <div id="farver-development-version" class="section level1">
-<h1 class="page-header" data-toc-text="development version">
-<a href="#farver-development-version" class="anchor"></a>farver (development version)<small> Unreleased </small>
-</h1>
-<ul>
-<li>Added support for OKLab and OKLch (polar version of OKLab) colour spaces</li>
-<li>Added <code><a href="../reference/native-encoding.html">encode_native()</a></code> and <code><a href="../reference/native-encoding.html">decode_native()</a></code> to convert back and forth between the internal R colour format.</li>
-</ul>
-</div>
-    <div id="farver-203" class="section level1">
-<h1 class="page-header" data-toc-text="2.0.3">
-<a href="#farver-203" class="anchor"></a>farver 2.0.3<small> 2020-01-16 </small>
-</h1>
-<ul>
-<li>Fixed a bug in colour comparison where the blue channel got ignored (<a href='https://github.com/thomasp85/farver/issues/20'>#20</a>, <a href='https://github.com/krlmlr'>@krlmlr</a>)</li>
-<li>Allowing <code>"NA"</code> and <code>"transparent"</code> as valid colour names</li>
-<li>How NA should be treated can now be set in all functions accepting colour names</li>
-<li>farver now accepts legacy colour specifications as integers indexing into <code><a href="https://rdrr.io/r/grDevices/palette.html">palette()</a></code> as well as integers represented as characters</li>
-</ul>
-</div>
-    <div id="farver-202" class="section level1">
-<h1 class="page-header" data-toc-text="2.0.2">
-<a href="#farver-202" class="anchor"></a>farver 2.0.2<small> 2020-01-09 </small>
-</h1>
-<ul>
-<li>Small adjustments to support super weird architectures (<a href='https://github.com/thomasp85/farver/issues/15'>#15</a>, <a href='https://github.com/thomasp85/farver/issues/16'>#16</a>)</li>
-<li>
-<code><a href="../reference/decode_colour.html">decode_colour()</a></code> now allows you to specify how <code>NA</code> should get interpreted</li>
-<li>Fixed a major bug in colour comparison</li>
-<li>Colour names are now stripped of whitespace and converted to lower-case before conversion, making it behave like <code><a href="https://rdrr.io/r/grDevices/col2rgb.html">col2rgb()</a></code>
-</li>
-<li>An error is now emitted if an unknown colour name is passed into any decoding function</li>
-</ul>
-</div>
-    <div id="farver-201" class="section level1">
-<h1 class="page-header" data-toc-text="2.0.1">
-<a href="#farver-201" class="anchor"></a>farver 2.0.1<small> 2019-11-13 </small>
-</h1>
-<ul>
-<li>Fixed symbol remapping issues on Solaris</li>
-<li>UPPER and Title case for colour names are now supported alongside lower case</li>
-</ul>
-</div>
-    <div id="farver-200" class="section level1">
-<h1 class="page-header" data-toc-text="2.0.0">
-<a href="#farver-200" class="anchor"></a>farver 2.0.0<small> 2019-11-13 </small>
-</h1>
-<ul>
-<li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
-<li>Remove Rcpp dependency for faster compilation. (<a href='https://github.com/thomasp85/farver/issues/6'>#6</a>)</li>
-<li>Add support for Lch(uv) (Hcl) for parallel to <code><a href="https://rdrr.io/r/grDevices/hcl.html">grDevices::hcl()</a></code> (<a href='https://github.com/thomasp85/farver/issues/9'>#9</a>)</li>
-<li>Add <code><a href="../reference/encode_colour.html">encode_colour()</a></code> for converting colours in any colourspace into <code>#RRGGBB</code> format (<a href='https://github.com/thomasp85/farver/issues/7'>#7</a>)</li>
-<li>Add <code><a href="../reference/decode_colour.html">decode_colour()</a></code> for converting hexstrings into any colourspace</li>
-<li>Fix bug in luv conversion where 0 in the l channel resulted in <code>NaN</code> results (<a href='https://github.com/thomasp85/farver/issues/12'>#12</a>)</li>
-<li>Provide a family of channel manipulation functions to directly manipulate encodes strings</li>
-</ul>
-</div>
-  </div>
+    <div class="ref-description">
+    <p>Colours in R are internally encoded as integers when they are passed around
+to graphics devices. The encoding splits the 32 bytes in the integer between
+red, green, blue, and alpha, so that each get 8 bytes, equivalent to 256
+values. It is very seldom that an R user is subjected to this representation,
+but it is present in the <code>nativeRaster</code> format which can be obtained from
+e.g. capturing the content of a graphic device (using <code>dev.cap()</code>) or reading
+in PNG files using <code>png::readPNG(native = TRUE)</code>. It is very rare that you
+might need to convert back and forth between this format, but it is provided
+here for completeness.</p>
+    </div>
 
+    <pre class="usage"><span class='fu'>encode_native</span><span class='op'>(</span><span class='va'>colour</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>decode_native</span><span class='op'>(</span><span class='va'>colour</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>colour</th>
+      <td><p>For <code>encode_native</code> either a vector of hex-encoded
+colours/colour names or a matrix encoding colours in any of the supported
+colour spaces. If the  latter, the colours will be encoded to a hex string
+using <code><a href='encode_colour.html'>encode_colour()</a></code> first. For <code>decode_native</code> it is a vector of
+integers.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='encode_colour.html'>encode_colour()</a></code></p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p><code>encode_native()</code> returns an integer vector and <code>decode_native()</code>
+returns a character vector, both matching the length of the input.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='co'># Get native representation of navyblue and #228B22</span>
+<span class='va'>native_col</span> <span class='op'>&lt;-</span> <span class='fu'>encode_native</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'navyblue'</span>, <span class='st'>'#228B22'</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>native_col</span>
+</div><div class='output co'>#&gt; [1]  -8388608 -14513374</div><div class='input'>
+<span class='co'># Convert back</span>
+<span class='fu'>decode_native</span><span class='op'>(</span><span class='va'>native_col</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "#000080" "#228B22"</div><div class='input'>
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
-
 </div>
 
 
