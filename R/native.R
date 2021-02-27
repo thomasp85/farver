@@ -1,8 +1,8 @@
 #' Convert to and from the R native colour representation
 #' 
 #' Colours in R are internally encoded as integers when they are passed around
-#' to graphics devices. The encoding splits the 32 bytes in the integer between
-#' red, green, blue, and alpha, so that each get 8 bytes, equivalent to 256 
+#' to graphics devices. The encoding splits the 32 bit in the integer between
+#' red, green, blue, and alpha, so that each get 8 bit, equivalent to 256 
 #' values. It is very seldom that an R user is subjected to this representation,
 #' but it is present in the `nativeRaster` format which can be obtained from 
 #' e.g. capturing the content of a graphic device (using `dev.cap()`) or reading
