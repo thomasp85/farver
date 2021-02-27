@@ -41,6 +41,8 @@ SEXP decode_c(SEXP codes, SEXP alpha, SEXP to, SEXP white, SEXP na);
 SEXP encode_channel_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op, SEXP white, SEXP na);
 SEXP decode_channel_c(SEXP codes, SEXP channel, SEXP space, SEXP white, SEXP na);
 SEXP load_colour_names_c(SEXP name, SEXP value);
+SEXP encode_native_c(SEXP color);
+SEXP decode_native_c(SEXP native);
 
 template <typename Space>
 inline void modify_channel(Space&, double value, int channel, int op);

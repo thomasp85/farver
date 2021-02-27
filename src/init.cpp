@@ -20,6 +20,8 @@ static const R_CallMethodDef CallEntries[] = {
   {"encode_channel_c", (DL_FUNC) &encode_channel_c, 7},
   {"decode_channel_c", (DL_FUNC) &decode_channel_c, 5},
   {"load_colour_names_c", (DL_FUNC) &load_colour_names_c, 2},
+  {"encode_native_c", (DL_FUNC) &encode_native_c, 1},
+  {"decode_native_c", (DL_FUNC) &decode_native_c, 1},
   {NULL, NULL, 0}
 };
 
