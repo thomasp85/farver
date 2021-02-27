@@ -61,4 +61,12 @@ reference:
     strings.
   contents:
   - set_channel
+- title: Converting to and from native colour representation
+  desc: >
+    Under the hood, R encodes colours as integers, with the 32 bit in the 
+    integer divided beetween red, green, blue, and alpha, giving them 8 bit (or
+    256 values) each. farver provides a simple and fast way of converting 
+    between the native integer representation and the string representation.
+  contents:
+  - encode_native
   
