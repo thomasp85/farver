@@ -1,17 +1,14 @@
-This release addresses the problems of the last release that had to be 
-withdrawn. farver should now recognise all of the same colour formats as 
-col2rgb(), namely colour names + "transparent"", numerics indexing into 
-palette(), and numerals given as strings behaving like numerics. It further 
-recognises the "NA" string and treats it as NA_character_
-
-I have done extensive reverse dependency checks which include the reverse 
-dependencies of scales and ggplot2 without detecting any problems related to 
-colour conversion, so I'm hopeful that this upgrade will be smooth.
+This is a small feature release that adds support for the new oklab colour space
+as well as add functionality for converting back and forth between the native 
+integer-based colour representation and hex-encoded strings. There are no
+breaking changes in this release
 
 ## Test environments
-* local R installation, R 3.6.0
-* ubuntu 16.04 (on travis-ci), R 3.6.0
-* win-builder (devel)
+
+* GitHub Actions (ubuntu-16.04): devel, release, oldrel, 3.5, 3.4, 3.3
+* GitHub Actions (windows): release, oldrel
+* GitHub Actions (macOS): release
+* win-builder: devel
 
 ## R CMD check results
 
@@ -19,8 +16,8 @@ colour conversion, so I'm hopeful that this upgrade will be smooth.
 
 ## revdepcheck results
 
-We checked 3158 reverse dependencies, comparing R CMD check results across CRAN 
-dev versions of this package.
+We checked 10 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
 
  * We saw 0 new problems
- * We failed to check 89 packages
+ * We failed to check 0 packages
+ 
