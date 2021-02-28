@@ -1,3 +1,5 @@
+# farver (development version)
+
 # farver 2.1.0
 
 * Added support for OKLab and OKLch (polar version of OKLab) colour spaces
