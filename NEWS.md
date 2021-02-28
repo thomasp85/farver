@@ -1,4 +1,4 @@
-# farver (development version)
+# farver 2.1.0
 
 * Added support for OKLab and OKLch (polar version of OKLab) colour spaces
 * Added `encode_native()` and `decode_native()` to convert back and forth 
