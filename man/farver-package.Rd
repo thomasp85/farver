@@ -6,15 +6,9 @@
 \alias{farver-package}
 \title{farver: High Performance Colour Space Manipulation}
 \description{
-\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-The encoding of colour can be handled in many different ways, using
-    different colour spaces. As different colour spaces have different uses,
-    efficient conversion between these representations are important. The 
-    'farver' package provides a set of functions that gives access to very fast
-    colour space conversion and comparisons implemented in C++, and offers 
-    speed improvements over the 'convertColor' function in the 'grDevices' 
-    package.
+The encoding of colour can be handled in many different ways, using different colour spaces. As different colour spaces have different uses, efficient conversion between these representations are important. The 'farver' package provides a set of functions that gives access to very fast colour space conversion and comparisons implemented in C++, and offers speed improvements over the 'convertColor' function in the 'grDevices' package.
 }
 \seealso{
 Useful links:

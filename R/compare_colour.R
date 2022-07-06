@@ -50,7 +50,7 @@ compare_colour <- function(from, to = NULL, from_space, to_space = from_space, m
 }
 
 compare_c <- function(from, to, from_space, to_space, method, symmetric, white_from, white_to) {
-  .Call('compare_c', as.matrix(from), as.matrix(to), as.integer(from_space), 
+  .Call(`farver_compare_c`, as.matrix(from), as.matrix(to), as.integer(from_space), 
         as.integer(to_space), as.integer(method), as.logical(symmetric), 
-        as.numeric(white_from), as.numeric(white_to), PACKAGE = 'farver')
+        as.numeric(white_from), as.numeric(white_to))
 }

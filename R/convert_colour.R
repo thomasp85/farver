@@ -59,6 +59,6 @@ convert_colour <- function(colour, from, to, white_from = 'D65', white_to = whit
 }
 
 convert_c <- function(colour, from, to, white_from, white_to) {
-  .Call('convert_c', as.matrix(colour), as.integer(from), as.integer(to), 
-        as.numeric(white_from), as.numeric(white_to), PACKAGE = 'farver')
+  .Call(`farver_convert_c`, as.matrix(colour), as.integer(from), as.integer(to), 
+        as.numeric(white_from), as.numeric(white_to))
 }

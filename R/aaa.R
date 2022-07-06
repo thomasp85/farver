@@ -177,10 +177,9 @@ as_white_ref <- function(x, fow = 2) {
 }
 
 load_colour_names <- function() {
-  .Call('load_colour_names_c', 
+  .Call(`farver_load_colour_names_c`, 
         c(all_colours, as.character(seq_along(def_palette) - 1L)), 
-        cbind(all_values, def_palette_values), 
-        PACKAGE = 'farver')
+        cbind(all_values, def_palette_values))
   invisible()
 }
 as_colour_code <- function(x) {

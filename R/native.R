@@ -46,8 +46,8 @@ decode_native <- function(colour) {
 } 
 
 encode_native_c <- function(colour) {
-  .Call('encode_native_c', colour, PACKAGE = 'farver')
+  .Call(`farver_encode_native_c`, colour)
 }
 decode_native_c <- function(colour) {
-  .Call('decode_native_c', as.integer(colour), PACKAGE = 'farver')
+  .Call(`farver_decode_native_c`, as.integer(colour))
 }

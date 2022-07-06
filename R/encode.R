@@ -60,5 +60,5 @@ encode_c <- function(colour, alpha, from, white) {
       alpha <- NULL
     }
   }
-  .Call('encode_c', as.matrix(colour), alpha, as.integer(from), white, PACKAGE = 'farver')
+  .Call(`farver_encode_c`, as.matrix(colour), alpha, as.integer(from), white)
 }
