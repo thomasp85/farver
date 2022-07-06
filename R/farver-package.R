@@ -1,3 +1,7 @@
-#' @useDynLib farver
+#' @useDynLib farver, .registration = TRUE
 #' @keywords internal
-'_PACKAGE'
+"_PACKAGE"
+
+## usethis namespace: start
+## usethis namespace: end
+NULL

@@ -5,11 +5,11 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/thomasp85/farver/workflows/R-CMD-check/badge.svg)](https://github.com/thomasp85/farver/actions)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version-ago/farver)](https://cran.r-project.org/package=farver)
-[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/farver)](https://cran.r-project.org/package=farver)
+[![R-CMD-check](https://github.com/thomasp85/farver/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thomasp85/farver/actions/workflows/R-CMD-check.yaml)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/farver)](https://cran.r-project.org/package=farver)
+[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/farver)](https://cran.r-project.org/package=farver)
 [![Codecov test
-coverage](https://codecov.io/gh/thomasp85/farver/branch/master/graph/badge.svg)](https://codecov.io/gh/thomasp85/farver?branch=master)
+coverage](https://codecov.io/gh/thomasp85/farver/branch/master/graph/badge.svg)](https://app.codecov.io/gh/thomasp85/farver?branch=master)
 <!-- badges: end -->
 
 The goal of farver is to provide very fast, vectorised functions for
@@ -147,31 +147,31 @@ compare_colour(spectrum, spectrum2, 'rgb', method = 'cie2000')[1:6, 1:6]
 
 `farver` currently supports the following colour spaces:
 
-  - CMY
-  - CMYK
-  - HSL
-  - HSB
-  - HSV
-  - CIE L\*AB
-  - Hunter LAB
-  - OK LAB
-  - LCH(ab)
-  - LCH(uv)
-  - LCH(OK)
-  - LUV
-  - RGB
-  - XYZ
-  - YXY
+-   CMY
+-   CMYK
+-   HSL
+-   HSB
+-   HSV
+-   CIE L\*AB
+-   Hunter LAB
+-   OK LAB
+-   LCH(ab)
+-   LCH(uv)
+-   LCH(OK)
+-   LUV
+-   RGB
+-   XYZ
+-   YXY
 
 ## Supported distance measures
 
 `farver` supports the following colour distance metrics
 
-  - Euclidean
-  - CIE1976
-  - CIE94
-  - CIE2000
-  - CMC
+-   Euclidean
+-   CIE1976
+-   CIE94
+-   CIE2000
+-   CMC
 
 ## White References
 
@@ -194,6 +194,7 @@ timing <- bench::mark(
   check = FALSE,
   min_iterations = 100
 )
+#> Warning: Some expressions had a GC in every iteration; so filtering is disabled.
 plot(timing, type = 'ridge')
 ```
 

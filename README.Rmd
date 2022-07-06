@@ -7,10 +7,10 @@ output: github_document
 # farver <a href='https://farver.data-imaginist.com'><img src='man/figures/logo.png' align="right" height="131.5" /></a>
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/thomasp85/farver/workflows/R-CMD-check/badge.svg)](https://github.com/thomasp85/farver/actions)
+[![R-CMD-check](https://github.com/thomasp85/farver/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thomasp85/farver/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/farver)](https://cran.r-project.org/package=farver)
 [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/farver)](https://cran.r-project.org/package=farver)
-[![Codecov test coverage](https://codecov.io/gh/thomasp85/farver/branch/master/graph/badge.svg)](https://codecov.io/gh/thomasp85/farver?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/thomasp85/farver/branch/master/graph/badge.svg)](https://app.codecov.io/gh/thomasp85/farver?branch=master)
 <!-- badges: end -->
 
 ```{r, echo = FALSE}

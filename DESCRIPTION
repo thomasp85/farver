@@ -1,38 +1,32 @@
-Package: farver
 Type: Package
+Package: farver
 Title: High Performance Colour Space Manipulation
 Version: 2.1.0.9000
-Authors@R:
-    c(person(given = "Thomas Lin",
-             family = "Pedersen",
-             role = c("cre", "aut"),
-             email = "thomasp85@gmail.com",
-             comment = c(ORCID = "0000-0002-5147-4711")),
-      person(given = "Berendea",
-             family = "Nicolae",
-             role = "aut",
-             comment = "Author of the ColorSpace C++ library"),
-      person(given = "Romain", 
-             family = "François", 
-             role = "aut", 
-             email = "romain@purrple.cat",
-             comment = c(ORCID = "0000-0002-2444-4226")) 
-      )
+Authors@R: c(
+    person("Thomas Lin", "Pedersen", , "thomasp85@gmail.com", role = c("cre", "aut"),
+           comment = c(ORCID = "0000-0002-5147-4711")),
+    person("Berendea", "Nicolae", role = "aut",
+           comment = "Author of the ColorSpace C++ library"),
+    person("Romain", "François", , "romain@purrple.cat", role = "aut",
+           comment = c(ORCID = "0000-0002-2444-4226"))
+  )
 Maintainer: Thomas Lin Pedersen <thomasp85@gmail.com>
-Description: The encoding of colour can be handled in many different ways, using
-    different colour spaces. As different colour spaces have different uses,
-    efficient conversion between these representations are important. The 
-    'farver' package provides a set of functions that gives access to very fast
-    colour space conversion and comparisons implemented in C++, and offers 
-    speed improvements over the 'convertColor' function in the 'grDevices' 
-    package.
+Description: The encoding of colour can be handled in many different ways,
+    using different colour spaces. As different colour spaces have
+    different uses, efficient conversion between these representations are
+    important. The 'farver' package provides a set of functions that gives
+    access to very fast colour space conversion and comparisons
+    implemented in C++, and offers speed improvements over the
+    'convertColor' function in the 'grDevices' package.
 License: MIT + file LICENSE
-Encoding: UTF-8
-SystemRequirements: C++11
-RoxygenNote: 7.1.1
-URL: https://farver.data-imaginist.com, https://github.com/thomasp85/farver
+URL: https://farver.data-imaginist.com,
+    https://github.com/thomasp85/farver
 BugReports: https://github.com/thomasp85/farver/issues
 Suggests: 
-    testthat (>= 2.1.0),
-    covr
+    covr,
+    testthat (>= 3.0.0)
+Encoding: UTF-8
 Roxygen: list(markdown=TRUE)
+RoxygenNote: 7.1.1
+SystemRequirements: C++11
+Config/testthat/edition: 3
