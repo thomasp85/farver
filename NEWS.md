@@ -1,4 +1,4 @@
-# farver (development version)
+# farver 2.1.1
 
 * Added input checking to a range of functions to guard against segfaults with 
   empty input (#31)
