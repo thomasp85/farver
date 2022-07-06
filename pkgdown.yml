@@ -1,8 +1,8 @@
-pandoc: 2.7.3
-pkgdown: 1.6.1
+pandoc: 2.14.2
+pkgdown: 2.0.5
 pkgdown_sha: ~
 articles: {}
-last_built: 2021-02-28T19:27Z
+last_built: 2022-07-06T11:03Z
 urls:
   reference: https://farver.data-imaginist.com/reference
   article: https://farver.data-imaginist.com/articles
