@@ -10,7 +10,7 @@ output: github_document
 [![R-CMD-check](https://github.com/thomasp85/farver/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thomasp85/farver/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/farver)](https://cran.r-project.org/package=farver)
 [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/farver)](https://cran.r-project.org/package=farver)
-[![Codecov test coverage](https://codecov.io/gh/thomasp85/farver/branch/master/graph/badge.svg)](https://app.codecov.io/gh/thomasp85/farver?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/thomasp85/farver/branch/main/graph/badge.svg)](https://app.codecov.io/gh/thomasp85/farver?branch=main)
 <!-- badges: end -->
 
 ```{r, echo = FALSE}

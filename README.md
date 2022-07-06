@@ -9,7 +9,7 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/farver)](https://cran.r-project.org/package=farver)
 [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/farver)](https://cran.r-project.org/package=farver)
 [![Codecov test
-coverage](https://codecov.io/gh/thomasp85/farver/branch/master/graph/badge.svg)](https://app.codecov.io/gh/thomasp85/farver?branch=master)
+coverage](https://codecov.io/gh/thomasp85/farver/branch/main/graph/badge.svg)](https://app.codecov.io/gh/thomasp85/farver?branch=main)
 <!-- badges: end -->
 
 The goal of farver is to provide very fast, vectorised functions for
