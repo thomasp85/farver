@@ -62,7 +62,6 @@ set_channel <- function(colour, channel, value, space = 'rgb', white = 'D65', na
   if (space != 'rgb') {
     white <- as_white_ref(white)
   }
-  if (length(value) != 1) value <- rep_len(value, length(colour))
   encode_channel_c(colour, channel, value, space, 1L, white, na_value)
 }
 
@@ -72,7 +71,6 @@ add_to_channel <- function(colour, channel, value, space = 'rgb', white = 'D65',
   if (space != 'rgb') {
     white <- as_white_ref(white)
   }
-  if (length(value) != 1) value <- rep_len(value, length(colour))
   encode_channel_c(colour, channel, value, space, 2L, white, na_value)
 }
 
@@ -82,7 +80,6 @@ multiply_channel <- function(colour, channel, value, space = 'rgb', white = 'D65
   if (space != 'rgb') {
     white <- as_white_ref(white)
   }
-  if (length(value) != 1) value <- rep_len(value, length(colour))
   encode_channel_c(colour, channel, value, space, 3L, white, na_value)
 }
 
@@ -92,7 +89,6 @@ raise_channel <- function(colour, channel, value, space = 'rgb', white = 'D65', 
   if (space != 'rgb') {
     white <- as_white_ref(white)
   }
-  if (length(value) != 1) value <- rep_len(value, length(colour))
   encode_channel_c(colour, channel, value, space, 4L, white, na_value)
 }
 
@@ -102,7 +98,6 @@ cap_channel <- function(colour, channel, value, space = 'rgb', white = 'D65', na
   if (space != 'rgb') {
     white <- as_white_ref(white)
   }
-  if (length(value) != 1) value <- rep_len(value, length(colour))
   encode_channel_c(colour, channel, value, space, 5L, white, na_value)
 }
 
@@ -116,6 +111,13 @@ get_channel <- function(colour, channel, space = 'rgb', white = 'D65', na_value 
 }
 
 encode_channel_c <- function(colour, channel, value, space, op, white, na_value) {
+  if (length(colour) == 0) {
+    return(colour)
+  }
+  if (length(value) == 0) {
+    stop("`value` must not be empty", call. = FALSE)
+  }
+  if (length(value) != 1) value <- rep_len(value, length(colour))
   if (channel == 'alpha') {
     channel <- 0L
     space <- 0L

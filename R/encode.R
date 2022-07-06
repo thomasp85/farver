@@ -47,12 +47,17 @@ encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
 }
 
 encode_c <- function(colour, alpha, from, white) {
+  if (nrow(colour) == 0) {
+    return(character())
+  }
   if (!is.null(alpha)) {
     alpha <- alpha * 255
-    if (length(alpha) != 1) {
-      alpha = rep_len(alpha, nrow(colour))
+    if (length(alpha) == 0) {
+      alpha <- NULL
+    } else if (length(alpha) != 1) {
+      alpha <- rep_len(alpha, nrow(colour))
     } else if (is.na(alpha) || alpha == 1) {
-      alpha = NULL
+      alpha <- NULL
     }
   }
   .Call('encode_c', as.matrix(colour), alpha, as.integer(from), white, PACKAGE = 'farver')
