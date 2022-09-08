@@ -50,7 +50,14 @@ inline std::string prepare_code(const char* col) {
 }
 
 template <typename From>
-SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
+SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt) {
+  int out_fmt = INTEGER(s_out_fmt)[0]; // 1 is character vector, 2 is native format
+  if (out_fmt != 1 && out_fmt != 2) {
+    Rf_error("invalid output format.");
+  }
+  SEXP na_colour_sexp = R_NaString;
+  int na_colour_int = R_NaInt;
+  int *codes_int; 
   int n_channels = dimension<From>();
   if (Rf_ncols(colour) < n_channels) {
     Rf_errorcall(R_NilValue, "Colour in this format must contain at least %i columns", n_channels);
@@ -58,7 +65,13 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
   static ColorSpace::Rgb rgb;
   ColorSpace::XyzConverter::SetWhiteReference(REAL(white)[0], REAL(white)[1], REAL(white)[2]);
   int n = Rf_nrows(colour);
-  SEXP codes = PROTECT(Rf_allocVector(STRSXP, n));
+  SEXP codes;
+  if (out_fmt == 1) {
+    codes = PROTECT(Rf_allocVector(STRSXP, n));
+  } else {
+    codes = PROTECT(Rf_allocVector(INTSXP, n));
+    codes_int = INTEGER(codes);
+  }
   bool has_alpha = !Rf_isNull(alpha);
   char alpha1 = '\0';
   char alpha2 = '\0';
@@ -67,11 +80,11 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
   char* buf = NULL;
   int* alpha_i = NULL;
   double* alpha_d = NULL;
+  int first_alpha;
   if (has_alpha) {
     buf = buffera;
     alpha_is_int = Rf_isInteger(alpha);
     one_alpha = Rf_length(alpha) == 1;
-    int first_alpha;
     if (alpha_is_int) {
       alpha_i = INTEGER(alpha);
       first_alpha = alpha_i[0];
@@ -84,9 +97,12 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
         first_alpha = double2int(alpha_d[0]);
       }
     }
-    first_alpha = cap0255(first_alpha) * 2;
-    alpha1 = hex8[first_alpha];
-    alpha2 = hex8[first_alpha + 1];
+    first_alpha = cap0255(first_alpha);
+    if (out_fmt == 1) {
+      first_alpha *= 2;
+      alpha1 = hex8[first_alpha];
+      alpha2 = hex8[first_alpha + 1];
+    }
   } else {
     buf = buffer;
   }
@@ -111,46 +127,74 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
       fill_rgb<From>(&rgb, colour_d[offset1 + i], colour_d[offset2 + i], colour_d[offset3 + i], n_channels == 4 ? colour_d[offset4 + i] : 0.0);
     }
     if (!rgb.valid) {
-      SET_STRING_ELT(codes, i, R_NaString);
+      if (out_fmt == 1) {
+        SET_STRING_ELT(codes, i, na_colour_sexp);
+      } else {
+        codes_int[i] = na_colour_int;
+      }
       continue;
     }
-    num = double2int(rgb.r);
-    num = cap0255(num) * 2;
-    buf[1] = hex8[num];
-    buf[2] = hex8[num + 1];
     
-    num = double2int(rgb.g);
-    num = cap0255(num) * 2;
-    buf[3] = hex8[num];
-    buf[4] = hex8[num + 1];
-    
-    num = double2int(rgb.b);
-    num = cap0255(num) * 2;
-    buf[5] = hex8[num];
-    buf[6] = hex8[num + 1];
-    
-    if (has_alpha) {
-      if (one_alpha) {
-        buf[7] = alpha1;
-        buf[8] = alpha2;
-      } else {
-        if (alpha_is_int) {
-          num = alpha_i[i];
+    if (out_fmt == 2) { /* native output */
+      int alpha = 255;
+      if (has_alpha) {
+        if (one_alpha) {
+          alpha = first_alpha;
         } else {
-          num = double2int(alpha_d[i]);
-        }
-        num = cap0255(num) * 2;
-        if (num == 510) { // opaque
-          buf[7] = '\0';
-        } else {
-          buf[7] = hex8[num];
-          buf[8] = hex8[num + 1];
+          if (alpha_is_int) {
+            alpha = alpha_i[i];
+          } else {
+            alpha = double2int(alpha_d[i]);
+          }
+          alpha = cap0255(alpha);
         }
       }
+      /* This can overflow and become negative, but R just cares about the bytes */
+      codes_int[i] = (
+        cap0255(double2int(rgb.r)) +
+        (cap0255(double2int(rgb.g)) << 8) +
+        (cap0255(double2int(rgb.b)) << 16) +
+        (alpha << 24)
+      );
+    } else { /* character output */
+      num = double2int(rgb.r);
+      num = cap0255(num) * 2;
+      buf[1] = hex8[num];
+      buf[2] = hex8[num + 1];
+      
+      num = double2int(rgb.g);
+      num = cap0255(num) * 2;
+      buf[3] = hex8[num];
+      buf[4] = hex8[num + 1];
+      
+      num = double2int(rgb.b);
+      num = cap0255(num) * 2;
+      buf[5] = hex8[num];
+      buf[6] = hex8[num + 1];
+      
+      if (has_alpha) {
+        if (one_alpha) {
+          buf[7] = alpha1;
+          buf[8] = alpha2;
+        } else {
+          if (alpha_is_int) {
+            num = alpha_i[i];
+          } else {
+            num = double2int(alpha_d[i]);
+          }
+          num = cap0255(num) * 2;
+          if (num == 510) { // opaque
+            buf[7] = '\0';
+          } else {
+            buf[7] = hex8[num];
+            buf[8] = hex8[num + 1];
+          }
+        }
+      }
+      SET_STRING_ELT(codes, i, Rf_mkChar(buf));
     }
     
     
-    SET_STRING_ELT(codes, i, Rf_mkChar(buf));
   }
   
   copy_names(colour, codes);
@@ -159,12 +203,24 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
 }
 
 template<>
-SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
+SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt) {
+  int out_fmt = INTEGER(s_out_fmt)[0]; // 1 is character vector, 2 is native format
+  if (out_fmt != 1 && out_fmt != 2) {
+    Rf_error("invalid output format.");
+  }
   if (Rf_ncols(colour) < 3) {
     Rf_errorcall(R_NilValue, "Colour in RGB format must contain at least 3 columns");
   }
   int n = Rf_nrows(colour);
-  SEXP codes = PROTECT(Rf_allocVector(STRSXP, n));
+  int *codes_int;
+  SEXP codes;
+  if (out_fmt == 1) {
+    codes = PROTECT(Rf_allocVector(STRSXP, n));
+  } else {
+    codes = PROTECT(Rf_allocVector(INTSXP, n));
+    codes_int = INTEGER(codes);
+    
+  }
   bool has_alpha = !Rf_isNull(alpha);
   char alpha1 = '\0';
   char alpha2 = '\0';
@@ -173,11 +229,11 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
   char* buf = NULL;
   int* alpha_i = NULL;
   double* alpha_d = NULL;
+  int first_alpha;
   if (has_alpha) {
     buf = buffera;
     alpha_is_int = Rf_isInteger(alpha);
     one_alpha = Rf_length(alpha) == 1;
-    int first_alpha;
     if (alpha_is_int) {
       alpha_i = INTEGER(alpha);
       first_alpha = alpha_i[0];
@@ -190,9 +246,12 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
         first_alpha = double2int(alpha_d[0]);
       }
     }
-    first_alpha = cap0255(first_alpha) * 2;
-    alpha1 = hex8[first_alpha];
-    alpha2 = hex8[first_alpha + 1];
+    first_alpha = cap0255(first_alpha);
+    if (out_fmt == 1) {
+      first_alpha *= 2;
+      alpha1 = hex8[first_alpha];
+      alpha2 = hex8[first_alpha + 1];
+    }
   } else {
     buf = buffer;
   }
@@ -212,42 +271,70 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
       g = colour_i[offset2 + i];
       b = colour_i[offset3 + i];
       if (r == R_NaInt || g == R_NaInt || b == R_NaInt) {
-        SET_STRING_ELT(codes, i, R_NaString);
+        if (out_fmt == 1) {
+          SET_STRING_ELT(codes, i, R_NaString);
+        } else {
+          codes_int[i] = R_NaInt;
+        }
         continue;
       }
-      num = cap0255(r) * 2;
-      buf[1] = hex8[num];
-      buf[2] = hex8[num + 1];
-      
-      num = cap0255(g) * 2;
-      buf[3] = hex8[num];
-      buf[4] = hex8[num + 1];
-      
-      num = cap0255(b) * 2;
-      buf[5] = hex8[num];
-      buf[6] = hex8[num + 1];
-      
-      if (has_alpha) {
-        if (one_alpha) {
-          buf[7] = alpha1;
-          buf[8] = alpha2;
-        } else {
-          if (alpha_is_int) {
-            num = alpha_i[i];
+      if (out_fmt == 2) {
+        int alpha = 255;
+        if (has_alpha) {
+          if (one_alpha) {
+            alpha = first_alpha;
           } else {
-            num = double2int(alpha_d[i]);
-          }
-          num = cap0255(num) * 2;
-          if (num == 510) { // opaque
-            buf[7] = '\0';
-          } else {
-            buf[7] = hex8[num];
-            buf[8] = hex8[num + 1];
+            if (alpha_is_int) {
+              alpha = alpha_i[i];
+            } else {
+              alpha = double2int(alpha_d[i]);
+            }
+            alpha = cap0255(alpha);
           }
         }
+        codes_int[i] = (
+          cap0255(r) +
+            (cap0255(g) << 8) +
+            (cap0255(b) << 16) +
+            (alpha << 24)
+        );
+        
+      } else {
+        num = cap0255(r) * 2;
+        buf[1] = hex8[num];
+        buf[2] = hex8[num + 1];
+        
+        num = cap0255(g) * 2;
+        buf[3] = hex8[num];
+        buf[4] = hex8[num + 1];
+        
+        num = cap0255(b) * 2;
+        buf[5] = hex8[num];
+        buf[6] = hex8[num + 1];
+        
+        if (has_alpha) {
+          if (one_alpha) {
+            buf[7] = alpha1;
+            buf[8] = alpha2;
+          } else {
+            if (alpha_is_int) {
+              num = alpha_i[i];
+            } else {
+              num = double2int(alpha_d[i]);
+            }
+            num = cap0255(num) * 2;
+            if (num == 510) { // opaque
+              buf[7] = '\0';
+            } else {
+              buf[7] = hex8[num];
+              buf[8] = hex8[num + 1];
+            }
+          }
+        }
+        
+        SET_STRING_ELT(codes, i, Rf_mkChar(buf));
+        
       }
-      
-      SET_STRING_ELT(codes, i, Rf_mkChar(buf));
     }
   } else {
     double r, g, b;
@@ -257,42 +344,71 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
       g = colour_d[offset2 + i];
       b = colour_d[offset3 + i];
       if (!(R_finite(r) && R_finite(g) && R_finite(b))) {
-        SET_STRING_ELT(codes, i, R_NaString);
+        if (out_fmt == 1) {
+          SET_STRING_ELT(codes, i, R_NaString);
+        } else {
+          codes_int[i] = R_NaInt;
+        }
         continue;
       }
-      num = cap0255(double2int(r)) * 2;
-      buf[1] = hex8[num];
-      buf[2] = hex8[num + 1];
-      
-      num = cap0255(double2int(g)) * 2;
-      buf[3] = hex8[num];
-      buf[4] = hex8[num + 1];
-      
-      num = cap0255(double2int(b)) * 2;
-      buf[5] = hex8[num];
-      buf[6] = hex8[num + 1];
-      
-      if (has_alpha) {
-        if (one_alpha) {
-          buf[7] = alpha1;
-          buf[8] = alpha2;
-        } else {
-          if (alpha_is_int) {
-            num = alpha_i[i];
+      if (out_fmt == 2)  {
+        int alpha = 255;
+        if (has_alpha) {
+          if (one_alpha) {
+            alpha = first_alpha;
           } else {
-            num = double2int(alpha_d[i]);
-          }
-          num = cap0255(num) * 2;
-          if (num == 510) { // opaque
-            buf[7] = '\0';
-          } else {
-            buf[7] = hex8[num];
-            buf[8] = hex8[num + 1];
+            if (alpha_is_int) {
+              alpha = alpha_i[i];
+            } else {
+              alpha = double2int(alpha_d[i]);
+            }
+            alpha = cap0255(alpha);
           }
         }
+        /* This can overflow and become negative, but R just cares about the bytes */
+        codes_int[i] = (
+          cap0255(double2int(r)) +
+            (cap0255(double2int(g)) << 8) +
+            (cap0255(double2int(b)) << 16) +
+            (alpha << 24)
+        );
+        
+      } else {
+        num = cap0255(double2int(r)) * 2;
+        buf[1] = hex8[num];
+        buf[2] = hex8[num + 1];
+        
+        num = cap0255(double2int(g)) * 2;
+        buf[3] = hex8[num];
+        buf[4] = hex8[num + 1];
+        
+        num = cap0255(double2int(b)) * 2;
+        buf[5] = hex8[num];
+        buf[6] = hex8[num + 1];
+        
+        if (has_alpha) {
+          if (one_alpha) {
+            buf[7] = alpha1;
+            buf[8] = alpha2;
+          } else {
+            if (alpha_is_int) {
+              num = alpha_i[i];
+            } else {
+              num = double2int(alpha_d[i]);
+            }
+            num = cap0255(num) * 2;
+            if (num == 510) { // opaque
+              buf[7] = '\0';
+            } else {
+              buf[7] = hex8[num];
+              buf[8] = hex8[num + 1];
+            }
+          }
+        }
+        
+        SET_STRING_ELT(codes, i, Rf_mkChar(buf));
+        
       }
-      
-      SET_STRING_ELT(codes, i, Rf_mkChar(buf));
     }
   }
   
@@ -301,23 +417,23 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
   return codes;
 }
 
-SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white) {
+SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white, SEXP out_fmt) {
   switch (INTEGER(from)[0]) {
-    case CMY: return encode_impl<ColorSpace::Cmy>(colour, alpha, white);
-    case CMYK: return encode_impl<ColorSpace::Cmyk>(colour, alpha, white);
-    case HSL: return encode_impl<ColorSpace::Hsl>(colour, alpha, white);
-    case HSB: return encode_impl<ColorSpace::Hsb>(colour, alpha, white);
-    case HSV: return encode_impl<ColorSpace::Hsv>(colour, alpha, white);
-    case LAB: return encode_impl<ColorSpace::Lab>(colour, alpha, white);
-    case HUNTERLAB: return encode_impl<ColorSpace::HunterLab>(colour, alpha, white);
-    case LCH: return encode_impl<ColorSpace::Lch>(colour, alpha, white);
-    case LUV: return encode_impl<ColorSpace::Luv>(colour, alpha, white);
-    case RGB: return encode_impl<ColorSpace::Rgb>(colour, alpha, white);
-    case XYZ: return encode_impl<ColorSpace::Xyz>(colour, alpha, white);
-    case YXY: return encode_impl<ColorSpace::Yxy>(colour, alpha, white);
-    case HCL: return encode_impl<ColorSpace::Hcl>(colour, alpha, white);
-    case OKLAB: return encode_impl<ColorSpace::OkLab>(colour, alpha, white);
-    case OKLCH: return encode_impl<ColorSpace::OkLch>(colour, alpha, white);
+    case CMY: return encode_impl<ColorSpace::Cmy>(colour, alpha, white, out_fmt);
+    case CMYK: return encode_impl<ColorSpace::Cmyk>(colour, alpha, white, out_fmt);
+    case HSL: return encode_impl<ColorSpace::Hsl>(colour, alpha, white, out_fmt);
+    case HSB: return encode_impl<ColorSpace::Hsb>(colour, alpha, white, out_fmt);
+    case HSV: return encode_impl<ColorSpace::Hsv>(colour, alpha, white, out_fmt);
+    case LAB: return encode_impl<ColorSpace::Lab>(colour, alpha, white, out_fmt);
+    case HUNTERLAB: return encode_impl<ColorSpace::HunterLab>(colour, alpha, white, out_fmt);
+    case LCH: return encode_impl<ColorSpace::Lch>(colour, alpha, white, out_fmt);
+    case LUV: return encode_impl<ColorSpace::Luv>(colour, alpha, white, out_fmt);
+    case RGB: return encode_impl<ColorSpace::Rgb>(colour, alpha, white, out_fmt);
+    case XYZ: return encode_impl<ColorSpace::Xyz>(colour, alpha, white, out_fmt);
+    case YXY: return encode_impl<ColorSpace::Yxy>(colour, alpha, white, out_fmt);
+    case HCL: return encode_impl<ColorSpace::Hcl>(colour, alpha, white, out_fmt);
+    case OKLAB: return encode_impl<ColorSpace::OkLab>(colour, alpha, white, out_fmt);
+    case OKLCH: return encode_impl<ColorSpace::OkLch>(colour, alpha, white, out_fmt);
   }
   
   // never happens

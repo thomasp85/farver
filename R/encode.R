@@ -43,10 +43,10 @@ encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
   if (from != 'rgb') {
     white <- as_white_ref(white)
   }
-  encode_c(colour, alpha, colourspace_match(from), white)
+  encode_c(colour, alpha, colourspace_match(from), white, out_format = colour_format_match("character"))
 }
 
-encode_c <- function(colour, alpha, from, white) {
+encode_c <- function(colour, alpha, from, white, out_format) {
   if (nrow(colour) == 0) {
     return(character())
   }
@@ -60,5 +60,5 @@ encode_c <- function(colour, alpha, from, white) {
       alpha <- NULL
     }
   }
-  .Call(`farver_encode_c`, as.matrix(colour), alpha, as.integer(from), white)
+  .Call(`farver_encode_c`, as.matrix(colour), alpha, as.integer(from), white, as.integer(out_format))
 }

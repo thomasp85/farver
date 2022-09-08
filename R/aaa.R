@@ -64,6 +64,17 @@ operations <- c(
   "most"
 )
 
+colour_formats <- c(
+  "character",
+  "native"
+)
+
+colour_format_match <- function(format) {
+  f <- pmatch(tolower(format), colour_formats)
+  if (is.na(f)) stop("Unknown colour format", call. = FALSE)
+  f
+}
+
 colourspace_match <- function(colour) {
   m <- pmatch(tolower(colour), colourspaces)
   if (is.na(m)) stop("Unknown colour space", call. = FALSE)

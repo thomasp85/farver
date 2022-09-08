@@ -36,7 +36,7 @@ typedef std::unordered_map<std::string, rgb_colour> ColourMap;
 // Defined in init.cpp
 ColourMap& get_named_colours();
 
-SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white);
+SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white, SEXP out_fmt);
 SEXP decode_c(SEXP codes, SEXP alpha, SEXP to, SEXP white, SEXP na);
 SEXP encode_channel_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op, SEXP white, SEXP na);
 SEXP decode_channel_c(SEXP codes, SEXP channel, SEXP space, SEXP white, SEXP na);
