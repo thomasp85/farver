@@ -33,6 +33,9 @@
 #' decode_native(native_col)
 #' 
 encode_native <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
+  if (is.character(colour)) {
+    return(encode_native_c(colour))
+  }
   if (from != 'rgb') {
     white <- as_white_ref(white)
   }
@@ -45,7 +48,6 @@ decode_native <- function(colour) {
   decode_native_c(colour)
 } 
 
-# This is left for benchmarking the two implementations:
 encode_native_c <- function(colour) {
   .Call(`farver_encode_native_c`, colour)
 }
