@@ -54,7 +54,7 @@ encode_c <- function(colour, alpha, from, white, out_format) {
   if ((is.matrix(colour) || is.data.frame(colour)) && nrow(colour) == 0) {
     return(character())
   }
-  if (is.list(colour) && length(colour) > 0 && length(colour[[1]]) == 0) {
+  if (is.list(colour) && (length(colour) == 0 || length(colour[[1]]) == 0)) {
     return(character())
   }
   if (!is.matrix(colour) || !is.list(colour)) {
