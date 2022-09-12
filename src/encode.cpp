@@ -430,6 +430,33 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_ou
   return codes;
 }
 
+SEXP replace_alpha_native_c(SEXP colour, SEXP alpha) {
+  struct alpha_channel ac;
+  int n;
+  if (TYPEOF(colour) != INTSXP) {
+    Rf_error("colour must be an integer vector.");
+  }
+  n = Rf_length(colour);
+  get_alpha_channel(&ac, alpha, n);
+  if (!ac.has_alpha) {
+    return colour;
+  }
+  int *colour_i = INTEGER(colour);
+  int i;
+  int alpha_value;
+  SEXP codes = PROTECT(Rf_allocVector(INTSXP, n));
+  int *codes_i = INTEGER(codes);
+  int mask = 0xff << 24;
+  for (i = 0; i<n;i++) {
+    alpha_value = get_alpha_value(&ac, i);
+    int value = alpha_value << 24;
+    codes_i[i] = (~mask & colour_i[i]) | value;
+  }
+  UNPROTECT(1);
+  return codes;
+}
+
+
 SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white, SEXP out_fmt) {
   switch (INTEGER(from)[0]) {
     case CMY: return encode_impl<ColorSpace::Cmy>(colour, alpha, white, out_fmt);
