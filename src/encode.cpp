@@ -81,7 +81,7 @@ static inline int get_alpha_value(struct alpha_channel *ac, int i, char *b1 = NU
     if (b1 != NULL) {
       *b1 = '\0';
     }
-    return(255);
+    return(ac->na_alpha);
   }
   if (ac->one_alpha) {
     if (b1 != NULL && b2 != NULL) {
@@ -93,16 +93,16 @@ static inline int get_alpha_value(struct alpha_channel *ac, int i, char *b1 = NU
   int alpha;
   if (ac->alpha_is_int) {
     alpha = ac->alpha_i[i];
-    alpha = alpha == R_NaInt ? ac->na_alpha : alpha;
+    alpha = alpha == R_NaInt ? ac->na_alpha : cap0255(alpha);
   } else {
     if (!R_finite(ac->alpha_d[i])) {
       alpha = ac->na_alpha;
     } else {
       alpha = double2int(ac->alpha_d[i]);
+      alpha = cap0255(alpha);
     }
   }
-  alpha = cap0255(alpha);
-  if (b1 != NULL && b2 != NULL) {
+  if (b1 != NULL && b2 != NULL && alpha != R_NaInt) {
     if (alpha == 255) { // opaque
       *b1 = '\0';
     } else {
@@ -194,9 +194,9 @@ static void get_input_channels(struct colour_channels *cc, SEXP colour, int n_ch
   return;
 }
 
-static void get_alpha_channel(struct alpha_channel *ac, SEXP alpha, int n) {
+static void get_alpha_channel(struct alpha_channel *ac, SEXP alpha, int n, int na_alpha = 255) {
   int alpha_length;
-  ac->na_alpha = 255;
+  ac->na_alpha = na_alpha;
   ac->has_alpha = !Rf_isNull(alpha);
   if (!ac->has_alpha) {
     ac->alpha1 = '\0';
@@ -212,18 +212,22 @@ static void get_alpha_channel(struct alpha_channel *ac, SEXP alpha, int n) {
   if (ac->alpha_is_int) {
     ac->alpha_i = INTEGER(alpha);
     ac->first_alpha = ac->alpha_i[0];
-    ac->first_alpha = ac->first_alpha == R_NaInt ? ac->na_alpha : ac->first_alpha;
+    ac->first_alpha = ac->first_alpha == R_NaInt ? ac->na_alpha : cap0255(ac->first_alpha);
   } else {
     ac->alpha_d = REAL(alpha);
     if (!R_finite(ac->alpha_d[0])) {
       ac->first_alpha = ac->na_alpha;
     } else {
-      ac->first_alpha = double2int(ac->alpha_d[0]);
+      ac->first_alpha = cap0255(double2int(ac->alpha_d[0]));
     }
   }
-  ac->first_alpha = cap0255(ac->first_alpha);
-  ac->alpha1 = hex8[2*ac->first_alpha];
-  ac->alpha2 = hex8[2*ac->first_alpha + 1];
+  if (ac->first_alpha == R_NaInt) {
+    ac->alpha1 = '\0';
+    ac->alpha2 = '\0';
+  } else {
+    ac->alpha1 = hex8[2*ac->first_alpha];
+    ac->alpha2 = hex8[2*ac->first_alpha + 1];
+  }
   return;
 }
 
@@ -437,8 +441,8 @@ SEXP replace_alpha_native_c(SEXP colour, SEXP alpha) {
     Rf_error("colour must be an integer vector.");
   }
   n = Rf_length(colour);
-  get_alpha_channel(&ac, alpha, n);
-  if (!ac.has_alpha) {
+  get_alpha_channel(&ac, alpha, n, R_NaInt);
+  if (!ac.has_alpha || (ac.one_alpha && ac.first_alpha == R_NaInt)) {
     return colour;
   }
   int *colour_i = INTEGER(colour);
@@ -449,8 +453,11 @@ SEXP replace_alpha_native_c(SEXP colour, SEXP alpha) {
   int mask = 0xff << 24;
   for (i = 0; i<n;i++) {
     alpha_value = get_alpha_value(&ac, i);
-    int value = alpha_value << 24;
-    codes_i[i] = (~mask & colour_i[i]) | value;
+    if (alpha_value != R_NaInt) {
+      codes_i[i] = (~mask & colour_i[i]) | (alpha_value << 24);
+    } else {
+      codes_i[i] = colour_i[i];
+    }
   }
   UNPROTECT(1);
   return codes;
