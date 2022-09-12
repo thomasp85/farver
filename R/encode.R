@@ -57,18 +57,21 @@ encode_c <- function(colour, alpha, from, white, out_format) {
   if (is.list(colour) && length(colour) > 0 && length(colour[[1]]) == 0) {
     return(character())
   }
+  if (!is.matrix(colour) || !is.list(colour)) {
+    colour <- as.matrix(colour)
+    num_colours <- nrow(colour)
+  } else {
+    num_colours <- length(colour[[1]])
+  }
   if (!is.null(alpha)) {
     alpha <- alpha * 255
     if (length(alpha) == 0) {
       alpha <- NULL
     } else if (length(alpha) != 1) {
-      alpha <- rep_len(alpha, nrow(colour))
+      alpha <- rep_len(alpha, num_colours)
     } else if (is.na(alpha) || alpha == 1) {
       alpha <- NULL
     }
-  }
-  if (!is.matrix(colour) || !is.list(colour)) {
-    colour <- as.matrix(colour)
   }
   .Call(`farver_encode_c`, colour, alpha, as.integer(from), white, as.integer(out_format))
 }
