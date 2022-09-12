@@ -102,9 +102,10 @@ static inline int get_alpha_value(struct alpha_channel *ac, int i, char *b1 = NU
       alpha = cap0255(alpha);
     }
   }
-  if (b1 != NULL && b2 != NULL && alpha != R_NaInt) {
-    if (alpha == 255) { // opaque
+  if (b1 != NULL && b2 != NULL) {
+    if (alpha == 255 || alpha == R_NaInt) { // opaque
       *b1 = '\0';
+      *b2 = '\0';
     } else {
       *b1 = hex8[2*alpha];
       *b2 = hex8[2*alpha+1];
@@ -221,7 +222,7 @@ static void get_alpha_channel(struct alpha_channel *ac, SEXP alpha, int n, int n
       ac->first_alpha = cap0255(double2int(ac->alpha_d[0]));
     }
   }
-  if (ac->first_alpha == R_NaInt) {
+  if (ac->first_alpha == R_NaInt || ac->first_alpha == 255) {
     ac->alpha1 = '\0';
     ac->alpha2 = '\0';
   } else {
