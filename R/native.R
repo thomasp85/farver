@@ -42,6 +42,20 @@ encode_native <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
   encode_c(colour, alpha, colourspace_match(from), white, out_format = colour_format_match("native"))
 }
 
+#' Replace the alpha channel of a native vector
+#'
+#' @param colour An integer vector, expressing colours in native format
+#' @inheritParams native-encoding
+#'
+#' @return The `colour` integer vector, with updated alpha values
+#' @export
+#'
+#' @examples
+#' # Get native representation of navyblue and #228B22
+#' native_col <- encode_native(c('navyblue', '#228B22'))
+#' # Replace the alpha of the native colour to 0.5:
+#' native_with_alpha <- replace_alpha_native(native_col, 0.5)
+#' 
 replace_alpha_native <- function(colour, alpha) {
   replace_alpha_native_c(colour, alpha)
 }
