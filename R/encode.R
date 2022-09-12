@@ -6,7 +6,6 @@
 #' 
 #' @inheritSection convert_colour Handling of non-finite and out of bounds values
 #' 
-#' @inheritParams convert_colour
 #' @param colour A numeric matrix (or an object coercible to one) with colours 
 #' encoded in the rows and the different colour space values in the columns. For 
 #' all colourspaces except `'cmyk'` this will mean a matrix with three columns - 
