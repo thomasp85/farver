@@ -10,7 +10,8 @@ encode_colour(colour, alpha = NULL, from = "rgb", white = "D65")
 \item{colour}{A numeric matrix (or an object coercible to one) with colours
 encoded in the rows and the different colour space values in the columns. For
 all colourspaces except \code{'cmyk'} this will mean a matrix with three columns -
-for \code{'cmyk'} it means four columns.}
+for \code{'cmyk'} it means four columns. Alternatively, \code{colour} may be a list of
+length three (or four for \code{'cmyk'}) numeric vectors of the same length.}
 
 \item{alpha}{A numeric vector between 0 and 1. Will be recycled to the number
 of rows in \code{colour}. If \code{NULL} or a single \code{NA} it will be ignored.}
