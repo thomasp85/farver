@@ -57,8 +57,10 @@ encode_c <- function(colour, alpha, from, white, out_format) {
   if (is.list(colour) && (length(colour) == 0 || length(colour[[1]]) == 0)) {
     return(character())
   }
-  if (!is.matrix(colour) || !is.list(colour)) {
+  if (!is.matrix(colour) && !is.list(colour)) {
     colour <- as.matrix(colour)
+  }
+  if (is.matrix(colour)) {
     num_colours <- nrow(colour)
   } else {
     num_colours <- length(colour[[1]])
