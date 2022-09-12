@@ -7,6 +7,11 @@
 #' @inheritSection convert_colour Handling of non-finite and out of bounds values
 #' 
 #' @inheritParams convert_colour
+#' @param colour A numeric matrix (or an object coercible to one) with colours 
+#' encoded in the rows and the different colour space values in the columns. For 
+#' all colourspaces except `'cmyk'` this will mean a matrix with three columns - 
+#' for `'cmyk'` it means four columns. Alternatively, `colour` may be a list of
+#' length three (or four for `'cmyk'`) numeric vectors of the same length.
 #' @param alpha A numeric vector between 0 and 1. Will be recycled to the number
 #' of rows in `colour`. If `NULL` or a single `NA` it will be ignored.
 #' @param from The input colour space. Allowed values are: `"cmy"`, 
@@ -47,7 +52,10 @@ encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
 }
 
 encode_c <- function(colour, alpha, from, white, out_format) {
-  if (nrow(colour) == 0) {
+  if ((is.matrix(colour) || is.data.frame(colour)) && nrow(colour) == 0) {
+    return(character())
+  }
+  if (is.list(colour) && length(colour) > 0 && length(colour[[1]]) == 0) {
     return(character())
   }
   if (!is.null(alpha)) {
@@ -60,5 +68,8 @@ encode_c <- function(colour, alpha, from, white, out_format) {
       alpha <- NULL
     }
   }
-  .Call(`farver_encode_c`, as.matrix(colour), alpha, as.integer(from), white, as.integer(out_format))
+  if (!is.matrix(colour) || !is.list(colour)) {
+    colour <- as.matrix(colour)
+  }
+  .Call(`farver_encode_c`, colour, alpha, as.integer(from), white, as.integer(out_format))
 }

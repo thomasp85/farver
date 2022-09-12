@@ -42,6 +42,14 @@ encode_native <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
   encode_c(colour, alpha, colourspace_match(from), white, out_format = colour_format_match("native"))
 }
 
+replace_alpha_native <- function(colour, alpha) {
+  replace_alpha_native_c(colour, alpha)
+}
+
+replace_alpha_native_c <- function(colour, alpha) {
+  .Call(`farver_replace_alpha_native_c`, as.integer(colour), alpha)
+}
+
 #' @rdname native_encoding
 #' @export
 decode_native <- function(colour) {
