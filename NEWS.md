@@ -1,5 +1,17 @@
 # farver (development version)
 
+* `encode_native()` is faster now since it avoids going through the character
+  vector representation (#35, @zeehio).
+* `encode_colour()` and `encode_native()` also accept a list of channel vectors.
+  If you compute your channels independently you don't need to `cbind()` them into
+  a contiguous matrix anymore, but rather you can `list()` them (#35, @zeehio).
+* `encode_colour()` and `encode_native()` also accept a logical alpha channel. (#35, @zeehio)
+* `encode_colour()` and `encode_native()` accept a `na_colour` argument to specify
+  a color that can be used as a fallback if the color to convert contains `NA`s
+  or it can not be represented in the RGB space. (#35, @zeehio)
+* New function `replace_alpha_native()` allows to replace the alpha channel of
+  a native color vector (#35, @zeehio).
+
 # farver 2.1.1
 
 * Added input checking to a range of functions to guard against segfaults with 
