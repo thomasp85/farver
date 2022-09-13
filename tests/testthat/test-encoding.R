@@ -48,3 +48,22 @@ test_that("colours can be encoded from a list of channels", {
   expect_equal(encode_colour(list(cols_dec[,1], cols_dec[,2], cols_dec[,3])), cols)
   expect_equal(encode_colour(list(cols_cmy[,1], cols_cmy[,2], cols_cmy[,3]), from = 'cmy'), cols)
 })
+
+
+test_that("can provide a colour to be used when NA are found", {
+  na_color <- "red"
+  cols_dec_na <- cols_dec
+  cols_dec_na[2,3] <- NA
+  cols_na <- cols
+  cols_na[2] <- NA
+  
+  expect_equal(encode_colour(cols_dec_na), cols_na)
+  cols_na[2] <- na_color
+  expect_equal(encode_colour(cols_dec_na, na_colour = na_color), cols_na)
+  
+  native_cols_na <- native_cols
+  native_cols_na[2] <- NA
+  expect_equal(encode_native(cols_dec_na), native_cols_na)
+  native_cols_na[2] <- farver::encode_native(na_color)
+  expect_equal(encode_native(cols_dec_na, na_colour = na_color), native_cols_na)
+})

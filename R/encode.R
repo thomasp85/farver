@@ -21,6 +21,8 @@
 #' @param white The white reference of the input colour space. Will only have an 
 #' effect for relative colour spaces such as Lab and luv. Any value accepted by 
 #' [as_white_ref()] allowed.
+#' @param na_colour A string naming the colour to be used when `colour` has a 
+#' missing value or it is not valid in the RGB space.
 #' 
 #' @return A character vector with colours encoded as `#RRGGBB(AA)`
 #' 
@@ -43,14 +45,14 @@
 #' spectrum_hcl <- convert_colour(spectrum, 'rgb', 'hcl')
 #' encode_colour(spectrum_hcl, from = 'hcl')
 #' 
-encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
+encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65', na_colour = NA_character_) {
   if (from != 'rgb') {
     white <- as_white_ref(white)
   }
-  encode_c(colour, alpha, colourspace_match(from), white, out_format = colour_format_match("character"))
+  encode_c(colour, alpha, colourspace_match(from), white, out_format = colour_format_match("character"), na_colour)
 }
 
-encode_c <- function(colour, alpha, from, white, out_format) {
+encode_c <- function(colour, alpha, from, white, out_format, na_colour) {
   if ((is.matrix(colour) || is.data.frame(colour)) && nrow(colour) == 0) {
     return(character())
   }
@@ -75,5 +77,11 @@ encode_c <- function(colour, alpha, from, white, out_format) {
       alpha <- NULL
     }
   }
-  .Call(`farver_encode_c`, colour, alpha, as.integer(from), white, as.integer(out_format))
+  if (length(na_colour) == 0) {
+    na_colour <- NA_character_
+  }
+  if (length(na_colour) > 1) {
+    stop("na_colour must be a string")
+  }
+  .Call(`farver_encode_c`, colour, alpha, as.integer(from), white, as.integer(out_format), as.character(na_colour))
 }

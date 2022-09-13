@@ -32,14 +32,14 @@
 #' # Convert back
 #' decode_native(native_col)
 #' 
-encode_native <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
+encode_native <- function(colour, alpha = NULL, from = 'rgb', white = 'D65', na_colour = NA_character_) {
   if (is.character(colour)) {
-    return(encode_native_c(colour))
+    return(encode_native_c(colour, na_colour = na_colour))
   }
   if (from != 'rgb') {
     white <- as_white_ref(white)
   }
-  encode_c(colour, alpha, colourspace_match(from), white, out_format = colour_format_match("native"))
+  encode_c(colour, alpha, colourspace_match(from), white, out_format = colour_format_match("native"), na_colour = na_colour)
 }
 
 #' Replace the alpha channel of a native vector
@@ -70,8 +70,14 @@ decode_native <- function(colour) {
   decode_native_c(colour)
 } 
 
-encode_native_c <- function(colour) {
-  .Call(`farver_encode_native_c`, colour)
+encode_native_c <- function(colour, na_colour = NA_character_) {
+  if (length(na_colour) == 0) {
+    na_colour <- NA_character_
+  }
+  if (length(na_colour) > 1) {
+    stop("na_colour must be a string")
+  }
+  .Call(`farver_encode_native_c`, colour, as.character(na_colour))
 }
 
 
