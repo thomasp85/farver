@@ -246,8 +246,10 @@ static SEXP get_na_colour(SEXP s_na_colour, int *na_colour_int) {
   const char *na_txt;
   if (TYPEOF(s_na_colour) == STRSXP) {
     na_colour_sexp = STRING_ELT(s_na_colour, 0);
-  } else {
+  } else if (TYPEOF(s_na_colour) == CHARSXP) {
     na_colour_sexp = s_na_colour;
+  } else {
+    Rf_error("Expected na_colour to be a string");
   }
   na_txt = CHAR(na_colour_sexp);
 
@@ -458,8 +460,8 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_ou
         if (ac.has_alpha) {
           get_alpha_value(&ac, i, &(buf[7]), &(buf[8]));
         }
+        SET_STRING_ELT(codes, i, Rf_mkChar(buf));
       }
-      SET_STRING_ELT(codes, i, Rf_mkChar(buf));
     }
   }
   copy_names(colour, codes);
