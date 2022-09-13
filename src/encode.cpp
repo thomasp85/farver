@@ -69,6 +69,7 @@ struct alpha_channel {
   bool has_alpha;
   bool one_alpha;
   bool alpha_is_int;
+  bool alpha_is_lgl;
   int *alpha_i;
   double *alpha_d;
   int first_alpha;
@@ -94,7 +95,10 @@ static inline int get_alpha_value(struct alpha_channel *ac, int i, char *b1 = NU
   if (ac->alpha_is_int) {
     alpha = ac->alpha_i[i];
     alpha = alpha == R_NaInt ? ac->na_alpha : cap0255(alpha);
-  } else {
+  } else if (ac->alpha_is_lgl) {
+    alpha = ac->alpha_i[i];
+    alpha = alpha == R_NaInt ? ac->na_alpha : cap0255(255*alpha);
+  }else {
     if (!R_finite(ac->alpha_d[i])) {
       alpha = ac->na_alpha;
     } else {
@@ -205,6 +209,7 @@ static void get_alpha_channel(struct alpha_channel *ac, SEXP alpha, int n, int n
     return;
   }
   ac->alpha_is_int =  Rf_isInteger(alpha);
+  ac->alpha_is_lgl = Rf_isLogical(alpha);
   alpha_length = Rf_length(alpha);
   if (alpha_length != 1 && alpha_length != n) {
     Rf_error("alpha should be a numeric vector of length 1 or length %d", n);
@@ -214,6 +219,10 @@ static void get_alpha_channel(struct alpha_channel *ac, SEXP alpha, int n, int n
     ac->alpha_i = INTEGER(alpha);
     ac->first_alpha = ac->alpha_i[0];
     ac->first_alpha = ac->first_alpha == R_NaInt ? ac->na_alpha : cap0255(ac->first_alpha);
+  } else if (ac->alpha_is_lgl) {
+    ac->alpha_i= LOGICAL(alpha);
+    ac->first_alpha = ac->alpha_i[0];
+    ac->first_alpha = ac->first_alpha == R_NaInt ? ac->na_alpha : cap0255(255*ac->first_alpha);
   } else {
     ac->alpha_d = REAL(alpha);
     if (!R_finite(ac->alpha_d[0])) {
