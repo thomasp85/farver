@@ -66,29 +66,21 @@ struct colour_channels {
 struct alpha_channel {
   char alpha1;
   char alpha2;
-  bool has_alpha;
-  bool one_alpha;
-  bool alpha_is_int;
-  bool alpha_is_lgl;
   int *alpha_i;
   double *alpha_d;
   int first_alpha;
   int na_alpha;
+  bool has_alpha;
+  bool one_alpha;
+  bool alpha_is_int;
+  bool alpha_is_lgl;
 };
 
-static inline int get_alpha_value(struct alpha_channel *ac, int i, char *b1 = NULL, char *b2 = NULL) {
+static inline int get_alpha_value(struct alpha_channel *ac, int i) {
   if (!ac->has_alpha) {
-    /* Opaque */
-    if (b1 != NULL) {
-      *b1 = '\0';
-    }
     return(ac->na_alpha);
   }
   if (ac->one_alpha) {
-    if (b1 != NULL && b2 != NULL) {
-      *b1 = ac->alpha1;
-      *b2 = ac->alpha2;
-    }
     return(ac->first_alpha);
   }
   int alpha;
@@ -104,15 +96,6 @@ static inline int get_alpha_value(struct alpha_channel *ac, int i, char *b1 = NU
     } else {
       alpha = double2int(ac->alpha_d[i]);
       alpha = cap0255(alpha);
-    }
-  }
-  if (b1 != NULL && b2 != NULL) {
-    if (alpha == 255 || alpha == R_NaInt) { // opaque
-      *b1 = '\0';
-      *b2 = '\0';
-    } else {
-      *b1 = hex8[2*alpha];
-      *b2 = hex8[2*alpha+1];
     }
   }
   return alpha;
@@ -204,6 +187,7 @@ static void get_alpha_channel(struct alpha_channel *ac, SEXP alpha, int n, int n
   ac->na_alpha = na_alpha;
   ac->has_alpha = !Rf_isNull(alpha);
   if (!ac->has_alpha) {
+    ac->first_alpha = R_NaInt;
     ac->alpha1 = '\0';
     ac->alpha2 = '\0';
     return;
@@ -231,7 +215,7 @@ static void get_alpha_channel(struct alpha_channel *ac, SEXP alpha, int n, int n
       ac->first_alpha = cap0255(double2int(ac->alpha_d[0]));
     }
   }
-  if (ac->first_alpha == R_NaInt || ac->first_alpha == 255) {
+  if (ac->first_alpha == R_NaInt) {
     ac->alpha1 = '\0';
     ac->alpha2 = '\0';
   } else {
@@ -286,7 +270,7 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt, SEXP s_na_
     codes = PROTECT(Rf_allocVector(INTSXP, cc.n));
     codes_int = INTEGER(codes);
   }
-  get_alpha_channel(&ac, alpha, cc.n);
+  get_alpha_channel(&ac, alpha, cc.n, R_NaInt);
   
   char* buf = NULL;
   if (ac.has_alpha) {
@@ -312,6 +296,7 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt, SEXP s_na_
     
     if (out_fmt == 2) { /* native output */
       int alpha = get_alpha_value(&ac, i);
+      alpha = (alpha == R_NaInt) ? 255 : alpha;
       /* This can overflow and become negative, but R just cares about the bytes */
       codes_int[i] = (
         cap0255(double2int(rgb.r)) +
@@ -337,7 +322,14 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt, SEXP s_na_
       buf[6] = hex8[num + 1];
       
       if (ac.has_alpha) {
-        get_alpha_value(&ac, i, &(buf[7]), &(buf[8]));
+        int alpha = get_alpha_value(&ac, i);
+        if (alpha == 255 || alpha == R_NaInt) { // opaque
+          buf[7] = '\0';
+          buf[8] = '\0';
+        } else {
+          buf[7] = hex8[2*alpha];
+          buf[8] = hex8[2*alpha+1];
+        }
       }
       SET_STRING_ELT(codes, i, Rf_mkChar(buf));
     }
@@ -368,7 +360,7 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_ou
     codes = PROTECT(Rf_allocVector(INTSXP, cc.n));
     codes_int = INTEGER(codes);
   }
-  get_alpha_channel(&ac, alpha, cc.n);
+  get_alpha_channel(&ac, alpha, cc.n, R_NaInt);
   
   char* buf = NULL;
   if (ac.has_alpha) {
@@ -393,6 +385,7 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_ou
       }
       if (out_fmt == 2) {
         int alpha = get_alpha_value(&ac, i);
+        alpha = (alpha == R_NaInt ? 255 : R_NaInt);
         codes_int[i] = (
           cap0255(r) +
           (cap0255(g) << 8) +
@@ -415,7 +408,15 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_ou
         buf[6] = hex8[num + 1];
         
         if (ac.has_alpha) {
-          get_alpha_value(&ac, i, &(buf[7]), &(buf[8]));
+          int alpha = get_alpha_value(&ac, i);
+          if (alpha == 255 || alpha == R_NaInt) { // opaque
+            buf[7] = '\0';
+            buf[8] = '\0';
+          } else {
+            buf[7] = hex8[2*alpha];
+            buf[8] = hex8[2*alpha+1];
+          }
+          
         }
         SET_STRING_ELT(codes, i, Rf_mkChar(buf));
       }
@@ -436,6 +437,7 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_ou
       }
       if (out_fmt == 2)  {
         int alpha = get_alpha_value(&ac, i);
+        alpha = (alpha == R_NaInt ? 255 : alpha);
         /* This can overflow and become negative, but R just cares about the bytes */
         codes_int[i] = (
           cap0255(double2int(r)) +
@@ -458,7 +460,14 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_ou
         buf[6] = hex8[num + 1];
         
         if (ac.has_alpha) {
-          get_alpha_value(&ac, i, &(buf[7]), &(buf[8]));
+          int alpha = get_alpha_value(&ac, i);
+          if (alpha == 255 || alpha == R_NaInt) { // opaque
+            buf[7] = '\0';
+            buf[8] = '\0';
+          } else {
+            buf[7] = hex8[2*alpha];
+            buf[8] = hex8[2*alpha+1];
+          }
         }
         SET_STRING_ELT(codes, i, Rf_mkChar(buf));
       }

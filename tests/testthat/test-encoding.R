@@ -67,3 +67,17 @@ test_that("can provide a colour to be used when NA are found", {
   native_cols_na[2] <- farver::encode_native(na_color)
   expect_equal(encode_native(cols_dec_na, na_colour = na_color), native_cols_na)
 })
+
+
+test_that("Encoding with alpha is consistent", {
+  red_no_alpha <- "#FF0000"
+  red_with_alphas <- c("#FF0000", "#FF0000FF", "#FF0000AA", "#FF000000")
+  red_with_alphas_exp <- c("#FF0000", "#FF0000", "#FF0000AA", "#FF000000")
+  red_with_alphas_dec <- decode_colour(red_with_alphas, alpha = TRUE)
+  red_with_alphas_dec[1,4] <- NA
+  expect_equal(encode_colour(red_with_alphas_dec, alpha = NULL), rep(red_no_alpha, nrow(red_with_alphas_dec)))
+  expect_equal(encode_colour(red_with_alphas_dec, alpha = NA), rep(red_no_alpha, nrow(red_with_alphas_dec)))
+  red_with_alphas_exp <- red_with_alphas
+  red_with_alphas_exp[2] <- "#FF0000"
+  expect_equal(encode_colour(red_with_alphas_dec, alpha = red_with_alphas_dec[,4]), red_with_alphas_exp)
+})
