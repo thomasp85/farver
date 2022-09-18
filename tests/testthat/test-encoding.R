@@ -22,3 +22,12 @@ test_that("alpha gets encoded correctly", {
   alpha_col <- encode_colour(cols_dec[1:6,], alpha = seq(0, 1, length.out = 6))
   expect_equal(substr(alpha_col, 8, 9), c("00", "33", "66", "99", "CC", ""))
 })
+
+test_that("colours can be encoded from a list of channels", {
+  cols_cmy <- convert_colour(cols_dec, 'rgb', 'cmy')
+  expect_equal(encode_colour(list(cols_dec[,1], cols_dec[,2], cols_dec[,3])), cols)
+  expect_equal(encode_colour(data.frame(cols_dec[,1], cols_dec[,2], cols_dec[,3])), cols)
+  expect_equal(encode_colour(list(cols_cmy[,1], cols_cmy[,2], cols_cmy[,3]), from = 'cmy'), cols)
+  expect_equal(encode_colour(data.frame(cols_cmy[,1], cols_cmy[,2], cols_cmy[,3]), from = 'cmy'), cols)
+})
+
