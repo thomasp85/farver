@@ -1,5 +1,12 @@
 # farver (development version)
 
+* `encode_colour()` and `encode_native()` also accept a list of channel vectors.
+  If you compute your channels independently you don't need to `cbind()` them into
+  a contiguous matrix anymore, but rather you can `list()` them (#36, @zeehio).
+
+* `encode_native()` is faster now. It avoids going through an intermediate character
+  vector representation (#375, @zeehio).
+
 # farver 2.1.1
 
 * Added input checking to a range of functions to guard against segfaults with 

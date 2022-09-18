@@ -15,7 +15,7 @@ ColourMap& get_named_colours() {
 static const R_CallMethodDef CallEntries[] = {
   {"farver_convert_c", (DL_FUNC) &convert_c, 5},
   {"farver_compare_c", (DL_FUNC) &compare_c, 8},
-  {"farver_encode_c", (DL_FUNC) &encode_c, 4},
+  {"farver_encode_c", (DL_FUNC) &encode_c, 5},
   {"farver_decode_c", (DL_FUNC) &decode_c, 5},
   {"farver_encode_channel_c", (DL_FUNC) &encode_channel_c, 7},
   {"farver_decode_channel_c", (DL_FUNC) &decode_channel_c, 5},

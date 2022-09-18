@@ -1,5 +1,3 @@
-context("comparison")
-
 spectrum <- unname(t(col2rgb(rainbow(10))))
 spectrum2 <- unname(t(col2rgb(heat.colors(5))))
 reconvert <- function(data, space) {
