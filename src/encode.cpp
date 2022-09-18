@@ -49,16 +49,51 @@ inline std::string prepare_code(const char* col) {
   return code;
 }
 
+struct colour_channels {
+  int n;
+  int *colour_i1;
+  int *colour_i2;
+  int *colour_i3;
+  int *colour_i4;
+  double *colour_d1;
+  double *colour_d2;
+  double *colour_d3;
+  double *colour_d4;
+  bool colour_is_int;
+};
+
+static void get_input_channels(struct colour_channels *cc, SEXP colour, int n_channels) {
+  if (Rf_isMatrix(colour)) {
+    cc->colour_is_int = Rf_isInteger(colour);
+    if (Rf_ncols(colour) < n_channels) {
+      Rf_errorcall(R_NilValue, "Colour in this format must contain at least %i columns", n_channels);
+    }
+    cc->n = Rf_nrows(colour);
+    if (cc->colour_is_int) {
+      cc->colour_i1 = INTEGER(colour);
+      cc->colour_i2 = cc->colour_i1 + cc->n;
+      cc->colour_i3 = cc->colour_i1 + 2*cc->n;
+      cc->colour_i4 = cc->colour_i1 + 3*cc->n;
+    } else {
+      cc->colour_d1 = REAL(colour);
+      cc->colour_d2 = cc->colour_d1 + cc->n;
+      cc->colour_d3 = cc->colour_d1 + 2*cc->n;
+      cc->colour_d4 = cc->colour_d1 + 3*cc->n;
+    }
+  } else {
+    Rf_error("invalid input format, expected a matrix");
+  }
+  return;
+}
+
 template <typename From>
 SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
-  int n_channels = dimension<From>();
-  if (Rf_ncols(colour) < n_channels) {
-    Rf_errorcall(R_NilValue, "Colour in this format must contain at least %i columns", n_channels);
-  }
   static ColorSpace::Rgb rgb;
+  struct colour_channels cc;
+  int n_channels = dimension<From>();
+  get_input_channels(&cc, colour, n_channels);
   ColorSpace::XyzConverter::SetWhiteReference(REAL(white)[0], REAL(white)[1], REAL(white)[2]);
-  int n = Rf_nrows(colour);
-  SEXP codes = PROTECT(Rf_allocVector(STRSXP, n));
+  SEXP codes = PROTECT(Rf_allocVector(STRSXP, cc.n));
   bool has_alpha = !Rf_isNull(alpha);
   char alpha1 = '\0';
   char alpha2 = '\0';
@@ -90,25 +125,13 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
   } else {
     buf = buffer;
   }
-  int offset1 = 0;
-  int offset2 = offset1 + n;
-  int offset3 = offset2 + n;
-  int offset4 = offset3 + n;
   
-  int* colour_i = NULL;
-  double* colour_d = NULL;
-  bool colour_is_int = Rf_isInteger(colour);
   int num;
-  if (colour_is_int) {
-    colour_i = INTEGER(colour);
-  } else {
-    colour_d = REAL(colour);
-  }
-  for (int i = 0; i < n; ++i) {
-    if (colour_is_int) {
-      fill_rgb<From>(&rgb, colour_i[offset1 + i], colour_i[offset2 + i], colour_i[offset3 + i], n_channels == 4 ? colour_i[offset4 + i] : 0);
+  for (int i = 0; i < cc.n; ++i) {
+    if (cc.colour_is_int) {
+      fill_rgb<From>(&rgb, cc.colour_i1[i], cc.colour_i2[i], cc.colour_i3[i], n_channels == 4 ? cc.colour_i4[i]: 0);
     } else {
-      fill_rgb<From>(&rgb, colour_d[offset1 + i], colour_d[offset2 + i], colour_d[offset3 + i], n_channels == 4 ? colour_d[offset4 + i] : 0.0);
+      fill_rgb<From>(&rgb, cc.colour_d1[i], cc.colour_d2[i], cc.colour_d3[i], n_channels == 4 ? cc.colour_d4[i] : 0.0);
     }
     if (!rgb.valid) {
       SET_STRING_ELT(codes, i, R_NaString);
@@ -160,11 +183,9 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
 
 template<>
 SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
-  if (Rf_ncols(colour) < 3) {
-    Rf_errorcall(R_NilValue, "Colour in RGB format must contain at least 3 columns");
-  }
-  int n = Rf_nrows(colour);
-  SEXP codes = PROTECT(Rf_allocVector(STRSXP, n));
+  struct colour_channels cc;
+  get_input_channels(&cc, colour, 3);
+  SEXP codes = PROTECT(Rf_allocVector(STRSXP, cc.n));
   bool has_alpha = !Rf_isNull(alpha);
   char alpha1 = '\0';
   char alpha2 = '\0';
@@ -196,21 +217,14 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
   } else {
     buf = buffer;
   }
-  int offset1 = 0;
-  int offset2 = offset1 + n;
-  int offset3 = offset2 + n;
   
-  int* colour_i = NULL;
-  double* colour_d = NULL;
-  bool colour_is_int = Rf_isInteger(colour);
   int num;
-  if (colour_is_int) {
+  if (cc.colour_is_int) {
     int r, g, b;
-    colour_i = INTEGER(colour);
-    for (int i = 0; i < n; ++i) {
-      r = colour_i[offset1 + i];
-      g = colour_i[offset2 + i];
-      b = colour_i[offset3 + i];
+    for (int i = 0; i < cc.n; ++i) {
+      r = cc.colour_i1[i];
+      g = cc.colour_i2[i];
+      b = cc.colour_i3[i];
       if (r == R_NaInt || g == R_NaInt || b == R_NaInt) {
         SET_STRING_ELT(codes, i, R_NaString);
         continue;
@@ -251,11 +265,10 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
     }
   } else {
     double r, g, b;
-    colour_d = REAL(colour);
-    for (int i = 0; i < n; ++i) {
-      r = colour_d[offset1 + i];
-      g = colour_d[offset2 + i];
-      b = colour_d[offset3 + i];
+    for (int i = 0; i < cc.n; ++i) {
+      r = cc.colour_d1[i];
+      g = cc.colour_d2[i];
+      b = cc.colour_d3[i];
       if (!(R_finite(r) && R_finite(g) && R_finite(b))) {
         SET_STRING_ELT(codes, i, R_NaString);
         continue;
