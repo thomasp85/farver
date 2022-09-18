@@ -47,10 +47,10 @@ encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
   if (from != 'rgb') {
     white <- as_white_ref(white)
   }
-  encode_c(colour, alpha, colourspace_match(from), white)
+  encode_c(colour, alpha, colourspace_match(from), white, out_format = 1L)
 }
 
-encode_c <- function(colour, alpha, from, white) {
+encode_c <- function(colour, alpha, from, white, out_format = 1L) {
   # colour has zero colours:
   if ((is.matrix(colour) || is.data.frame(colour)) && nrow(colour) == 0) {
     return(character())
@@ -80,5 +80,9 @@ encode_c <- function(colour, alpha, from, white) {
       alpha <- NULL
     }
   }
-  .Call(`farver_encode_c`, colour, alpha, as.integer(from), white)
+  out_format <- as.integer(out_format)
+  if (out_format != 1L && out_format != 2L) {
+    stop("out_format must be 1L (for character) or 2L (for native)")
+  }
+  .Call(`farver_encode_c`, colour, alpha, as.integer(from), white, out_format)
 }
