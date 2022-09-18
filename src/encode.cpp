@@ -63,7 +63,63 @@ struct colour_channels {
 };
 
 static void get_input_channels(struct colour_channels *cc, SEXP colour, int n_channels) {
-  if (Rf_isMatrix(colour)) {
+  if (TYPEOF(colour) == VECSXP) {
+    int input_n_channels = Rf_length(colour);
+    if (input_n_channels < n_channels) {
+      Rf_errorcall(R_NilValue, "Colour, if given as a list, must contain at least %i elements (channels)", n_channels);
+    }
+    input_n_channels = n_channels;
+    SEXP a_channel = VECTOR_ELT(colour, 0);
+    cc->colour_is_int = Rf_isInteger(a_channel);
+    if (!(cc->colour_is_int)) {
+      if (TYPEOF(a_channel) != REALSXP) {
+        Rf_error("All channels must be either integers or reals");
+      }
+      cc->colour_d1 = REAL(a_channel);
+    } else {
+      cc->colour_i1 = INTEGER(a_channel);
+    }
+    cc->n = Rf_length(a_channel);
+    for (int i=1; i<n_channels;i++) {
+      a_channel = VECTOR_ELT(colour, i);
+      if (cc->colour_is_int) {
+        if (TYPEOF(a_channel) != INTSXP) {
+          Rf_error("The first channel was integer, channel %d is not. All channels should be of the same type", i+1);
+        }
+      } else {
+        if (TYPEOF(a_channel) != REALSXP) {
+          Rf_error("The first channel was real, channel %d is not. All channels should be of the same type", i+1);
+        }
+      }
+      int n_thisch = Rf_length(a_channel);
+      if (n_thisch != cc->n) {
+        Rf_error("The first channel was of length %d. Channel %d is of length %d. All channels should be of the same length", cc->n, i+1, n_thisch);
+      }
+      switch(i) {
+      case 1:
+        if (cc->colour_is_int) {
+          cc->colour_i2 = INTEGER(a_channel);
+        } else {
+          cc->colour_d2 = REAL(a_channel);
+        }
+        break;
+      case 2:
+        if (cc->colour_is_int) {
+          cc->colour_i3 = INTEGER(a_channel);
+        } else {
+          cc->colour_d3 = REAL(a_channel);
+        }
+        break;
+      case 3:
+        if (cc->colour_is_int) {
+          cc->colour_i4 = INTEGER(a_channel);
+        } else {
+          cc->colour_d4 = REAL(a_channel);
+        }
+        break;
+      }
+    }
+  } else if (Rf_isMatrix(colour)) {
     cc->colour_is_int = Rf_isInteger(colour);
     if (Rf_ncols(colour) < n_channels) {
       Rf_errorcall(R_NilValue, "Colour in this format must contain at least %i columns", n_channels);
@@ -81,7 +137,7 @@ static void get_input_channels(struct colour_channels *cc, SEXP colour, int n_ch
       cc->colour_d4 = cc->colour_d1 + 3*cc->n;
     }
   } else {
-    Rf_error("invalid input format, expected a matrix");
+    Rf_error("invalid input format, expected a matrix or a list of vectors");
   }
   return;
 }
@@ -175,8 +231,17 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
     
     SET_STRING_ELT(codes, i, Rf_mkChar(buf));
   }
-  
-  copy_names(colour, codes);
+
+  if (Rf_isMatrix(colour)) {
+    copy_names(colour, codes);
+  } else if (Rf_inherits(colour, "data.frame")) {
+    SEXP names = PROTECT(Rf_getAttrib(colour, Rf_install("dimnames")));
+    if (!Rf_isNull(names)) {
+      names = VECTOR_ELT(names, 0);
+    }
+    Rf_namesgets(codes, names);
+    UNPROTECT(1);
+  }
   UNPROTECT(1);
   return codes;
 }
@@ -309,7 +374,9 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
     }
   }
   
-  copy_names(colour, codes);
+  if (Rf_isMatrix(colour)) {
+    copy_names(colour, codes);
+  }
   UNPROTECT(1);
   return codes;
 }
