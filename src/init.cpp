@@ -22,6 +22,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"farver_load_colour_names_c", (DL_FUNC) &load_colour_names_c, 2},
   {"farver_encode_native_c", (DL_FUNC) &encode_native_c, 2},
   {"farver_decode_native_c", (DL_FUNC) &decode_native_c, 1},
+  {"farver_encode_channel_native_c", (DL_FUNC) &encode_channel_native_c, 7},
   {NULL, NULL, 0}
 };
 

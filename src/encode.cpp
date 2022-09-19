@@ -1076,6 +1076,255 @@ SEXP encode_channel_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op,
   return R_NilValue;
 }
 
+
+template <typename Space>
+SEXP encode_channel_native_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white, SEXP na) {
+  int chan = INTEGER(channel)[0];
+  int operation = INTEGER(op)[0];
+  int n = Rf_length(codes);
+  
+  bool one_value = Rf_length(value) == 1;
+  int first_value_i = 0;
+  double first_value_d = 0.0;
+  int* value_i = NULL;
+  double* value_d = NULL;
+  bool value_is_int = Rf_isInteger(value);
+  if (value_is_int) {
+    value_i = INTEGER(value);
+    first_value_i = value_i[0];
+  } else {
+    value_d = REAL(value);
+    first_value_d = value_d[0];
+  }
+  
+  SEXP na_code = STRING_ELT(na, 0);
+  int na_int = R_NaInt;
+  get_na_value(na, &na_int); 
+  bool na_is_na = na_int == R_NaInt;
+  
+  if (TYPEOF(codes) != INTSXP) {
+    Rf_error("Expected an integer vector");
+  }
+  int *codes_int = INTEGER(codes);
+  SEXP ret = PROTECT(Rf_allocVector(INTSXP, n));
+  int *ret_int = INTEGER(ret);
+  
+  ColorSpace::Rgb rgb;
+  ColorSpace::XyzConverter::SetWhiteReference(REAL(white)[0], REAL(white)[1], REAL(white)[2]);
+  Space colour;
+  int num, alpha;
+  ColourMap& named_colours = get_named_colours();
+  
+  for (int i = 0; i < n; ++i) {
+    int code = codes_int[i];
+    if (code == R_NaInt) {
+      if (na_is_na) {
+        ret_int[i] = R_NaInt;
+        continue;
+      }
+      code = na_int;
+    }
+
+    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
+        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
+      ret_int[i] = R_NaInt;
+      continue;
+    }
+    rgb.r = code & 0xFF;
+    rgb.g = (code >> 8) & 0xFF;
+    rgb.b = (code >> 16) & 0xFF;
+    alpha = (code >> 24) & 0xFF;
+    
+    ColorSpace::IConverter<Space>::ToColorSpace(&rgb, &colour);
+    if (value_is_int) {
+      modify_channel<Space>(colour, one_value ? first_value_i : value_i[i], chan, operation);
+    } else {
+      modify_channel<Space>(colour, one_value ? first_value_d : value_d[i], chan, operation);
+    }
+    colour.Cap();
+    colour.ToRgb(&rgb);
+    
+    if (!(R_finite(rgb.r) && R_finite(rgb.g) && R_finite(rgb.b))) {
+      ret_int[i] = R_NaInt;
+      continue;
+    }
+    ret_int[i] = (
+      cap0255(double2int(rgb.r)) +
+        (cap0255(double2int(rgb.g)) << 8) +
+        (cap0255(double2int(rgb.b)) << 16) +
+        (alpha << 24)
+    );
+  }
+  
+  copy_names(codes, ret);
+  UNPROTECT(1);
+  return ret;
+}
+
+template <>
+SEXP encode_channel_native_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white, SEXP na) {
+  int chan = INTEGER(channel)[0];
+  int operation = INTEGER(op)[0];
+  int n = Rf_length(codes);
+  
+  bool one_value = Rf_length(value) == 1;
+  int first_value_i = 0;
+  double first_value_d = 0.0;
+  int* value_i = NULL;
+  double* value_d = NULL;
+  bool value_is_int = Rf_isInteger(value);
+  if (value_is_int) {
+    value_i = INTEGER(value);
+    first_value_i = value_i[0];
+  } else {
+    value_d = REAL(value);
+    first_value_d = value_d[0];
+  }
+  
+  SEXP na_code = STRING_ELT(na, 0);
+  int na_int = R_NaInt;
+  get_na_value(na, &na_int); 
+  bool na_is_na = na_int == R_NaInt;
+  
+  if (TYPEOF(codes) != INTSXP) {
+    Rf_error("Expected an integer vector");
+  }
+  int *codes_int = INTEGER(codes);
+  SEXP ret = PROTECT(Rf_allocVector(INTSXP, n));
+  int *ret_int = INTEGER(ret);
+
+  int num, nchar;
+  int r, g, b, alpha;
+  double new_val;
+  ColourMap& named_colours = get_named_colours();
+  
+  for (int i = 0; i < n; ++i) {
+    int code = codes_int[i];
+    if (code == R_NaInt) {
+      if (na_is_na) {
+        ret_int[i] = R_NaInt;
+        continue;
+      }
+      code = na_int;
+    }
+    
+    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
+        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
+      ret_int[i] = R_NaInt;
+      continue;
+    }
+    r = code & 0xFF;
+    g = (code >> 8) & 0xFF;
+    b = (code >> 16) & 0xFF;
+    alpha = (code >> 24) & 0xFF;
+
+    switch (chan) {
+    case 1: 
+      r = mod_val(r, value_is_int ? (one_value ? first_value_i : value_i[i]) : (one_value ? first_value_d : value_d[i]), operation); // Sometimes I really hate myself
+      break;
+    case 2: 
+      g = mod_val(g, value_is_int ? (one_value ? first_value_i : value_i[i]) : (one_value ? first_value_d : value_d[i]), operation);
+      break;
+    case 3:
+      b = mod_val(b, value_is_int ? (one_value ? first_value_i : value_i[i]) : (one_value ? first_value_d : value_d[i]), operation);
+      break;
+    }
+    ret_int[i] = (
+      cap0255(r) +
+        (cap0255(g) << 8) +
+        (cap0255(b) << 16) +
+        (alpha << 24)
+    );
+  }
+  
+  copy_names(codes, ret);
+  UNPROTECT(1);
+  return ret;
+}
+
+
+SEXP encode_alpha_native_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
+  int operation = INTEGER(op)[0];
+  int n = Rf_length(codes);
+  
+  bool one_value = Rf_length(value) == 1;
+  int first_value_i = 0;
+  double first_value_d = 0.0;
+  int* value_i = NULL;
+  double* value_d = NULL;
+  bool value_is_int = Rf_isInteger(value);
+  if (value_is_int) {
+    value_i = INTEGER(value);
+    first_value_i = value_i[0];
+  } else {
+    value_d = REAL(value);
+    first_value_d = value_d[0];
+  }
+  
+  int na_int = R_NaInt;
+  get_na_value(na, &na_int); 
+
+  if (TYPEOF(codes) != INTSXP) {
+    Rf_error("Expected an integer vector");
+  }
+  int *codes_int = INTEGER(codes);
+  SEXP ret = PROTECT(Rf_allocVector(INTSXP, n));
+  int *ret_int = INTEGER(ret);
+  int alpha;
+
+  for (int i = 0; i < n; ++i) {
+    int code = codes_int[i];
+    if (code == R_NaInt) {
+      if (na_int == R_NaInt) {
+        ret_int[i] = na_int;
+        continue;
+      }
+      code = na_int;
+    }
+    
+    alpha = (code >> 24) & 0xFF;
+    
+    if (value_is_int) {
+      alpha = double2int(mod_val(alpha / 255.0, one_value ? first_value_i : value_i[i], operation) * 255.0);
+    } else {
+      alpha = double2int(mod_val(alpha / 255.0, one_value ? first_value_d : value_d[i], operation) * 255.0);
+    }
+    alpha = cap0255(alpha);
+    ret_int[i] = (alpha << 24) | ( code & 0x00FFFFFF);
+  }
+  
+  copy_names(codes, ret);
+  UNPROTECT(1);
+  return ret;
+}
+
+
+SEXP encode_channel_native_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op, SEXP white, SEXP na) {
+  if (INTEGER(channel)[0] == 0) {
+    return encode_alpha_native_impl(codes, value, op, na);
+  }
+  switch (INTEGER(space)[0]) {
+  case CMY: return encode_channel_native_impl<ColorSpace::Cmy>(codes, channel, value, op, white, na);
+  case CMYK: return encode_channel_native_impl<ColorSpace::Cmyk>(codes, channel, value, op, white, na);
+  case HSL: return encode_channel_native_impl<ColorSpace::Hsl>(codes, channel, value, op, white, na);
+  case HSB: return encode_channel_native_impl<ColorSpace::Hsb>(codes, channel, value, op, white, na);
+  case HSV: return encode_channel_native_impl<ColorSpace::Hsv>(codes, channel, value, op, white, na);
+  case LAB: return encode_channel_native_impl<ColorSpace::Lab>(codes, channel, value, op, white, na);
+  case HUNTERLAB: return encode_channel_native_impl<ColorSpace::HunterLab>(codes, channel, value, op, white, na);
+  case LCH: return encode_channel_native_impl<ColorSpace::Lch>(codes, channel, value, op, white, na);
+  case LUV: return encode_channel_native_impl<ColorSpace::Luv>(codes, channel, value, op, white, na);
+  case RGB: return encode_channel_native_impl<ColorSpace::Rgb>(codes, channel, value, op, white, na);
+  case XYZ: return encode_channel_native_impl<ColorSpace::Xyz>(codes, channel, value, op, white, na);
+  case YXY: return encode_channel_native_impl<ColorSpace::Yxy>(codes, channel, value, op, white, na);
+  case HCL: return encode_channel_native_impl<ColorSpace::Hcl>(codes, channel, value, op, white, na);
+  case OKLAB: return encode_channel_native_impl<ColorSpace::OkLab>(codes, channel, value, op, white, na);
+  case OKLCH: return encode_channel_native_impl<ColorSpace::OkLch>(codes, channel, value, op, white, na);
+  }
+  
+  // never happens
+  return R_NilValue;
+}
+
 template <typename Space>
 SEXP decode_channel_impl(SEXP codes, SEXP channel, SEXP white, SEXP na) {
   int chan = INTEGER(channel)[0];
