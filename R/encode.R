@@ -21,6 +21,10 @@
 #' @param white The white reference of the input colour space. Will only have an 
 #' effect for relative colour spaces such as Lab and luv. Any value accepted by 
 #' [as_white_ref()] allowed.
+#' @param na_value A valid colour string or `NA` to use when `colour` contains
+#' `NA` elements or is invalid in the RGB space. The general approach in farver
+#' is to carry `NA` values over, but if you want to mimick [col2rgb()] you should
+#' set `na_value = 'transparent'`, i.e. treat `NA` as transparent white.
 #' 
 #' @return A character vector with colours encoded as `#RRGGBB(AA)`
 #' 
@@ -43,14 +47,14 @@
 #' spectrum_hcl <- convert_colour(spectrum, 'rgb', 'hcl')
 #' encode_colour(spectrum_hcl, from = 'hcl')
 #' 
-encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
+encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65', na_value = NA_character_) {
   if (from != 'rgb') {
     white <- as_white_ref(white)
   }
-  encode_c(colour, alpha, colourspace_match(from), white, out_format = 1L)
+  encode_c(colour, alpha, colourspace_match(from), white, out_format = 1L, na_value)
 }
 
-encode_c <- function(colour, alpha, from, white, out_format = 1L) {
+encode_c <- function(colour, alpha, from, white, out_format = 1L, na_value) {
   # colour has zero colours:
   if ((is.matrix(colour) || is.data.frame(colour)) && nrow(colour) == 0) {
     return(character())
@@ -84,5 +88,14 @@ encode_c <- function(colour, alpha, from, white, out_format = 1L) {
   if (out_format != 1L && out_format != 2L) {
     stop("out_format must be 1L (for character) or 2L (for native)")
   }
-  .Call(`farver_encode_c`, colour, alpha, as.integer(from), white, out_format)
+  if (length(na_value) == 0) {
+    na_value <- NA_character_
+  }
+  if (length(na_value) > 1) {
+    stop("na_value must be a string")
+  }
+  na_value <- as.character(na_value)
+
+  .Call(`farver_encode_c`, colour, alpha, as.integer(from), white, out_format, na_value)
 }
+

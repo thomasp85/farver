@@ -32,14 +32,14 @@
 #' # Convert back
 #' decode_native(native_col)
 #' 
-encode_native <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
+encode_native <- function(colour, alpha = NULL, from = 'rgb', white = 'D65', na_value = NA) {
   if (is.character(colour)) {
-    return(encode_native_c(colour))
+    return(encode_native_c(colour, na_value = na_value))
   }
   if (from != 'rgb') {
     white <- as_white_ref(white)
   }
-  encode_c(colour, alpha, colourspace_match(from), white, out_format = 2L)
+  encode_c(colour, alpha, colourspace_match(from), white, out_format = 2L, na_value = na_value)
 }
 
 #' @rdname native_encoding
@@ -48,8 +48,15 @@ decode_native <- function(colour) {
   decode_native_c(colour)
 } 
 
-encode_native_c <- function(colour) {
-  .Call(`farver_encode_native_c`, colour)
+encode_native_c <- function(colour, na_value = NA_character_) {
+  if (length(na_value) == 0) {
+    na_value <- NA_character_
+  }
+  if (length(na_value) > 1) {
+    stop("na_value must be a string")
+  }
+  na_value <- as.character(na_value)
+  .Call(`farver_encode_native_c`, colour, na_value)
 }
 decode_native_c <- function(colour) {
   .Call(`farver_decode_native_c`, as.integer(colour))

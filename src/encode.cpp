@@ -142,14 +142,39 @@ static void get_input_channels(struct colour_channels *cc, SEXP colour, int n_ch
   return;
 }
 
+static SEXP get_na_value(SEXP s_na_value, int *na_value_int) {
+  SEXP na_value_sexp;
+  const char *na_txt;
+  if (TYPEOF(s_na_value) == STRSXP) {
+    na_value_sexp = STRING_ELT(s_na_value, 0);
+  } else if (TYPEOF(s_na_value) == CHARSXP) {
+    na_value_sexp = s_na_value;
+  } else {
+    Rf_error("Expected na_value to be a string");
+  }
+  na_txt = CHAR(na_value_sexp);
+
+  if (na_value_sexp == R_NaString || strcmp("NA", na_txt) == 0) {
+    na_value_sexp = R_NaString;
+    *na_value_int = R_NaInt;
+  } else {
+    SEXP tmp = encode_native_c(na_value_sexp, R_NaString);
+    *na_value_int = INTEGER(tmp)[0];
+  }
+  return(na_value_sexp);
+}
+
+
 template <typename From>
-SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt) {
+SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt,  SEXP s_na_value) {
   static ColorSpace::Rgb rgb;
   struct colour_channels cc;
   int out_fmt = INTEGER(s_out_fmt)[0]; // 1 is character vector, 2 is native format
   if (out_fmt != 1 && out_fmt != 2) {
     Rf_error("invalid output format.");
   }
+  int na_value_int;
+  SEXP na_value_sexp = get_na_value(s_na_value, &na_value_int);
   int n_channels = dimension<From>();
   get_input_channels(&cc, colour, n_channels);
   ColorSpace::XyzConverter::SetWhiteReference(REAL(white)[0], REAL(white)[1], REAL(white)[2]);
@@ -201,9 +226,9 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt) {
     }
     if (!rgb.valid) {
       if (out_fmt == 1) {
-        SET_STRING_ELT(codes, i, R_NaString);
+        SET_STRING_ELT(codes, i, na_value_sexp);
       } else {
-        codes_int[i] = R_NaInt;
+        codes_int[i] = na_value_int;
       }
       continue;
     }
@@ -278,13 +303,15 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt) {
 }
 
 template<>
-SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt) {
+SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_out_fmt, SEXP s_na_value) {
   struct colour_channels cc;
   int out_fmt = INTEGER(s_out_fmt)[0]; // 1 is character vector, 2 is native format
   if (out_fmt != 1 && out_fmt != 2) {
     Rf_error("invalid output format.");
   }
   get_input_channels(&cc, colour, 3);
+  int na_value_int;
+  SEXP na_value_sexp = get_na_value(s_na_value, &na_value_int);
   SEXP codes;
   int *codes_int;
   if (out_fmt == 1) {
@@ -333,9 +360,9 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_ou
       b = cc.colour_i3[i];
       if (r == R_NaInt || g == R_NaInt || b == R_NaInt) {
         if (out_fmt == 1) {
-          SET_STRING_ELT(codes, i, R_NaString);
+          SET_STRING_ELT(codes, i, na_value_sexp);
         } else {
-          codes_int[i] = R_NaInt;
+          codes_int[i] = na_value_int;
         }
         continue;
       }
@@ -405,9 +432,9 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_ou
       b = cc.colour_d3[i];
       if (!(R_finite(r) && R_finite(g) && R_finite(b))) {
         if (out_fmt == 1) {
-          SET_STRING_ELT(codes, i, R_NaString);
+          SET_STRING_ELT(codes, i, na_value_sexp);
         } else {
-          codes_int[i] = R_NaInt;
+          codes_int[i] = na_value_int;
         }
         continue;
       }
@@ -478,23 +505,23 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white, SEXP s_ou
   return codes;
 }
 
-SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white, SEXP out_fmt) {
+SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white, SEXP out_fmt, SEXP na_value) {
   switch (INTEGER(from)[0]) {
-    case CMY: return encode_impl<ColorSpace::Cmy>(colour, alpha, white, out_fmt);
-    case CMYK: return encode_impl<ColorSpace::Cmyk>(colour, alpha, white, out_fmt);
-    case HSL: return encode_impl<ColorSpace::Hsl>(colour, alpha, white, out_fmt);
-    case HSB: return encode_impl<ColorSpace::Hsb>(colour, alpha, white, out_fmt);
-    case HSV: return encode_impl<ColorSpace::Hsv>(colour, alpha, white, out_fmt);
-    case LAB: return encode_impl<ColorSpace::Lab>(colour, alpha, white, out_fmt);
-    case HUNTERLAB: return encode_impl<ColorSpace::HunterLab>(colour, alpha, white, out_fmt);
-    case LCH: return encode_impl<ColorSpace::Lch>(colour, alpha, white, out_fmt);
-    case LUV: return encode_impl<ColorSpace::Luv>(colour, alpha, white, out_fmt);
-    case RGB: return encode_impl<ColorSpace::Rgb>(colour, alpha, white, out_fmt);
-    case XYZ: return encode_impl<ColorSpace::Xyz>(colour, alpha, white, out_fmt);
-    case YXY: return encode_impl<ColorSpace::Yxy>(colour, alpha, white, out_fmt);
-    case HCL: return encode_impl<ColorSpace::Hcl>(colour, alpha, white, out_fmt);
-    case OKLAB: return encode_impl<ColorSpace::OkLab>(colour, alpha, white, out_fmt);
-    case OKLCH: return encode_impl<ColorSpace::OkLch>(colour, alpha, white, out_fmt);
+    case CMY: return encode_impl<ColorSpace::Cmy>(colour, alpha, white, out_fmt, na_value);
+    case CMYK: return encode_impl<ColorSpace::Cmyk>(colour, alpha, white, out_fmt, na_value);
+    case HSL: return encode_impl<ColorSpace::Hsl>(colour, alpha, white, out_fmt, na_value);
+    case HSB: return encode_impl<ColorSpace::Hsb>(colour, alpha, white, out_fmt, na_value);
+    case HSV: return encode_impl<ColorSpace::Hsv>(colour, alpha, white, out_fmt, na_value);
+    case LAB: return encode_impl<ColorSpace::Lab>(colour, alpha, white, out_fmt, na_value);
+    case HUNTERLAB: return encode_impl<ColorSpace::HunterLab>(colour, alpha, white, out_fmt, na_value);
+    case LCH: return encode_impl<ColorSpace::Lch>(colour, alpha, white, out_fmt, na_value);
+    case LUV: return encode_impl<ColorSpace::Luv>(colour, alpha, white, out_fmt, na_value);
+    case RGB: return encode_impl<ColorSpace::Rgb>(colour, alpha, white, out_fmt, na_value);
+    case XYZ: return encode_impl<ColorSpace::Xyz>(colour, alpha, white, out_fmt, na_value);
+    case YXY: return encode_impl<ColorSpace::Yxy>(colour, alpha, white, out_fmt, na_value);
+    case HCL: return encode_impl<ColorSpace::Hcl>(colour, alpha, white, out_fmt, na_value);
+    case OKLAB: return encode_impl<ColorSpace::OkLab>(colour, alpha, white, out_fmt, na_value);
+    case OKLCH: return encode_impl<ColorSpace::OkLch>(colour, alpha, white, out_fmt, na_value);
   }
   
   // never happens
@@ -1251,8 +1278,20 @@ SEXP decode_channel_c(SEXP codes, SEXP channel, SEXP space, SEXP white, SEXP na)
   return R_NilValue;
 }
 
-SEXP encode_native_c(SEXP color) {
+SEXP encode_native_c(SEXP color, SEXP na_value) {
   int n = Rf_length(color);
+  switch(TYPEOF(color)) {
+    case STRSXP:
+      n = Rf_length(color);
+      break;
+    case CHARSXP:
+      n = 1;
+      break;
+    default:
+      Rf_error("color should be a character vector");
+  }
+  int na_value_int;
+  get_na_value(na_value, &na_value_int);
   ColourMap& named_colours = get_named_colours();
   SEXP natives = PROTECT(Rf_allocVector(INTSXP, n));
   int* natives_p = INTEGER(natives);
@@ -1260,9 +1299,14 @@ SEXP encode_native_c(SEXP color) {
   int nchar;
   bool has_alpha;
   for (int i = 0; i < n; ++i) {
-    SEXP code = STRING_ELT(color, i);
+    SEXP code;
+    if (TYPEOF(color) == STRSXP) {
+      code = STRING_ELT(color, i);
+    } else {
+      code = color;
+    }
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
-      natives_p[i] = NA_INTEGER;
+      natives_p[i] = na_value_int;
     }
     const char* col = Rf_translateCharUTF8(code);
     if (col[0] == '#') {
@@ -1281,14 +1325,16 @@ SEXP encode_native_c(SEXP color) {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
         Rf_errorcall(R_NilValue, "Unknown colour name: %s", col);
-        natives_p[i] = NA_INTEGER;
+        natives_p[i] = na_value_int;
       } else {
         natives_p[i] = R_RGB(it->second.r, it->second.g, it->second.b);
       }
     }
   }
   
-  copy_names(color, natives);
+  if (TYPEOF(color) == STRSXP) {
+    copy_names(color, natives);
+  }
   UNPROTECT(1);
   return natives;
 }
