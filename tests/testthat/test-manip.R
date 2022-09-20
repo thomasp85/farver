@@ -14,6 +14,21 @@ codes_native <- encode_native(codes)
 codes_native_alpha <- encode_native(codes_alpha)
 
 
+test_that("setting channel sets colour to NA if modification value is NA", {
+  cols_mod[, 'g'] <- 1:10
+  expected <- encode_colour(cols_mod)
+  expected[2] <- NA
+  expect_equal(set_channel(codes, 'g', c(1L, NA, 3:10)), expected)
+})
+
+test_that("setting channel leaves colour as it was if modification value is NA and skip_na_values is TRUE", {
+  cols_mod[, 'g'] <- 1:10
+  expected <- encode_colour(cols_mod)
+  expected[2] <- codes[2]
+  expect_equal(set_channel(codes, 'g', c(1L, NA, 3:10), skip_na_values = TRUE), expected)
+})
+
+
 test_that("setting channel works", {
   cols_mod[, 'g'] <- 1:10
   expect_equal(set_channel(codes, 'g', 1:10), encode_colour(cols_mod))
@@ -76,6 +91,22 @@ test_that("setting channel native works", {
   
   expect_equal(set_channel_native(codes_native, 'alpha', (1:10)/10), encode_native(cols, alpha = (1:10)/10))
 })
+
+
+test_that("setting channel native sets colour to NA if modification value is NA", {
+  cols_mod[, 'g'] <- 1:10
+  expected <- encode_native(cols_mod)
+  expected[2] <- NA
+  expect_equal(set_channel_native(codes_native, 'g', c(1L, NA, 3:10)), expected)
+})
+
+test_that("setting channel native leaves colour as it was if modification value is NA and skip_na_values is TRUE", {
+  cols_mod[, 'g'] <- 1:10
+  expected <- encode_native(cols_mod)
+  expected[2] <- codes_native[2]
+  expect_equal(set_channel_native(codes_native, 'g', c(1L, NA, 3:10), skip_na_values = TRUE), expected)
+})
+
 
 test_that("adding channel works", {
   cols_mod[, 'r'] <- cols_mod[, 'r'] + 1:10
