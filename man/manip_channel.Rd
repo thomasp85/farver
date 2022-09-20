@@ -21,7 +21,8 @@ set_channel(
   value,
   space = "rgb",
   white = "D65",
-  na_value = NA
+  na_value = NA,
+  skip_na_values = FALSE
 )
 
 add_to_channel(
@@ -30,7 +31,8 @@ add_to_channel(
   value,
   space = "rgb",
   white = "D65",
-  na_value = NA
+  na_value = NA,
+  skip_na_values = FALSE
 )
 
 multiply_channel(
@@ -39,7 +41,8 @@ multiply_channel(
   value,
   space = "rgb",
   white = "D65",
-  na_value = NA
+  na_value = NA,
+  skip_na_values = FALSE
 )
 
 raise_channel(
@@ -48,7 +51,8 @@ raise_channel(
   value,
   space = "rgb",
   white = "D65",
-  na_value = NA
+  na_value = NA,
+  skip_na_values = FALSE
 )
 
 cap_channel(
@@ -57,7 +61,8 @@ cap_channel(
   value,
   space = "rgb",
   white = "D65",
-  na_value = NA
+  na_value = NA,
+  skip_na_values = FALSE
 )
 
 get_channel(colour, channel, space = "rgb", white = "D65", na_value = NA)
@@ -68,7 +73,8 @@ set_channel_native(
   value,
   space = "rgb",
   white = "D65",
-  na_value = NA
+  na_value = NA,
+  skip_na_values = FALSE
 )
 
 add_to_channel_native(
@@ -77,7 +83,8 @@ add_to_channel_native(
   value,
   space = "rgb",
   white = "D65",
-  na_value = NA
+  na_value = NA,
+  skip_na_values = FALSE
 )
 
 multiply_channel_native(
@@ -86,7 +93,8 @@ multiply_channel_native(
   value,
   space = "rgb",
   white = "D65",
-  na_value = NA
+  na_value = NA,
+  skip_na_values = FALSE
 )
 
 raise_channel_native(
@@ -95,7 +103,8 @@ raise_channel_native(
   value,
   space = "rgb",
   white = "D65",
-  na_value = NA
+  na_value = NA,
+  skip_na_values = FALSE
 )
 
 cap_channel_native(
@@ -104,7 +113,8 @@ cap_channel_native(
   value,
   space = "rgb",
   white = "D65",
-  na_value = NA
+  na_value = NA,
+  skip_na_values = FALSE
 )
 }
 \arguments{
@@ -131,6 +141,10 @@ by \code{\link[=as_white_ref]{as_white_ref()}} allowed.}
 \code{NA} elements. The general approach in farver is to carry \code{NA} values over,
 but if you want to mimick \code{\link[=col2rgb]{col2rgb()}} you should set
 \code{na_value = 'transparent'}, i.e. treat \code{NA} as transparent white.}
+
+\item{skip_na_values}{By default (\code{skip_na_values = FALSE}), if \code{value} is \code{NA} the colour
+will be set to \code{NA}. If \code{skip_na_values} is \code{TRUE} and the \code{value} to modify with
+is \code{NA}, the colour won't be modified.}
 }
 \value{
 A character vector of the same length as \code{colour} (or a numeric
@@ -149,6 +163,11 @@ spectrum <- rainbow(10)
 set_channel(spectrum, 'r', c(10, 50))
 set_channel(spectrum, 'l', 50, space = 'lab')
 set_channel(spectrum, 'alpha', c(0.5, 1))
+
+# This returns NA, because the replacement value is NA
+set_channel("#FF0000", "r", NA)
+# This returns "red", because we skip modifications on NA values:
+set_channel("red", "r", NA, skip_na_values = TRUE)
 
 # Add value to channel
 add_to_channel(spectrum, 'r', c(10, 50))
