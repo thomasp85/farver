@@ -17,12 +17,12 @@ static const R_CallMethodDef CallEntries[] = {
   {"farver_compare_c", (DL_FUNC) &compare_c, 8},
   {"farver_encode_c", (DL_FUNC) &encode_c, 6},
   {"farver_decode_c", (DL_FUNC) &decode_c, 5},
-  {"farver_encode_channel_c", (DL_FUNC) &encode_channel_c, 7},
+  {"farver_encode_channel_c", (DL_FUNC) &encode_channel_c, 8},
   {"farver_decode_channel_c", (DL_FUNC) &decode_channel_c, 5},
   {"farver_load_colour_names_c", (DL_FUNC) &load_colour_names_c, 2},
   {"farver_encode_native_c", (DL_FUNC) &encode_native_c, 2},
   {"farver_decode_native_c", (DL_FUNC) &decode_native_c, 1},
-  {"farver_encode_channel_native_c", (DL_FUNC) &encode_channel_native_c, 7},
+  {"farver_encode_channel_native_c", (DL_FUNC) &encode_channel_native_c, 8},
   {NULL, NULL, 0}
 };
 

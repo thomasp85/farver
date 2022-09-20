@@ -753,10 +753,12 @@ SEXP decode_c(SEXP codes, SEXP alpha, SEXP to, SEXP white, SEXP na) {
 }
 
 template <typename Space>
-SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white, SEXP na) {
+SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white, SEXP na, SEXP skip_na_values) {
   int chan = INTEGER(channel)[0];
   int operation = INTEGER(op)[0];
   int n = Rf_length(codes);
+  
+  bool skip_na_values_lgl = INTEGER(skip_na_values)[0];
   
   bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
@@ -784,6 +786,15 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
   
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
+    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
+        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
+      if (skip_na_values_lgl) {
+        SET_STRING_ELT(ret, i, code);
+      } else {
+        SET_STRING_ELT(ret, i, R_NaString);
+      }
+      continue;
+    }
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
       if (na_is_na) {
         SET_STRING_ELT(ret, i, R_NaString);
@@ -791,11 +802,6 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
       }
       code = na_code;
     } 
-    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
-        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
-      SET_STRING_ELT(ret, i, R_NaString);
-      continue;
-    }
     const char* col = CHAR(code);
     if (col[0] == '#') {
       nchar = strlen(col);
@@ -855,10 +861,12 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
 }
 
 template <>
-SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white, SEXP na) {
+SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white, SEXP na, SEXP skip_na_values) {
   int chan = INTEGER(channel)[0];
   int operation = INTEGER(op)[0];
   int n = Rf_length(codes);
+  
+  bool skip_na_values_lgl = INTEGER(skip_na_values)[0];
   
   bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
@@ -884,6 +892,15 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
   
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
+    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
+        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
+      if (skip_na_values_lgl) {
+        SET_STRING_ELT(ret, i, code);
+      } else {
+        SET_STRING_ELT(ret, i, R_NaString);
+      }
+      continue;
+    }
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
       if (na_is_na) {
         SET_STRING_ELT(ret, i, R_NaString);
@@ -891,11 +908,6 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
       }
       code = na_code;
     } 
-    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
-        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
-      SET_STRING_ELT(ret, i, R_NaString);
-      continue;
-    }
     const char* col = CHAR(code);
     if (col[0] == '#') {
       nchar = strlen(col);
@@ -960,10 +972,10 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
   return ret;
 }
 
-SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
+SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op, SEXP na, SEXP skip_na_values) {
   int operation = INTEGER(op)[0];
   int n = Rf_length(codes);
-  
+  bool skip_na_values_lgl = INTEGER(skip_na_values)[0];
   bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
   double first_value_d = 0.0;
@@ -987,6 +999,15 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
   
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
+    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
+        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
+      if (skip_na_values_lgl) {
+        SET_STRING_ELT(ret, i, code);
+      } else {
+        SET_STRING_ELT(ret, i, R_NaString);
+      }
+      continue;
+    }
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
       if (na_is_na) {
         SET_STRING_ELT(ret, i, R_NaString);
@@ -1050,26 +1071,26 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
   return ret;
 }
 
-SEXP encode_channel_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op, SEXP white, SEXP na) {
+SEXP encode_channel_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op, SEXP white, SEXP na, SEXP skip_na_values) {
   if (INTEGER(channel)[0] == 0) {
-    return encode_alpha_impl(codes, value, op, na);
+    return encode_alpha_impl(codes, value, op, na, skip_na_values);
   }
   switch (INTEGER(space)[0]) {
-    case CMY: return encode_channel_impl<ColorSpace::Cmy>(codes, channel, value, op, white, na);
-    case CMYK: return encode_channel_impl<ColorSpace::Cmyk>(codes, channel, value, op, white, na);
-    case HSL: return encode_channel_impl<ColorSpace::Hsl>(codes, channel, value, op, white, na);
-    case HSB: return encode_channel_impl<ColorSpace::Hsb>(codes, channel, value, op, white, na);
-    case HSV: return encode_channel_impl<ColorSpace::Hsv>(codes, channel, value, op, white, na);
-    case LAB: return encode_channel_impl<ColorSpace::Lab>(codes, channel, value, op, white, na);
-    case HUNTERLAB: return encode_channel_impl<ColorSpace::HunterLab>(codes, channel, value, op, white, na);
-    case LCH: return encode_channel_impl<ColorSpace::Lch>(codes, channel, value, op, white, na);
-    case LUV: return encode_channel_impl<ColorSpace::Luv>(codes, channel, value, op, white, na);
-    case RGB: return encode_channel_impl<ColorSpace::Rgb>(codes, channel, value, op, white, na);
-    case XYZ: return encode_channel_impl<ColorSpace::Xyz>(codes, channel, value, op, white, na);
-    case YXY: return encode_channel_impl<ColorSpace::Yxy>(codes, channel, value, op, white, na);
-    case HCL: return encode_channel_impl<ColorSpace::Hcl>(codes, channel, value, op, white, na);
-    case OKLAB: return encode_channel_impl<ColorSpace::OkLab>(codes, channel, value, op, white, na);
-    case OKLCH: return encode_channel_impl<ColorSpace::OkLch>(codes, channel, value, op, white, na);
+    case CMY: return encode_channel_impl<ColorSpace::Cmy>(codes, channel, value, op, white, na, skip_na_values);
+    case CMYK: return encode_channel_impl<ColorSpace::Cmyk>(codes, channel, value, op, white, na, skip_na_values);
+    case HSL: return encode_channel_impl<ColorSpace::Hsl>(codes, channel, value, op, white, na, skip_na_values);
+    case HSB: return encode_channel_impl<ColorSpace::Hsb>(codes, channel, value, op, white, na, skip_na_values);
+    case HSV: return encode_channel_impl<ColorSpace::Hsv>(codes, channel, value, op, white, na, skip_na_values);
+    case LAB: return encode_channel_impl<ColorSpace::Lab>(codes, channel, value, op, white, na, skip_na_values);
+    case HUNTERLAB: return encode_channel_impl<ColorSpace::HunterLab>(codes, channel, value, op, white, na, skip_na_values);
+    case LCH: return encode_channel_impl<ColorSpace::Lch>(codes, channel, value, op, white, na, skip_na_values);
+    case LUV: return encode_channel_impl<ColorSpace::Luv>(codes, channel, value, op, white, na, skip_na_values);
+    case RGB: return encode_channel_impl<ColorSpace::Rgb>(codes, channel, value, op, white, na, skip_na_values);
+    case XYZ: return encode_channel_impl<ColorSpace::Xyz>(codes, channel, value, op, white, na, skip_na_values);
+    case YXY: return encode_channel_impl<ColorSpace::Yxy>(codes, channel, value, op, white, na, skip_na_values);
+    case HCL: return encode_channel_impl<ColorSpace::Hcl>(codes, channel, value, op, white, na, skip_na_values);
+    case OKLAB: return encode_channel_impl<ColorSpace::OkLab>(codes, channel, value, op, white, na, skip_na_values);
+    case OKLCH: return encode_channel_impl<ColorSpace::OkLch>(codes, channel, value, op, white, na, skip_na_values);
   }
   
   // never happens
@@ -1078,11 +1099,13 @@ SEXP encode_channel_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op,
 
 
 template <typename Space>
-SEXP encode_channel_native_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white, SEXP na) {
+SEXP encode_channel_native_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white, SEXP na, SEXP skip_na_values) {
   int chan = INTEGER(channel)[0];
   int operation = INTEGER(op)[0];
   int n = Rf_length(codes);
   
+  bool skip_na_values_lgl = INTEGER(skip_na_values)[0];
+
   bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
   double first_value_d = 0.0;
@@ -1117,6 +1140,16 @@ SEXP encode_channel_native_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, S
   
   for (int i = 0; i < n; ++i) {
     int code = codes_int[i];
+    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
+        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
+      if (skip_na_values_lgl) {
+        ret_int[i] = code;
+      } else {
+        ret_int[i] = R_NaInt;
+      }
+      continue;
+    }
+    
     if (code == R_NaInt) {
       if (na_is_na) {
         ret_int[i] = R_NaInt;
@@ -1125,11 +1158,6 @@ SEXP encode_channel_native_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, S
       code = na_int;
     }
 
-    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
-        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
-      ret_int[i] = R_NaInt;
-      continue;
-    }
     rgb.r = code & 0xFF;
     rgb.g = (code >> 8) & 0xFF;
     rgb.b = (code >> 16) & 0xFF;
@@ -1162,11 +1190,13 @@ SEXP encode_channel_native_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, S
 }
 
 template <>
-SEXP encode_channel_native_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white, SEXP na) {
+SEXP encode_channel_native_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP white, SEXP na, SEXP skip_na_values) {
   int chan = INTEGER(channel)[0];
   int operation = INTEGER(op)[0];
   int n = Rf_length(codes);
-  
+
+  bool skip_na_values_lgl = INTEGER(skip_na_values)[0];
+
   bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
   double first_value_d = 0.0;
@@ -1200,6 +1230,15 @@ SEXP encode_channel_native_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP 
   
   for (int i = 0; i < n; ++i) {
     int code = codes_int[i];
+    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
+        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
+      if (skip_na_values_lgl) {
+        ret_int[i] = code;
+      } else {
+        ret_int[i] = R_NaInt;
+      }
+      continue;
+    }
     if (code == R_NaInt) {
       if (na_is_na) {
         ret_int[i] = R_NaInt;
@@ -1207,12 +1246,7 @@ SEXP encode_channel_native_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP 
       }
       code = na_int;
     }
-    
-    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
-        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
-      ret_int[i] = R_NaInt;
-      continue;
-    }
+
     r = code & 0xFF;
     g = (code >> 8) & 0xFF;
     b = (code >> 16) & 0xFF;
@@ -1243,10 +1277,12 @@ SEXP encode_channel_native_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP 
 }
 
 
-SEXP encode_alpha_native_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
+SEXP encode_alpha_native_impl(SEXP codes, SEXP value, SEXP op, SEXP na, SEXP skip_na_values) {
   int operation = INTEGER(op)[0];
   int n = Rf_length(codes);
-  
+
+  bool skip_na_values_lgl = INTEGER(skip_na_values)[0];
+
   bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
   double first_value_d = 0.0;
@@ -1274,6 +1310,16 @@ SEXP encode_alpha_native_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
 
   for (int i = 0; i < n; ++i) {
     int code = codes_int[i];
+    if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
+        (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
+      if (skip_na_values_lgl) {
+        ret_int[i] = code;
+      } else {
+        ret_int[i] = R_NaInt;
+      }
+      continue;
+    }
+
     if (code == R_NaInt) {
       if (na_int == R_NaInt) {
         ret_int[i] = na_int;
@@ -1299,26 +1345,26 @@ SEXP encode_alpha_native_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
 }
 
 
-SEXP encode_channel_native_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op, SEXP white, SEXP na) {
+SEXP encode_channel_native_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op, SEXP white, SEXP na, SEXP skip_na_values) {
   if (INTEGER(channel)[0] == 0) {
-    return encode_alpha_native_impl(codes, value, op, na);
+    return encode_alpha_native_impl(codes, value, op, na, skip_na_values);
   }
   switch (INTEGER(space)[0]) {
-  case CMY: return encode_channel_native_impl<ColorSpace::Cmy>(codes, channel, value, op, white, na);
-  case CMYK: return encode_channel_native_impl<ColorSpace::Cmyk>(codes, channel, value, op, white, na);
-  case HSL: return encode_channel_native_impl<ColorSpace::Hsl>(codes, channel, value, op, white, na);
-  case HSB: return encode_channel_native_impl<ColorSpace::Hsb>(codes, channel, value, op, white, na);
-  case HSV: return encode_channel_native_impl<ColorSpace::Hsv>(codes, channel, value, op, white, na);
-  case LAB: return encode_channel_native_impl<ColorSpace::Lab>(codes, channel, value, op, white, na);
-  case HUNTERLAB: return encode_channel_native_impl<ColorSpace::HunterLab>(codes, channel, value, op, white, na);
-  case LCH: return encode_channel_native_impl<ColorSpace::Lch>(codes, channel, value, op, white, na);
-  case LUV: return encode_channel_native_impl<ColorSpace::Luv>(codes, channel, value, op, white, na);
-  case RGB: return encode_channel_native_impl<ColorSpace::Rgb>(codes, channel, value, op, white, na);
-  case XYZ: return encode_channel_native_impl<ColorSpace::Xyz>(codes, channel, value, op, white, na);
-  case YXY: return encode_channel_native_impl<ColorSpace::Yxy>(codes, channel, value, op, white, na);
-  case HCL: return encode_channel_native_impl<ColorSpace::Hcl>(codes, channel, value, op, white, na);
-  case OKLAB: return encode_channel_native_impl<ColorSpace::OkLab>(codes, channel, value, op, white, na);
-  case OKLCH: return encode_channel_native_impl<ColorSpace::OkLch>(codes, channel, value, op, white, na);
+  case CMY: return encode_channel_native_impl<ColorSpace::Cmy>(codes, channel, value, op, white, na, skip_na_values);
+  case CMYK: return encode_channel_native_impl<ColorSpace::Cmyk>(codes, channel, value, op, white, na, skip_na_values);
+  case HSL: return encode_channel_native_impl<ColorSpace::Hsl>(codes, channel, value, op, white, na, skip_na_values);
+  case HSB: return encode_channel_native_impl<ColorSpace::Hsb>(codes, channel, value, op, white, na, skip_na_values);
+  case HSV: return encode_channel_native_impl<ColorSpace::Hsv>(codes, channel, value, op, white, na, skip_na_values);
+  case LAB: return encode_channel_native_impl<ColorSpace::Lab>(codes, channel, value, op, white, na, skip_na_values);
+  case HUNTERLAB: return encode_channel_native_impl<ColorSpace::HunterLab>(codes, channel, value, op, white, na, skip_na_values);
+  case LCH: return encode_channel_native_impl<ColorSpace::Lch>(codes, channel, value, op, white, na, skip_na_values);
+  case LUV: return encode_channel_native_impl<ColorSpace::Luv>(codes, channel, value, op, white, na, skip_na_values);
+  case RGB: return encode_channel_native_impl<ColorSpace::Rgb>(codes, channel, value, op, white, na, skip_na_values);
+  case XYZ: return encode_channel_native_impl<ColorSpace::Xyz>(codes, channel, value, op, white, na, skip_na_values);
+  case YXY: return encode_channel_native_impl<ColorSpace::Yxy>(codes, channel, value, op, white, na, skip_na_values);
+  case HCL: return encode_channel_native_impl<ColorSpace::Hcl>(codes, channel, value, op, white, na, skip_na_values);
+  case OKLAB: return encode_channel_native_impl<ColorSpace::OkLab>(codes, channel, value, op, white, na, skip_na_values);
+  case OKLCH: return encode_channel_native_impl<ColorSpace::OkLch>(codes, channel, value, op, white, na, skip_na_values);
   }
   
   // never happens
