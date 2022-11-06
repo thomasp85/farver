@@ -6,7 +6,11 @@
 #' 
 #' @inheritSection convert_colour Handling of non-finite and out of bounds values
 #' 
-#' @inheritParams convert_colour
+#' @param colour A numeric matrix (or an object coercible to one) with colours 
+#' encoded in the rows and the different colour space values in the columns. For 
+#' all colourspaces except `'cmyk'` this will mean a matrix with three columns - 
+#' for `'cmyk'` it means four columns. Alternatively, `colour` may be a list of
+#' length three (or four for `'cmyk'`) numeric vectors of the same length.
 #' @param alpha A numeric vector between 0 and 1. Will be recycled to the number
 #' of rows in `colour`. If `NULL` or a single `NA` it will be ignored.
 #' @param from The input colour space. Allowed values are: `"cmy"`, 
@@ -17,6 +21,10 @@
 #' @param white The white reference of the input colour space. Will only have an 
 #' effect for relative colour spaces such as Lab and luv. Any value accepted by 
 #' [as_white_ref()] allowed.
+#' @param na_value A valid colour string or `NA` to use when `colour` contains
+#' `NA` elements or is invalid in the RGB space. The general approach in farver
+#' is to carry `NA` values over, but if you want to mimick [col2rgb()] you should
+#' set `na_value = 'transparent'`, i.e. treat `NA` as transparent white.
 #' 
 #' @return A character vector with colours encoded as `#RRGGBB(AA)`
 #' 
@@ -39,26 +47,55 @@
 #' spectrum_hcl <- convert_colour(spectrum, 'rgb', 'hcl')
 #' encode_colour(spectrum_hcl, from = 'hcl')
 #' 
-encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65') {
+encode_colour <- function(colour, alpha = NULL, from = 'rgb', white = 'D65', na_value = NA_character_) {
   if (from != 'rgb') {
     white <- as_white_ref(white)
   }
-  encode_c(colour, alpha, colourspace_match(from), white)
+  encode_c(colour, alpha, colourspace_match(from), white, out_format = 1L, na_value)
 }
 
-encode_c <- function(colour, alpha, from, white) {
-  if (nrow(colour) == 0) {
+encode_c <- function(colour, alpha, from, white, out_format = 1L, na_value) {
+  # colour has zero colours:
+  if ((is.matrix(colour) || is.data.frame(colour)) && nrow(colour) == 0) {
     return(character())
   }
+  # Colour has zero colours (given as a list of channels)
+  if (is.list(colour) && (length(colour) == 0 || length(colour[[1]]) == 0)) {
+    return(character())
+  }
+  # Colour is neither a list or a matrix, so let's coerce it
+  if (!is.matrix(colour) && !is.list(colour)) {
+    colour <- as.matrix(colour)
+  }
+  # How many colours do we have?
+  if (is.matrix(colour)) {
+    num_colours <- nrow(colour)
+  } else {
+    num_colours <- length(colour[[1]])
+  }
+
   if (!is.null(alpha)) {
     alpha <- alpha * 255
     if (length(alpha) == 0) {
       alpha <- NULL
     } else if (length(alpha) != 1) {
-      alpha <- rep_len(alpha, nrow(colour))
+      alpha <- rep_len(alpha, num_colours)
     } else if (is.na(alpha) || alpha == 1) {
       alpha <- NULL
     }
   }
-  .Call(`farver_encode_c`, as.matrix(colour), alpha, as.integer(from), white)
+  out_format <- as.integer(out_format)
+  if (out_format != 1L && out_format != 2L) {
+    stop("out_format must be 1L (for character) or 2L (for native)")
+  }
+  if (length(na_value) == 0) {
+    na_value <- NA_character_
+  }
+  if (length(na_value) > 1) {
+    stop("na_value must be a string")
+  }
+  na_value <- as.character(na_value)
+
+  .Call(`farver_encode_c`, colour, alpha, as.integer(from), white, out_format, na_value)
 }
+

@@ -1,7 +1,7 @@
 Type: Package
 Package: farver
 Title: High Performance Colour Space Manipulation
-Version: 2.1.1.9000
+Version: 2.1.1.9001
 Authors@R: c(
     person("Thomas Lin", "Pedersen", , "thomasp85@gmail.com", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-5147-4711")),
@@ -27,6 +27,6 @@ Suggests:
     testthat (>= 3.0.0)
 Encoding: UTF-8
 Roxygen: list(markdown=TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 SystemRequirements: C++11
 Config/testthat/edition: 3

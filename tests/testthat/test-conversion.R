@@ -1,5 +1,3 @@
-context("conversion")
-
 spectrum <- unname(t(col2rgb(rainbow(10))))
 reconvert <- function(data, space) {
   unname(round(convert_colour(convert_colour(data, 'rgb', space), space, 'rgb')))
