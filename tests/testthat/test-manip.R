@@ -10,6 +10,10 @@ cols_mod <- cols
 cols_lch <- convert_colour(cols, 'rgb' ,'lch')
 cols_lch_mod <- cols_lch
 
+codes_native <- encode_native(codes)
+codes_native_alpha <- encode_native(codes_alpha)
+
+
 test_that("setting channel works", {
   cols_mod[, 'g'] <- 1:10
   expect_equal(set_channel(codes, 'g', 1:10), encode_colour(cols_mod))
@@ -59,4 +63,58 @@ test_that("capping channel works", {
   expect_equal(cap_channel(codes, 'l', 50, 'lch'), encode_colour(cols_lch_mod, from = 'lch'))
   
   expect_equal(cap_channel(codes_alpha, 'alpha', 0.5), encode_colour(cols, alpha = ifelse(alpha > 0.5, 0.5, alpha)))
+})
+
+## Native variants:
+
+test_that("setting channel native works", {
+  cols_mod[, 'g'] <- 1:10
+  expect_equal(set_channel_native(codes_native, 'g', 1:10), encode_native(cols_mod))
+  
+  cols_lch_mod[, 'l'] <- 1:10
+  expect_equal(set_channel_native(codes_native, 'l', 1:10, 'lch'), encode_native(cols_lch_mod, from = 'lch'))
+  
+  expect_equal(set_channel_native(codes_native, 'alpha', (1:10)/10), encode_native(cols, alpha = (1:10)/10))
+})
+
+test_that("adding channel works", {
+  cols_mod[, 'r'] <- cols_mod[, 'r'] + 1:10
+  expect_equal(add_to_channel_native(codes_native, 'r', 1:10), encode_native(cols_mod))
+
+  cols_lch_mod[, 'c'] <- cols_lch_mod[, 'c'] + 1:10
+  expect_equal(add_to_channel_native(codes_native, 'c', 1:10, 'lch'), encode_native(cols_lch_mod, from = 'lch'))
+
+  skip_on_os('linux') # Rounding difference on someones aarch64/ppc64le processor
+  expect_equal(add_to_channel_native(codes_native_alpha, 'alpha', (1:10)/10), encode_native(cols, alpha = alpha + (1:10)/10))
+})
+
+
+test_that("multiply channel works", {
+  cols_mod[, 'b'] <- cols_mod[, 'b'] * 1:10
+  expect_equal(multiply_channel_native(codes_native, 'b', 1:10), encode_native(cols_mod))
+
+  cols_lch_mod[, 'h'] <- cols_lch_mod[, 'h'] * 1:10
+  expect_equal(multiply_channel_native(codes_native, 'h', 1:10, 'lch'), encode_native(cols_lch_mod, from = 'lch'))
+
+  expect_equal(multiply_channel_native(codes_native_alpha, 'alpha', 1:10), encode_native(cols, alpha = alpha * 1:10))
+})
+
+test_that("raising channel works", {
+  cols_mod[, 'g'] <- ifelse(cols_mod[, 'g'] < 200, 200, cols_mod[, 'g'])
+  expect_equal(raise_channel_native(codes_native, 'g', 200), encode_native(cols_mod))
+
+  cols_lch_mod[, 'l'] <- ifelse(cols_lch_mod[, 'l'] < 50, 50, cols_lch_mod[, 'l'])
+  expect_equal(raise_channel_native(codes_native, 'l', 50, 'lch'), encode_native(cols_lch_mod, from = 'lch'))
+
+  expect_equal(raise_channel_native(codes_native_alpha, 'alpha', 0.5), encode_native(cols, alpha = ifelse(alpha < 0.5, 0.5, alpha)))
+})
+
+test_that("capping channel works", {
+  cols_mod[, 'g'] <- ifelse(cols_mod[, 'g'] > 200, 200, cols_mod[, 'g'])
+  expect_equal(cap_channel_native(codes_native, 'g', 200), encode_native(cols_mod))
+
+  cols_lch_mod[, 'l'] <- ifelse(cols_lch_mod[, 'l'] > 50, 50, cols_lch_mod[, 'l'])
+  expect_equal(cap_channel_native(codes_native, 'l', 50, 'lch'), encode_native(cols_lch_mod, from = 'lch'))
+
+  expect_equal(cap_channel_native(codes_native_alpha, 'alpha', 0.5), encode_native(cols, alpha = ifelse(alpha > 0.5, 0.5, alpha)))
 })

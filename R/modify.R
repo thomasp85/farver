@@ -1,11 +1,13 @@
 #' Modify colour space channels in hex-encoded colour strings
 #' 
 #' This set of functions allows you to modify colours as given by strings, 
-#' whithout first decoding them. For large vectors of colour values this should
-#' provide a considerable speedup.
+#' without first decoding them. For large vectors of colour values this should
+#' provide a considerable speedup. The corresponding `_native` functions provide
+#' the same feature on [native-encoding] colours.
 #' 
 #' @param colour A character string giving colours, either as hexadecimal 
-#' strings or accepted colour names. 
+#' strings or accepted colour names. The `_native` functions expect an integer
+#' vector, describing colours in [native-encoding] format.
 #' @param channel The channel to modify or extract as a single letter, or 
 #' `'alpha'` for the alpha channel.
 #' @param value The value to modify with
