@@ -76,7 +76,7 @@ namespace ColorSpace {
 		r = ((r > 0.0031308) ? (1.055*std::pow(r, 1 / 2.4) - 0.055) : (12.92*r)) * 255.0;
 		g = ((g > 0.0031308) ? (1.055*std::pow(g, 1 / 2.4) - 0.055) : (12.92*g)) * 255.0;
 		b = ((b > 0.0031308) ? (1.055*std::pow(b, 1 / 2.4) - 0.055) : (12.92*b)) * 255.0;
-		
+
 		color->r = r;
 		color->g = g;
 		color->b = b;
@@ -85,7 +85,6 @@ namespace ColorSpace {
 	const double XyzConverter::kappa = 24389.0 / 27.0;
 	Xyz XyzConverter::whiteReference(95.047, 100.000, 108.883); // D65
 	void XyzConverter::SetWhiteReference(double x, double y, double z) {
-	  return;
 	  whiteReference.x = x;
 	  whiteReference.y = y;
 	  whiteReference.z = z;
@@ -104,7 +103,7 @@ namespace ColorSpace {
 		double min = std::min(r, std::min(g, b));
 		double max = std::max(r, std::max(g, b));
 		double delta = max - min;
-		
+
 		item->l = (max + min) / 2;
 		if (delta == 0)
 		{
@@ -186,7 +185,7 @@ namespace ColorSpace {
 	  }
 	  color->valid = true;
 	  const Xyz &white = XyzConverter::whiteReference;
-	  
+
 		double y = (item->l + 16.0) / 116.0;
 		double x = item->a / 500.0 + y;
 		double z = y - item->b / 200.0;
@@ -521,7 +520,7 @@ namespace ColorSpace {
 		Xyz xyz((x+y)/1.02, y, -(z-y)/0.847);
 		XyzConverter::ToColor(color, &xyz);
 	}
-	
+
 	void HclConverter::ToColorSpace(Rgb *color, Hcl *item) {
 	  if (!color->valid) {
 	    item->valid = false;
@@ -529,12 +528,12 @@ namespace ColorSpace {
 	  }
 	  item->valid = true;
 	  Luv luv;
-	  
+
 	  LuvConverter::ToColorSpace(color, &luv);
 	  double l = luv.l;
 	  double c = std::sqrt(luv.u*luv.u + luv.v*luv.v);
 	  double h = std::atan2(luv.v, luv.u);
-	  
+
 	  h = h / M_PI * 180;
 	  if (h < 0) {
 	    h += 360;
@@ -542,7 +541,7 @@ namespace ColorSpace {
 	  else if (h >= 360) {
 	    h -= 360;
 	  }
-	  
+
 	  item->l = l;
 	  item->c = c;
 	  item->h = h;
@@ -554,16 +553,16 @@ namespace ColorSpace {
 	  }
 	  color->valid = true;
 	  Luv luv;
-	  
+
 	  item->h = item->h * M_PI / 180;
-	  
+
 	  luv.l = item->l;
 	  luv.u = std::cos(item->h)*item->c;
 	  luv.v = std::sin(item->h)*item->c;
-	  
+
 	  LuvConverter::ToColor(color, &luv);
 	}
-	
+
 	// Using values reported at https://bottosson.github.io/posts/oklab/#converting-from-linear-srgb-to-oklab
 	// instead of going through xyz. This ensures any whitepoint is ignored
 	void OkLabConverter::ToColorSpace(Rgb *color, OkLab *item) {
@@ -575,20 +574,20 @@ namespace ColorSpace {
 	  double r = color->r / 255.0;
 	  double g = color->g / 255.0;
 	  double b = color->b / 255.0;
-	  
+
 	  r = ((r > 0.04045) ? std::pow((r + 0.055) / 1.055, 2.4) : (r / 12.92));
 	  g = ((g > 0.04045) ? std::pow((g + 0.055) / 1.055, 2.4) : (g / 12.92));
 	  b = ((b > 0.04045) ? std::pow((b + 0.055) / 1.055, 2.4) : (b / 12.92));
-	  
+
 	  double l = 0.4121656120 * r + 0.5362752080 * g + 0.0514575653 * b;
 	  double m = 0.2118591070 * r + 0.6807189584 * g + 0.1074065790 * b;
 	  double s = 0.0883097947 * r + 0.2818474174 * g + 0.6302613616 * b;
-	  
-	  
+
+
 	  l = std::cbrt(l);
 	  m = std::cbrt(m);
 	  s = std::cbrt(s);
-	  
+
 	  item->l = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
 	  item->a = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
 	  item->b = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
@@ -602,20 +601,20 @@ namespace ColorSpace {
 	  double l = item->l + 0.3963377774 * item->a + 0.2158037573 * item->b;
 	  double m = item->l - 0.1055613458 * item->a - 0.0638541728 * item->b;
 	  double s = item->l - 0.0894841775 * item->a - 1.2914855480 * item->b;
-	  
+
 	  l = l * l * l;
 	  m = m * m * m;
 	  s = s * s * s;
-	  
+
 	  double r =  4.0767245293 * l - 3.3072168827 * m + 0.2307590544 * s;
 	  double g = -1.2681437731 * l + 2.6093323231 * m - 0.3411344290 * s;
 	  double b = -0.0041119885 * l - 0.7034763098 * m + 1.7068625689 * s;
-	  
+
 	  color->r = ((r > 0.0031308) ? (1.055*std::pow(r, 1 / 2.4) - 0.055) : (12.92*r)) * 255.0;
 	  color->g = ((g > 0.0031308) ? (1.055*std::pow(g, 1 / 2.4) - 0.055) : (12.92*g)) * 255.0;
 	  color->b = ((b > 0.0031308) ? (1.055*std::pow(b, 1 / 2.4) - 0.055) : (12.92*b)) * 255.0;
 	}
-	
+
 	void OkLchConverter::ToColorSpace(Rgb *color, OkLch *item) {
 	  if (!color->valid) {
 	    item->valid = false;
@@ -623,12 +622,12 @@ namespace ColorSpace {
 	  }
 	  item->valid = true;
 	  OkLab lab;
-	  
+
 	  OkLabConverter::ToColorSpace(color, &lab);
 	  double l = lab.l;
 	  double c = std::sqrt(lab.a*lab.a + lab.b*lab.b);
 	  double h = std::atan2(lab.b, lab.a);
-	  
+
 	  h = h / M_PI * 180;
 	  if (h < 0) {
 	    h += 360;
@@ -636,7 +635,7 @@ namespace ColorSpace {
 	  else if (h >= 360) {
 	    h -= 360;
 	  }
-	  
+
 	  item->l = l;
 	  item->c = c;
 	  item->h = h;
@@ -648,13 +647,13 @@ namespace ColorSpace {
 	  }
 	  color->valid = true;
 	  OkLab lab;
-	  
+
 	  item->h = item->h * M_PI / 180;
-	  
+
 	  lab.l = item->l;
 	  lab.a = std::cos(item->h)*item->c;
 	  lab.b = std::sin(item->h)*item->c;
-	  
+
 	  OkLabConverter::ToColor(color, &lab);
 	}
 }
