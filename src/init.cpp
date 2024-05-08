@@ -14,7 +14,7 @@ ColourMap& get_named_colours() {
 
 static const R_CallMethodDef CallEntries[] = {
   {"farver_convert_c", (DL_FUNC) &convert_c, 5},
-  {"farver_compare_c", (DL_FUNC) &compare_c, 8},
+  {"farver_compare_c", (DL_FUNC) &compare_c, 10},
   {"farver_encode_c", (DL_FUNC) &encode_c, 4},
   {"farver_decode_c", (DL_FUNC) &decode_c, 5},
   {"farver_encode_channel_c", (DL_FUNC) &encode_channel_c, 7},
@@ -28,7 +28,7 @@ static const R_CallMethodDef CallEntries[] = {
 extern "C" void R_init_farver(DllInfo *dll) {
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
-  
+
   named_colours = new ColourMap();
 }
 

@@ -29,7 +29,7 @@ to graphics devices. The encoding splits the 32 bit in the integer between
 red, green, blue, and alpha, so that each get 8 bit, equivalent to 256
 values. It is very seldom that an R user is subjected to this representation,
 but it is present in the \code{nativeRaster} format which can be obtained from
-e.g. capturing the content of a graphic device (using \code{dev.cap()}) or reading
+e.g. capturing the content of a graphic device (using \code{dev.capture()}) or reading
 in PNG files using \code{png::readPNG(native = TRUE)}. It is very rare that you
 might need to convert back and forth between this format, but it is provided
 here for completeness.

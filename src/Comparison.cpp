@@ -147,29 +147,36 @@ namespace ColorSpace {
 		return sqrt(SQR(deltaL / sl) + SQR(deltaC / sc) + SQR(deltaH / sh) + rt * deltaC / sc * deltaH / sh);
 	}
 
-
-	const double CmcComparison::defaultLightness = 2.;
-	const double CmcComparison::defaultChroma = 1.;
+  double CmcComparison::defaultLightness = 2.0;
+  double CmcComparison::defaultChroma = 1.0;
 	double CmcComparison::Compare(IColorSpace *a, IColorSpace *b) {
+	  static const double pi = 3.141592653589793115998;
 	  if (!a->valid || !b->valid) return -1.0;
 		Lch lch_a;
 		Lch lch_b;
+		Lab lab_a;
+		Lab lab_b;
 
 		a->To<Lch>(&lch_a);
 		b->To<Lch>(&lch_b);
-
-		double deltaL = lch_a.l - lch_b.l;
-		double deltaC = lch_a.c - lch_b.c;
-		double deltaH = 0;
-
-		double f = std::sqrt(POW4(lch_a.c) / (POW4(lch_a.c) + 1900));
-		double t = (164 <= lch_a.h && lch_a.h <= 345) ? (0.56 + std::abs(0.2*std::cos(lch_a.h + 168))) : (0.36 + std::abs(0.4*std::cos(lch_a.h + 35)));
+		a->To<Lab>(&lab_a);
+		b->To<Lab>(&lab_b);
 
 		double sl = (lch_a.l < 16) ? 0.511 : (0.040975*lch_a.l / (1 + 0.01765*lch_a.l));
 		double sc = 0.0638*lch_a.c / (1 + 0.0131*lch_a.c) + 0.638;
+
+		double t = (164 <= lch_a.h && lch_a.h <= 345) ? (0.56 + std::abs(0.2*std::cos(pi * (lch_a.h + 168) / 180.0))) : (0.36 + std::abs(0.4*std::cos(pi * (lch_a.h + 35) / 180.0)));
+		double f = std::sqrt(POW4(lch_a.c) / (POW4(lch_a.c) + 1900));
+
 		double sh = sc*(f*t + 1 - f);
 
-		return std::sqrt(SQR(deltaL / (defaultLightness*sl)) + SQR(deltaC / (defaultChroma*sc)) + SQR(deltaH / sh));
+		double deltaL = lch_a.l - lch_b.l;
+		double deltaC = lch_a.c - lch_b.c;
+    double deltaA = lab_a.a - lab_b.a;
+    double deltaB = lab_a.b - lab_b.b;
+    double deltaH2 = deltaA * deltaA + deltaB * deltaB - deltaC * deltaC;
+
+		return std::sqrt(SQR(deltaL / (defaultLightness*sl)) + SQR(deltaC / (defaultChroma*sc)) + deltaH2 / SQR(sh));
 	}
 }
 

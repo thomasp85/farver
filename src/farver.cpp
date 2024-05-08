@@ -264,6 +264,8 @@ SEXP compare_dispatch_from(SEXP from, SEXP to, int from_space, int to_space, int
   return from;
 }
 
-SEXP compare_c(SEXP from, SEXP to, SEXP from_space, SEXP to_space, SEXP dist, SEXP sym, SEXP white_from, SEXP white_to) {
+SEXP compare_c(SEXP from, SEXP to, SEXP from_space, SEXP to_space, SEXP dist, SEXP sym, SEXP white_from, SEXP white_to, SEXP lightness, SEXP chroma) {
+  ColorSpace::CmcComparison::defaultLightness = REAL(lightness)[0];
+  ColorSpace::CmcComparison::defaultChroma = REAL(chroma)[0];
   return compare_dispatch_from(from, to, INTEGER(from_space)[0], INTEGER(to_space)[0], INTEGER(dist)[0], LOGICAL(sym)[0], white_from, white_to);
 }

@@ -7,7 +7,7 @@
 #include <Rinternals.h>
 
 // these are used in the dispatcher functions
-// this is one-based in the same order as the `colourspaces` 
+// this is one-based in the same order as the `colourspaces`
 // vector define in aaa.R
 #define CMY 1
 #define CMYK 2
@@ -32,7 +32,7 @@
 #define CMC 5
 
 SEXP convert_c(SEXP colour, SEXP from, SEXP to, SEXP white_from, SEXP white_to);
-SEXP compare_c(SEXP from, SEXP to, SEXP from_space, SEXP to_space, SEXP dist, SEXP sym, SEXP white_from, SEXP white_to);
+SEXP compare_c(SEXP from, SEXP to, SEXP from_space, SEXP to_space, SEXP dist, SEXP sym, SEXP white_from, SEXP white_to, SEXP lightness, SEXP chroma);
 
 inline void copy_names(SEXP from, SEXP to) {
   SEXP names;
@@ -45,7 +45,7 @@ inline void copy_names(SEXP from, SEXP to) {
   } else {
     names = PROTECT(Rf_getAttrib(from, R_NamesSymbol));
   }
-  
+
   if (!Rf_isNull(names)) {
     if (Rf_isMatrix(to)) {
       SEXP dn = PROTECT(Rf_allocVector(VECSXP, 2));
@@ -56,7 +56,7 @@ inline void copy_names(SEXP from, SEXP to) {
       Rf_namesgets(to, names);
     }
   }
-  
+
   UNPROTECT(1);
 }
 
@@ -80,7 +80,7 @@ inline void copy_names(SEXP from1, SEXP from2, SEXP to) {
   } else {
     names2 = PROTECT(Rf_getAttrib(from2, Rf_install("names")));
   }
-  
+
   if ((!Rf_isNull(names1) || !Rf_isNull(names2)) && Rf_isMatrix(to)) {
     names = PROTECT(Rf_allocVector(VECSXP, 2));
     if (!Rf_isNull(names1)) {
@@ -92,7 +92,7 @@ inline void copy_names(SEXP from1, SEXP from2, SEXP to) {
     Rf_setAttrib(to, Rf_install("dimnames"), names);
     UNPROTECT(1);
   }
-  
+
   UNPROTECT(2);
 }
 
@@ -134,7 +134,7 @@ inline void fill_rgb<ColorSpace::Cmyk>(ColorSpace::Rgb* rgb, int x1, int x2, int
 }
 
 // these grab values from the Space type and use them to fill `row`
-// unfortunately, given how the `ColorSpace` C++ library is written, 
+// unfortunately, given how the `ColorSpace` C++ library is written,
 // this has to do lots of special casing
 template <typename Space>
 inline void grab(const Space&, double* x1, double* x2, double* x3, double* x4) ;

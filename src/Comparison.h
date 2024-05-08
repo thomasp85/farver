@@ -36,8 +36,8 @@ namespace ColorSpace {
 
 
 	struct CmcComparison {
-		static const double defaultLightness;
-		static const double defaultChroma;
+		static double defaultLightness;
+		static double defaultChroma;
 		static double Compare(IColorSpace *a, IColorSpace *b);
 	};
 }

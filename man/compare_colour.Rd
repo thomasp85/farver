@@ -11,7 +11,9 @@ compare_colour(
   to_space = from_space,
   method = "euclidean",
   white_from = "D65",
-  white_to = white_from
+  white_to = white_from,
+  lightness = 2,
+  chroma = 1
 )
 }
 \arguments{
@@ -28,6 +30,10 @@ compared with itself and only the upper triangle will get calculated}
 \item{white_from, white_to}{The white reference of the from and to colour
 space. Will only have an effect for relative colour spaces such as Lab and
 luv. Any value accepted by \code{\link[=as_white_ref]{as_white_ref()}} allowed.}
+
+\item{lightness, chroma}{Weight of lightness vs chroma when using CMC. Common
+values are \code{2} and \code{1} (default) for acceptability and \code{1} and \code{1} for
+imperceptibility}
 }
 \value{
 A numeric matrix with the same number of rows as colours in \code{from}
