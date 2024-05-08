@@ -597,13 +597,24 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
     const char* col = CHAR(code);
     if (col[0] == '#') {
       nchar = strlen(col);
-      if (nchar != 9 && nchar != 7) {
-        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+      if (nchar != 9 && nchar != 7 && nchar != 5 && nchar != 4) {
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 3, 4, 6 or 8 hex values", col);
       }
-      rgb.r = hex2int(col[1]) * 16 + hex2int(col[2]);
-      rgb.g = hex2int(col[3]) * 16 + hex2int(col[4]);
-      rgb.b = hex2int(col[5]) * 16 + hex2int(col[6]);
-      strcpy(buffera, col);
+      if (nchar < 7) {
+        buffera[1] = buffera[2] = col[1];
+        buffera[3] = buffera[4] = col[2];
+        buffera[5] = buffera[6] = col[3];
+        if (nchar == 5) {
+          buffera[7] = buffera[8] = col[4];
+        } else {
+          buffera[7] = '\0';
+        }
+      } else {
+        strcpy(buffera, col);
+      }
+      rgb.r = hex2int(buffera[1]) * 16 + hex2int(buffera[2]);
+      rgb.g = hex2int(buffera[3]) * 16 + hex2int(buffera[4]);
+      rgb.b = hex2int(buffera[5]) * 16 + hex2int(buffera[6]);
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
@@ -697,10 +708,21 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
     const char* col = CHAR(code);
     if (col[0] == '#') {
       nchar = strlen(col);
-      if (nchar != 9 && nchar != 7) {
-        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+      if (nchar != 9 && nchar != 7 && nchar != 5 && nchar != 4) {
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 3, 4, 6 or 8 hex values", col);
       }
-      strcpy(buffera, col);
+      if (nchar < 7) {
+        buffera[1] = buffera[2] = col[1];
+        buffera[3] = buffera[4] = col[2];
+        buffera[5] = buffera[6] = col[3];
+        if (nchar == 5) {
+          buffera[7] = buffera[8] = col[4];
+        } else {
+          buffera[7] = '\0';
+        }
+      } else {
+        strcpy(buffera, col);
+      }
     } else {
       ColourMap::iterator it = named_colours.find(prepare_code(col));
       if (it == named_colours.end()) {
