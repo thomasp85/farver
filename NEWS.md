@@ -1,5 +1,7 @@
 # farver (development version)
 
+* make sure output channels are always named (#23)
+
 # farver 2.1.1
 
 * Added input checking to a range of functions to guard against segfaults with 
