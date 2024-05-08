@@ -6,18 +6,33 @@
 \alias{decode_native}
 \title{Convert to and from the R native colour representation}
 \usage{
-encode_native(colour, ...)
+encode_native(colour, alpha = NULL, from = "rgb", white = "D65", na_value = NA)
 
 decode_native(colour)
 }
 \arguments{
 \item{colour}{For \code{encode_native} either a vector of hex-encoded
 colours/colour names or a matrix encoding colours in any of the supported
-colour spaces. If the  latter, the colours will be encoded to a hex string
-using \code{\link[=encode_colour]{encode_colour()}} first. For \code{decode_native} it is a vector of
+colour spaces. For \code{decode_native} it is a vector of
 integers.}
 
-\item{...}{Arguments passed on to \code{\link[=encode_colour]{encode_colour()}}}
+\item{alpha}{A numeric vector between 0 and 1. Will be recycled to the number
+of rows in \code{colour}. If \code{NULL} or a single \code{NA} it will be ignored.}
+
+\item{from}{The input colour space. Allowed values are: \code{"cmy"},
+\code{"cmyk"}, \code{"hsl"}, \code{"hsb"}, \code{"hsv"}, \code{"lab"} (CIE L*ab), \code{"hunterlab"}
+(Hunter Lab), \code{"oklab"}, \code{"lch"} (CIE Lch(ab) / polarLAB), \code{"luv"},
+\code{"rgb"} (sRGB), \code{"xyz"}, \code{"yxy"} (CIE xyY), \code{"hcl"} (CIE Lch(uv) / polarLuv),
+or \code{"oklch"} (Polar form of oklab)}
+
+\item{white}{The white reference of the input colour space. Will only have an
+effect for relative colour spaces such as Lab and luv. Any value accepted by
+\code{\link[=as_white_ref]{as_white_ref()}} allowed.}
+
+\item{na_value}{A valid colour string or \code{NA} to use when \code{colour} contains
+\code{NA} elements or is invalid in the RGB space. The general approach in farver
+is to carry \code{NA} values over, but if you want to mimick \code{\link[=col2rgb]{col2rgb()}} you should
+set \code{na_value = 'transparent'}, i.e. treat \code{NA} as transparent white.}
 }
 \value{
 \code{encode_native()} returns an integer vector and \code{decode_native()}

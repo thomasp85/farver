@@ -12,10 +12,9 @@
 #' 
 #' @param colour For `encode_native` either a vector of hex-encoded 
 #' colours/colour names or a matrix encoding colours in any of the supported 
-#' colour spaces. If the  latter, the colours will be encoded to a hex string 
-#' using [encode_colour()] first. For `decode_native` it is a vector of 
+#' colour spaces. For `decode_native` it is a vector of 
 #' integers.
-#' @param ... Arguments passed on to [encode_colour()]
+#' @inheritParams encode_colour
 #' 
 #' @return `encode_native()` returns an integer vector and `decode_native()`
 #' returns a character vector, both matching the length of the input.
@@ -33,20 +32,31 @@
 #' # Convert back
 #' decode_native(native_col)
 #' 
-encode_native <- function(colour, ...) {
-  if (!is.character(colour)) {
-    colour <- encode_colour(colour, ...)
+encode_native <- function(colour, alpha = NULL, from = 'rgb', white = 'D65', na_value = NA) {
+  if (is.character(colour)) {
+    return(encode_native_c(colour, na_value = na_value))
   }
-  encode_native_c(colour)
+  if (from != 'rgb') {
+    white <- as_white_ref(white)
+  }
+  encode_c(colour, alpha, colourspace_match(from), white, out_format = 2L, na_value = na_value)
 }
+
 #' @rdname native_encoding
 #' @export
 decode_native <- function(colour) {
   decode_native_c(colour)
 } 
 
-encode_native_c <- function(colour) {
-  .Call(`farver_encode_native_c`, colour)
+encode_native_c <- function(colour, na_value = NA_character_) {
+  if (length(na_value) == 0) {
+    na_value <- NA_character_
+  }
+  if (length(na_value) > 1) {
+    stop("na_value must be a string")
+  }
+  na_value <- as.character(na_value)
+  .Call(`farver_encode_native_c`, colour, na_value)
 }
 decode_native_c <- function(colour) {
   .Call(`farver_decode_native_c`, as.integer(colour))
