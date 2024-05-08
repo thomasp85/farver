@@ -2,6 +2,7 @@
 
 * make sure output channels are always named (#23)
 * farver can now decode short version hex-code colours (#41)
+* Fix a bug in colour comparison that affected hcl input (#44)
 
 # farver 2.1.1
 
