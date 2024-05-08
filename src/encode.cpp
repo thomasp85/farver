@@ -11,7 +11,7 @@ static char hex8[] = "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C
 static char buffer[] = "#000000";
 static char buffera[] = "#00000000";
 
-#ifdef WORDS_BIGENDIAN 
+#ifdef WORDS_BIGENDIAN
 #include <cmath>
 inline int double2int(double d) {
   return (int)std::round(d);
@@ -94,7 +94,7 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
   int offset2 = offset1 + n;
   int offset3 = offset2 + n;
   int offset4 = offset3 + n;
-  
+
   int* colour_i = NULL;
   double* colour_d = NULL;
   bool colour_is_int = Rf_isInteger(colour);
@@ -118,17 +118,17 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
     num = cap0255(num) * 2;
     buf[1] = hex8[num];
     buf[2] = hex8[num + 1];
-    
+
     num = double2int(rgb.g);
     num = cap0255(num) * 2;
     buf[3] = hex8[num];
     buf[4] = hex8[num + 1];
-    
+
     num = double2int(rgb.b);
     num = cap0255(num) * 2;
     buf[5] = hex8[num];
     buf[6] = hex8[num + 1];
-    
+
     if (has_alpha) {
       if (one_alpha) {
         buf[7] = alpha1;
@@ -148,11 +148,11 @@ SEXP encode_impl(SEXP colour, SEXP alpha, SEXP white) {
         }
       }
     }
-    
-    
+
+
     SET_STRING_ELT(codes, i, Rf_mkChar(buf));
   }
-  
+
   copy_names(colour, codes);
   UNPROTECT(1);
   return codes;
@@ -199,7 +199,7 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
   int offset1 = 0;
   int offset2 = offset1 + n;
   int offset3 = offset2 + n;
-  
+
   int* colour_i = NULL;
   double* colour_d = NULL;
   bool colour_is_int = Rf_isInteger(colour);
@@ -218,15 +218,15 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
       num = cap0255(r) * 2;
       buf[1] = hex8[num];
       buf[2] = hex8[num + 1];
-      
+
       num = cap0255(g) * 2;
       buf[3] = hex8[num];
       buf[4] = hex8[num + 1];
-      
+
       num = cap0255(b) * 2;
       buf[5] = hex8[num];
       buf[6] = hex8[num + 1];
-      
+
       if (has_alpha) {
         if (one_alpha) {
           buf[7] = alpha1;
@@ -246,7 +246,7 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
           }
         }
       }
-      
+
       SET_STRING_ELT(codes, i, Rf_mkChar(buf));
     }
   } else {
@@ -263,15 +263,15 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
       num = cap0255(double2int(r)) * 2;
       buf[1] = hex8[num];
       buf[2] = hex8[num + 1];
-      
+
       num = cap0255(double2int(g)) * 2;
       buf[3] = hex8[num];
       buf[4] = hex8[num + 1];
-      
+
       num = cap0255(double2int(b)) * 2;
       buf[5] = hex8[num];
       buf[6] = hex8[num + 1];
-      
+
       if (has_alpha) {
         if (one_alpha) {
           buf[7] = alpha1;
@@ -291,11 +291,11 @@ SEXP encode_impl<ColorSpace::Rgb>(SEXP colour, SEXP alpha, SEXP white) {
           }
         }
       }
-      
+
       SET_STRING_ELT(codes, i, Rf_mkChar(buf));
     }
   }
-  
+
   copy_names(colour, codes);
   UNPROTECT(1);
   return codes;
@@ -319,7 +319,7 @@ SEXP encode_c(SEXP colour, SEXP alpha, SEXP from, SEXP white) {
     case OKLAB: return encode_impl<ColorSpace::OkLab>(colour, alpha, white);
     case OKLCH: return encode_impl<ColorSpace::OkLch>(colour, alpha, white);
   }
-  
+
   // never happens
   return R_NilValue;
 }
@@ -360,14 +360,14 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
   int offset3 = offset2 + n;
   int offset4 = offset3 + n;
   int offset5 = offset4 + n;
-  
+
   ColorSpace::Rgb rgb;
   ColorSpace::XyzConverter::SetWhiteReference(REAL(white)[0], REAL(white)[1], REAL(white)[2]);
   To to;
-  
+
   int nchar;
   double a;
-  bool has_alpha;
+  bool has_alpha, shrt;
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
@@ -384,15 +384,16 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
     const char* col = Rf_translateCharUTF8(code);
     if (col[0] == '#') {
       nchar = strlen(col);
-      has_alpha = nchar == 9;
-      if (!has_alpha && nchar != 7) {
-        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+      has_alpha = nchar == 9 || nchar == 5;
+      shrt = nchar < 7;
+      if (!has_alpha && (nchar != 7 && nchar != 4)) {
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 3, 4, 6 or 8 hex values", col);
       }
-      rgb.r = hex2int(col[1]) * 16 + hex2int(col[2]);
-      rgb.g = hex2int(col[3]) * 16 + hex2int(col[4]);
-      rgb.b = hex2int(col[5]) * 16 + hex2int(col[6]);
+      rgb.r = shrt ? hex2int(col[1]) * 16 + hex2int(col[1]) : hex2int(col[1]) * 16 + hex2int(col[2]);
+      rgb.g = shrt ? hex2int(col[2]) * 16 + hex2int(col[2]) : hex2int(col[3]) * 16 + hex2int(col[4]);
+      rgb.b = shrt ? hex2int(col[3]) * 16 + hex2int(col[3]) : hex2int(col[5]) * 16 + hex2int(col[6]);
       if (has_alpha) {
-        a = hex2int(col[7]) * 16 + hex2int(col[8]);
+        a = shrt ? hex2int(col[4]) * 16 + hex2int(col[4]) : hex2int(col[7]) * 16 + hex2int(col[8]);
         a /= 255;
       } else {
         a = 1.0;
@@ -420,7 +421,7 @@ SEXP decode_impl(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
       colours_p[n_cols == 4 ? offset4 + i : offset5 + i] = a;
     }
   }
-  
+
   copy_names(codes, colours);
   UNPROTECT(1);
   return colours;
@@ -436,7 +437,7 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
   int* colours_i = NULL;
   SEXP na_code = STRING_ELT(na, 0);
   bool na_is_na = na_code == R_NaString;
-  
+
   if (get_alpha) {
     colours = PROTECT(Rf_allocMatrix(REALSXP, n, 4));
     colours_d = REAL(colours);
@@ -448,10 +449,10 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
   int offset2 = offset1 + n;
   int offset3 = offset2 + n;
   int offset4 = offset3 + n;
-  
+
   int r, g, b, nchar;
   double a;
-  bool has_alpha;
+  bool has_alpha, shrt;
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
@@ -473,15 +474,16 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
     const char* col = Rf_translateCharUTF8(code);
     if (col[0] == '#') {
       nchar = strlen(col);
-      has_alpha = nchar == 9;
-      if (!has_alpha && nchar != 7) {
-        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
+      has_alpha = nchar == 9 || nchar == 5;
+      shrt = nchar < 7;
+      if (!has_alpha && (nchar != 7 && nchar != 4)) {
+        Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 3, 4, 6 or 8 hex values", col);
       }
-      r = hex2int(col[1]) * 16 + hex2int(col[2]);
-      g = hex2int(col[3]) * 16 + hex2int(col[4]);
-      b = hex2int(col[5]) * 16 + hex2int(col[6]);
+      r = shrt ? hex2int(col[1]) * 16 + hex2int(col[1]) : hex2int(col[1]) * 16 + hex2int(col[2]);
+      g = shrt ? hex2int(col[2]) * 16 + hex2int(col[2]) : hex2int(col[3]) * 16 + hex2int(col[4]);
+      b = shrt ? hex2int(col[3]) * 16 + hex2int(col[3]) : hex2int(col[5]) * 16 + hex2int(col[6]);
       if (has_alpha) {
-        a = hex2int(col[7]) * 16 + hex2int(col[8]);
+        a = shrt ? hex2int(col[4]) * 16 + hex2int(col[4]) : hex2int(col[7]) * 16 + hex2int(col[8]);
         a /= 255;
       } else {
         a = 1.0;
@@ -519,7 +521,7 @@ SEXP decode_impl<ColorSpace::Rgb>(SEXP codes, SEXP alpha, SEXP white, SEXP na) {
       colours_i[offset3 + i] = b;
     }
   }
-  
+
   copy_names(codes, colours);
   UNPROTECT(1);
   return colours;
@@ -543,7 +545,7 @@ SEXP decode_c(SEXP codes, SEXP alpha, SEXP to, SEXP white, SEXP na) {
     case OKLAB: return decode_impl<ColorSpace::OkLab>(codes, alpha, white, na);
     case OKLCH: return decode_impl<ColorSpace::OkLch>(codes, alpha, white, na);
   }
-  
+
   // never happens
   return R_NilValue;
 }
@@ -553,7 +555,7 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
   int chan = INTEGER(channel)[0];
   int operation = INTEGER(op)[0];
   int n = Rf_length(codes);
-  
+
   bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
   double first_value_d = 0.0;
@@ -567,17 +569,17 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
     value_d = REAL(value);
     first_value_d = value_d[0];
   }
-  
+
   SEXP na_code = STRING_ELT(na, 0);
   bool na_is_na = na_code == R_NaString;
-  
+
   SEXP ret = PROTECT(Rf_allocVector(STRSXP, n));
   ColorSpace::Rgb rgb;
   ColorSpace::XyzConverter::SetWhiteReference(REAL(white)[0], REAL(white)[1], REAL(white)[2]);
   Space colour;
   int num, nchar;
   ColourMap& named_colours = get_named_colours();
-  
+
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
@@ -586,7 +588,7 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
         continue;
       }
       code = na_code;
-    } 
+    }
     if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
         (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
       SET_STRING_ELT(ret, i, R_NaString);
@@ -626,7 +628,7 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
     }
     colour.Cap();
     colour.ToRgb(&rgb);
-    
+
     if (!(R_finite(rgb.r) && R_finite(rgb.g) && R_finite(rgb.b))) {
       SET_STRING_ELT(ret, i, R_NaString);
       continue;
@@ -634,17 +636,17 @@ SEXP encode_channel_impl(SEXP codes, SEXP channel, SEXP value, SEXP op, SEXP whi
     num = cap0255(double2int(rgb.r)) * 2;
     buffera[1] = hex8[num];
     buffera[2] = hex8[num + 1];
-    
+
     num = cap0255(double2int(rgb.g)) * 2;
     buffera[3] = hex8[num];
     buffera[4] = hex8[num + 1];
-    
+
     num = cap0255(double2int(rgb.b)) * 2;
     buffera[5] = hex8[num];
     buffera[6] = hex8[num + 1];
     SET_STRING_ELT(ret, i, Rf_mkChar(buffera));
   }
-  
+
   copy_names(codes, ret);
   UNPROTECT(1);
   return ret;
@@ -655,7 +657,7 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
   int chan = INTEGER(channel)[0];
   int operation = INTEGER(op)[0];
   int n = Rf_length(codes);
-  
+
   bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
   double first_value_d = 0.0;
@@ -669,15 +671,15 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
     value_d = REAL(value);
     first_value_d = value_d[0];
   }
-  
+
   SEXP na_code = STRING_ELT(na, 0);
   bool na_is_na = na_code == R_NaString;
-  
+
   SEXP ret = PROTECT(Rf_allocVector(STRSXP, n));
   int num, nchar;
   double new_val;
   ColourMap& named_colours = get_named_colours();
-  
+
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
@@ -686,7 +688,7 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
         continue;
       }
       code = na_code;
-    } 
+    }
     if ((value_is_int && (one_value ? first_value_i : value_i[i]) == R_NaInt) ||
         (!value_is_int && !R_finite(one_value ? first_value_d : value_d[i]))) {
       SET_STRING_ELT(ret, i, R_NaString);
@@ -709,15 +711,15 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
       num = cap0255(it->second.r) * 2;
       buffera[1] = hex8[num];
       buffera[2] = hex8[num + 1];
-      
+
       num = cap0255(it->second.g) * 2;
       buffera[3] = hex8[num];
       buffera[4] = hex8[num + 1];
-      
+
       num = cap0255(it->second.b) * 2;
       buffera[5] = hex8[num];
       buffera[6] = hex8[num + 1];
-      
+
       if (it->second.a == 1) {
         buffera[7] = '\0';
       } else {
@@ -725,16 +727,16 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
         buffera[7] = hex8[num];
         buffera[8] = hex8[num + 1];
       }
-      
+
     }
     switch (chan) {
-    case 1: 
+    case 1:
       new_val = mod_val(hex2int(buffera[1]) * 16 + hex2int(buffera[2]), value_is_int ? (one_value ? first_value_i : value_i[i]) : (one_value ? first_value_d : value_d[i]), operation); // Sometimes I really hate myself
       num = cap0255(new_val) * 2;
       buffera[1] = hex8[num];
       buffera[2] = hex8[num + 1];
       break;
-    case 2: 
+    case 2:
       new_val = mod_val(hex2int(buffera[3]) * 16 + hex2int(buffera[4]), value_is_int ? (one_value ? first_value_i : value_i[i]) : (one_value ? first_value_d : value_d[i]), operation);
       num = cap0255(new_val) * 2;
       buffera[3] = hex8[num];
@@ -747,10 +749,10 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
       buffera[6] = hex8[num + 1];
       break;
     }
-    
+
     SET_STRING_ELT(ret, i, Rf_mkChar(buffera));
   }
-  
+
   copy_names(codes, ret);
   UNPROTECT(1);
   return ret;
@@ -759,7 +761,7 @@ SEXP encode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP value, 
 SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
   int operation = INTEGER(op)[0];
   int n = Rf_length(codes);
-  
+
   bool one_value = Rf_length(value) == 1;
   int first_value_i = 0;
   double first_value_d = 0.0;
@@ -773,14 +775,14 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
     value_d = REAL(value);
     first_value_d = value_d[0];
   }
-  
+
   SEXP na_code = STRING_ELT(na, 0);
   bool na_is_na = na_code == R_NaString;
-  
+
   SEXP ret = PROTECT(Rf_allocVector(STRSXP, n));
   int alpha, num, nchar;
   ColourMap& named_colours = get_named_colours();
-  
+
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
@@ -790,7 +792,7 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
       }
       code = na_code;
     }
-    
+
     const char* col = CHAR(code);
     if (col[0] == '#') {
       nchar = strlen(col);
@@ -813,18 +815,18 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
       num = cap0255(it->second.r) * 2;
       buffera[1] = hex8[num];
       buffera[2] = hex8[num + 1];
-      
+
       num = cap0255(it->second.g) * 2;
       buffera[3] = hex8[num];
       buffera[4] = hex8[num + 1];
-      
+
       num = cap0255(it->second.b) * 2;
       buffera[5] = hex8[num];
       buffera[6] = hex8[num + 1];
-      
+
       alpha = it->second.a * 255;
     }
-    
+
     if (value_is_int) {
       alpha = double2int(mod_val(alpha / 255.0, one_value ? first_value_i : value_i[i], operation) * 255.0);
     } else {
@@ -840,7 +842,7 @@ SEXP encode_alpha_impl(SEXP codes, SEXP value, SEXP op, SEXP na) {
     }
     SET_STRING_ELT(ret, i, Rf_mkChar(buffera));
   }
-  
+
   copy_names(codes, ret);
   UNPROTECT(1);
   return ret;
@@ -867,7 +869,7 @@ SEXP encode_channel_c(SEXP codes, SEXP channel, SEXP value, SEXP space, SEXP op,
     case OKLAB: return encode_channel_impl<ColorSpace::OkLab>(codes, channel, value, op, white, na);
     case OKLCH: return encode_channel_impl<ColorSpace::OkLch>(codes, channel, value, op, white, na);
   }
-  
+
   // never happens
   return R_NilValue;
 }
@@ -876,7 +878,7 @@ template <typename Space>
 SEXP decode_channel_impl(SEXP codes, SEXP channel, SEXP white, SEXP na) {
   int chan = INTEGER(channel)[0];
   int n = Rf_length(codes);
-  
+
   SEXP ret = PROTECT(Rf_allocVector(REALSXP, n));
   double* ret_p = REAL(ret);
   ColorSpace::Rgb rgb;
@@ -884,10 +886,10 @@ SEXP decode_channel_impl(SEXP codes, SEXP channel, SEXP white, SEXP na) {
   Space colour;
   ColourMap& named_colours = get_named_colours();
   int nchar;
-  
+
   SEXP na_code = STRING_ELT(na, 0);
   bool na_is_na = na_code == R_NaString;
-  
+
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
@@ -919,10 +921,10 @@ SEXP decode_channel_impl(SEXP codes, SEXP channel, SEXP white, SEXP na) {
     }
     ColorSpace::IConverter<Space>::ToColorSpace(&rgb, &colour);
     colour.Cap();
-    
+
     ret_p[i] = grab_channel<Space>(colour, chan);
   }
-  
+
   copy_names(codes, ret);
   UNPROTECT(1);
   return ret;
@@ -932,16 +934,16 @@ template <>
 SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white, SEXP na) {
   int chan = INTEGER(channel)[0];
   int n = Rf_length(codes);
-  
+
   SEXP ret = PROTECT(Rf_allocVector(INTSXP, n));
   int* ret_p = INTEGER(ret);
   ColourMap& named_colours = get_named_colours();
   int val = 0;
   int nchar = 0;
-  
+
   SEXP na_code = STRING_ELT(na, 0);
   bool na_is_na = na_code == R_NaString;
-  
+
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
@@ -958,13 +960,13 @@ SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white, 
         Rf_errorcall(R_NilValue, "Malformed colour string `%s`. Must contain either 6 or 8 hex values", col);
       }
       switch (chan) {
-      case 1: 
+      case 1:
         val = hex2int(col[1]) * 16 + hex2int(col[2]);
         break;
-      case 2: 
+      case 2:
         val = hex2int(col[3]) * 16 + hex2int(col[4]);
         break;
-      case 3: 
+      case 3:
         val = hex2int(col[5]) * 16 + hex2int(col[6]);
         break;
       }
@@ -976,21 +978,21 @@ SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white, 
         continue;
       }
       switch (chan) {
-      case 1: 
+      case 1:
         val = it->second.r;
         break;
-      case 2: 
+      case 2:
         val = it->second.g;
         break;
-      case 3: 
+      case 3:
         val = it->second.b;
         break;
       }
     }
-    
+
     ret_p[i] = val;
   }
-  
+
   copy_names(codes, ret);
   UNPROTECT(1);
   return ret;
@@ -998,17 +1000,17 @@ SEXP decode_channel_impl<ColorSpace::Rgb>(SEXP codes, SEXP channel, SEXP white, 
 
 SEXP decode_alpha_impl(SEXP codes, SEXP na) {
   int n = Rf_length(codes);
-  
+
   SEXP ret = PROTECT(Rf_allocVector(REALSXP, n));
   double* ret_p = REAL(ret);
   ColourMap& named_colours = get_named_colours();
   int nchar;
   bool has_alpha;
   double val;
-  
+
   SEXP na_code = STRING_ELT(na, 0);
   bool na_is_na = na_code == R_NaString;
-  
+
   for (int i = 0; i < n; ++i) {
     SEXP code = STRING_ELT(codes, i);
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
@@ -1039,10 +1041,10 @@ SEXP decode_alpha_impl(SEXP codes, SEXP na) {
       }
       val = it->second.a;
     }
-    
+
     ret_p[i] = val;
   }
-  
+
   copy_names(codes, ret);
   UNPROTECT(1);
   return ret;
@@ -1069,7 +1071,7 @@ SEXP decode_channel_c(SEXP codes, SEXP channel, SEXP space, SEXP white, SEXP na)
   case OKLAB: return decode_channel_impl<ColorSpace::OkLab>(codes, channel, white, na);
   case OKLCH: return decode_channel_impl<ColorSpace::OkLch>(codes, channel, white, na);
   }
-  
+
   // never happens
   return R_NilValue;
 }
@@ -1079,7 +1081,7 @@ SEXP encode_native_c(SEXP color) {
   ColourMap& named_colours = get_named_colours();
   SEXP natives = PROTECT(Rf_allocVector(INTSXP, n));
   int* natives_p = INTEGER(natives);
-  
+
   int nchar;
   bool has_alpha;
   for (int i = 0; i < n; ++i) {
@@ -1110,7 +1112,7 @@ SEXP encode_native_c(SEXP color) {
       }
     }
   }
-  
+
   copy_names(color, natives);
   UNPROTECT(1);
   return natives;
@@ -1122,7 +1124,7 @@ SEXP decode_native_c(SEXP native) {
   char* buf = buffera;
   int* native_p = INTEGER(native);
   int num;
-  
+
   for (int i = 0; i < n; ++i) {
     if (native_p[i] == R_NaInt) {
       SET_STRING_ELT(codes, i, R_NaString);
@@ -1131,15 +1133,15 @@ SEXP decode_native_c(SEXP native) {
     num = R_RED(native_p[i]) * 2;
     buf[1] = hex8[num];
     buf[2] = hex8[num + 1];
-    
+
     num = R_GREEN(native_p[i]) * 2;
     buf[3] = hex8[num];
     buf[4] = hex8[num + 1];
-    
+
     num = R_BLUE(native_p[i]) * 2;
     buf[5] = hex8[num];
     buf[6] = hex8[num + 1];
-    
+
     num = R_ALPHA(native_p[i]) * 2;
     if (num == 510) { // opaque
       buf[7] = '\0';
@@ -1147,10 +1149,10 @@ SEXP decode_native_c(SEXP native) {
       buf[7] = hex8[num];
       buf[8] = hex8[num + 1];
     }
-    
+
     SET_STRING_ELT(codes, i, Rf_mkChar(buf));
   }
-  
+
   copy_names(native, codes);
   UNPROTECT(1);
   return codes;
