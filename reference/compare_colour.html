@@ -82,7 +82,9 @@ RGB space, to different perceptual measures such as CIE2000.</p>
 <span>  to_space <span class="op">=</span> <span class="va">from_space</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
 <span>  white_from <span class="op">=</span> <span class="st">"D65"</span>,</span>
-<span>  white_to <span class="op">=</span> <span class="va">white_from</span></span>
+<span>  white_to <span class="op">=</span> <span class="va">white_from</span>,</span>
+<span>  lightness <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  chroma <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -108,6 +110,12 @@ compared with itself and only the upper triangle will get calculated</p></dd>
 <dd><p>The white reference of the from and to colour
 space. Will only have an effect for relative colour spaces such as Lab and
 luv. Any value accepted by <code><a href="as_white_ref.html">as_white_ref()</a></code> allowed.</p></dd>
+
+
+<dt>lightness, chroma</dt>
+<dd><p>Weight of lightness vs chroma when using CMC. Common
+values are <code>2</code> and <code>1</code> (default) for acceptability and <code>1</code> and <code>1</code> for
+imperceptibility</p></dd>
 
 </dl></div>
     <div id="value">
@@ -176,28 +184,28 @@ the gamut of one of the spaces is less than the other.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compare a set of colours with itself</span></span></span>
 <span class="r-in"><span><span class="fu">compare_colour</span><span class="op">(</span><span class="va">r</span>, from_space <span class="op">=</span> <span class="st">'rgb'</span>, method <span class="op">=</span> <span class="st">'cmc'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       [,1]     [,2]      [,3]      [,4]      [,5]     [,6]      [,7]     [,8]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]    0 10.52597 18.003563 15.958871 15.623504 23.06674  5.030710 11.74396</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]    0  0.00000  9.732855 12.581267  7.948242 12.62015  9.568638 21.39777</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]    0  0.00000  0.000000  5.729119  1.877060 14.58716 16.089339 22.78038</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]    0  0.00000  0.000000  0.000000  5.253523 18.88463 16.297394 19.60278</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]    0  0.00000  0.000000  0.000000  0.000000 14.46503 14.540410 21.56755</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]    0  0.00000  0.000000  0.000000  0.000000  0.00000 21.444871 37.66022</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]    0  0.00000  0.000000  0.000000  0.000000  0.00000  0.000000 14.69552</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]    0  0.00000  0.000000  0.000000  0.000000  0.00000  0.000000  0.00000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]    0  0.00000  0.000000  0.000000  0.000000  0.00000  0.000000  0.00000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]    0  0.00000  0.000000  0.000000  0.000000  0.00000  0.000000  0.00000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            [,9]     [,10]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]  3.885606  5.174003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 13.496209  6.515862</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,] 15.389917 13.626292</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,] 12.801400 14.321552</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,] 13.988362 12.037620</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,] 29.707650 18.989681</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]  8.957990  3.701201</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,] 11.098901 17.436529</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]  0.000000  8.718964</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]  0.000000  0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       [,1]     [,2]     [,3]      [,4]       [,5]     [,6]      [,7]      [,8]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]    0 30.66001 79.59275 103.37370 101.509242 91.48686  97.00427 107.02585</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]    0  0.00000 50.42953  75.88074  77.339032 81.22327 110.77720 128.40117</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]    0  0.00000  0.00000  16.64463  21.009428 41.12636  80.26399  97.81056</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]    0  0.00000  0.00000   0.00000   8.359694 34.63378  76.14760  93.97196</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]    0  0.00000  0.00000   0.00000   0.000000 28.07909  71.85226  90.44183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]    0  0.00000  0.00000   0.00000   0.000000  0.00000  55.60517  78.29659</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]    0  0.00000  0.00000   0.00000   0.000000  0.00000   0.00000  19.91406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]    0  0.00000  0.00000   0.00000   0.000000  0.00000   0.00000   0.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]    0  0.00000  0.00000   0.00000   0.000000  0.00000   0.00000   0.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]    0  0.00000  0.00000   0.00000   0.000000  0.00000   0.00000   0.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            [,9]    [,10]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]  88.69588 47.25557</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 111.75460 72.07381</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]  89.44199 69.07941</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]  87.83719 72.00177</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]  85.01006 70.79239</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]  75.70598 69.06744</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]  26.36408 45.50214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]  16.45858 39.30074</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]   0.00000 24.97282</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]   0.00000  0.00000</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compare colours from different colour spaces</span></span></span>
 <span class="r-in"><span><span class="va">h_luv</span> <span class="op">&lt;-</span> <span class="fu"><a href="convert_colour.html">convert_colour</a></span><span class="op">(</span><span class="va">h</span>, <span class="st">'rgb'</span>, <span class="st">'luv'</span><span class="op">)</span></span></span>
