@@ -20,12 +20,17 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Thomas Lin Pedersen \email{thomasp85@gmail.com} (\href{https://orcid.org/0000-0002-5147-4711}{ORCID})
+\strong{Maintainer}: Thomas Lin Pedersen \email{thomas.pedersen@posit.co} (\href{https://orcid.org/0000-0002-5147-4711}{ORCID})
 
 Authors:
 \itemize{
   \item Berendea Nicolae (Author of the ColorSpace C++ library)
   \item Romain François \email{romain@purrple.cat} (\href{https://orcid.org/0000-0002-2444-4226}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Posit, PBC [copyright holder, funder]
 }
 
 }
