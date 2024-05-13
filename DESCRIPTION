@@ -3,12 +3,13 @@ Package: farver
 Title: High Performance Colour Space Manipulation
 Version: 2.1.2
 Authors@R: c(
-    person("Thomas Lin", "Pedersen", , "thomasp85@gmail.com", role = c("cre", "aut"),
+    person("Thomas Lin", "Pedersen", , "thomas.pedersen@posit.co", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-5147-4711")),
     person("Berendea", "Nicolae", role = "aut",
            comment = "Author of the ColorSpace C++ library"),
     person("Romain", "François", , "romain@purrple.cat", role = "aut",
-           comment = c(ORCID = "0000-0002-2444-4226"))
+           comment = c(ORCID = "0000-0002-2444-4226")),
+    person("Posit, PBC", role = c("cph", "fnd"))
   )
 Maintainer: Thomas Lin Pedersen <thomasp85@gmail.com>
 Description: The encoding of colour can be handled in many different ways,
