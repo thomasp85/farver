@@ -1,4 +1,4 @@
-# farver (development version)
+# farver 2.1.2
 
 * make sure output channels are always named (#23)
 * farver can now decode short version hex-code colours (#41)
