@@ -1110,6 +1110,7 @@ SEXP encode_native_c(SEXP color) {
     SEXP code = STRING_ELT(color, i);
     if (code == R_NaString || strcmp("NA", CHAR(code)) == 0) {
       natives_p[i] = NA_INTEGER;
+      continue;
     }
     const char* col = Rf_translateCharUTF8(code);
     if (col[0] == '#') {
@@ -1130,7 +1131,7 @@ SEXP encode_native_c(SEXP color) {
         Rf_errorcall(R_NilValue, "Unknown colour name: %s", col);
         natives_p[i] = NA_INTEGER;
       } else {
-        natives_p[i] = R_RGB(it->second.r, it->second.g, it->second.b);
+        natives_p[i] = R_RGBA(it->second.r, it->second.g, it->second.b, it->second.a * 255);
       }
     }
   }

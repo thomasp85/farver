@@ -22,3 +22,14 @@ test_that("alpha gets encoded correctly", {
   alpha_col <- encode_colour(cols_dec[1:6,], alpha = seq(0, 1, length.out = 6))
   expect_equal(substr(alpha_col, 8, 9), c("00", "33", "66", "99", "CC", ""))
 })
+
+test_that("named colours keep their alpha when encoded to native (#47)", {
+  expect_identical(encode_native("transparent"), encode_native("#FFFFFF00"))
+  expect_identical(encode_native("0"), encode_native("#FFFFFF00"))
+  expect_identical(decode_native(encode_native("transparent")), "#FFFFFF00")
+  expect_identical(encode_native("white"), encode_native("#FFFFFF"))
+})
+
+test_that("NA is encoded to native NA", {
+  expect_identical(encode_native(c("red", NA, "NA")), c(encode_native("red"), NA, NA))
+})

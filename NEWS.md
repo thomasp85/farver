@@ -1,5 +1,9 @@
 # farver (development version)
 
+* `encode_native()` now respects the alpha of named colours, so
+  `"transparent"` encodes to the same value as `"#FFFFFF00"` (#47)
+* `encode_native()` now returns `NA` for `NA_character_` input instead of erroring
+
 # farver 2.1.2
 
 * make sure output channels are always named (#23)
