@@ -190,7 +190,7 @@ as_colour_code <- function(x) {
       stop("colours encodes as numbers must be positive", call. = FALSE)
     }
     x <- as.integer(x)
-    x <- ifelse(x == 0, 1, ((x - 1) %% (length(def_palette) - 1)) + 2)
+    x <- as.integer(ifelse(x == 0, 1, ((x - 1) %% (length(def_palette) - 1)) + 2))
     x <- def_palette[x]
   } else {
     x <- as.character(x)

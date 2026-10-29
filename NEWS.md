@@ -1,5 +1,8 @@
 # farver (development version)
 
+* `decode_colour()` and other functions now return one value per input for
+  all-`NA` numeric colour vectors instead of one per default palette entry (#57)
+
 # farver 2.1.2
 
 * make sure output channels are always named (#23)

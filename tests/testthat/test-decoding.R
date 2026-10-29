@@ -27,3 +27,18 @@ test_that("alpha gets decoded correctly", {
   )[, 'alpha']
   expect_equal(alpha, seq(0, 1, length.out = 6))
 })
+test_that("all-NA numeric colours decode to one row per input (#57)", {
+  expect_equal(nrow(decode_colour(NA_real_)), 1)
+  expect_equal(nrow(decode_colour(NA_integer_)), 1)
+  expect_equal(nrow(decode_colour(NaN)), 1)
+  expect_equal(nrow(decode_colour(rep(NA_integer_, 3))), 3)
+  expect_true(all(is.na(decode_colour(rep(NA_integer_, 3)))))
+  pal <- farver:::def_palette[-1]
+  n <- length(pal)
+  expect_equal(decode_colour(c(seq_len(n + 2), NA)), decode_colour(c(pal, pal[1:2], NA)))
+  expect_equal(decode_colour(c(0.5, NA)), decode_colour(c("transparent", NA)))
+  expect_equal(decode_colour(0.5), decode_colour("transparent"))
+  expect_length(get_channel(rep(NA_integer_, 3), "r"), 3)
+  expect_length(get_channel(rep(NA_real_, 3), "alpha"), 3)
+  expect_length(set_channel(rep(NA_integer_, 3), "r", 100), 3)
+})
